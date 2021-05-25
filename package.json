@@ -1,0 +1,15 @@
+{
+  "name": "janusjstest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/Janus.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "dist/index.d.ts",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reactivex/rxjs": "^6.6.7"
+  }
+}
