@@ -1,9 +1,8 @@
-import Janus, { DetachOptions, JSEP, Message, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
+import Janus, { AnswerParams, DetachOptions, JSEP, Message, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 export declare class JanusPlugin implements PluginHandle {
+    constructor(instance: Janus);
     protected instance: Janus;
     protected handle: PluginHandle;
-    constructor(instance: Janus);
-    setNativeHandle(nativePluginHandle: PluginHandle): void;
     plugin: string;
     id: string;
     token?: string;
@@ -13,16 +12,21 @@ export declare class JanusPlugin implements PluginHandle {
     webrtcState?: (isConnected: boolean) => void;
     iceState?: (state: "connected" | "failed" | "disconnected" | "closed") => void;
     mediaState?: (medium: "audio" | "video", receiving: boolean, mid?: number) => void;
+    onerror: (error: string) => void;
+    ondataopen: () => void;
     slowLink?: (uplink: boolean, lost: number, mid: string) => void;
     onmessage?: (message: Message, jsep?: JSEP) => void;
     onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
     onremotetrack?: (track: MediaStreamTrack, mid: string, on: boolean) => void;
     ondata?: (data: any) => void;
+    oncleanup: () => void;
+    ondetached: () => void;
+    setNativeHandle(nativePluginHandle: PluginHandle): void;
     getId(): string;
     getPlugin(): string;
     send(message: Omit<PluginMessage, "success" | "error">): Promise<any>;
-    createOffer(params: OfferParams): void;
-    createAnswer(params: any): void;
+    createOffer(params: Omit<OfferParams, "success" | "error">): Promise<RTCSessionDescription>;
+    createAnswer(params: Omit<AnswerParams, "success" | "error">): Promise<RTCSessionDescription>;
     handleRemoteJsep(params: {
         jsep: JSEP;
     }): void;

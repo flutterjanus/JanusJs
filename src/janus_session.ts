@@ -86,7 +86,7 @@ export class JanusSession {
         success() {
           resolve(true);
         },
-        error(err) {
+        error(err: any) {
           reject(err);
         },
       });
@@ -95,10 +95,10 @@ export class JanusSession {
   async getInfo(): Promise<any> {
     return new Promise((resolve, reject) => {
       this.instance.getInfo({
-        success(info) {
+        success(info: any) {
           resolve(info);
         },
-        error(err) {
+        error(err: any) {
           reject(err);
         },
       });
@@ -113,7 +113,7 @@ export class JanusSession {
         success() {
           resolve();
         },
-        error(err) {
+        error(err: any) {
           reject(err);
         },
       });

@@ -73,10 +73,24 @@ var JanusPlugin = /** @class */ (function () {
         });
     };
     JanusPlugin.prototype.createOffer = function (params) {
-        throw new Error("Method not implemented.");
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.handle.createOffer(__assign(__assign({}, params), { success: function (offer) {
+                    resolve(offer);
+                }, error: function (error) {
+                    reject(error);
+                } }));
+        });
     };
     JanusPlugin.prototype.createAnswer = function (params) {
-        throw new Error("Method not implemented.");
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.handle.createAnswer(__assign(__assign({}, params), { success: function (offer) {
+                    resolve(offer);
+                }, error: function (error) {
+                    reject(error);
+                } }));
+        });
     };
     JanusPlugin.prototype.handleRemoteJsep = function (params) {
         throw new Error("Method not implemented.");

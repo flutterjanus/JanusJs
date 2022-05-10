@@ -27,7 +27,7 @@ export interface JSEP {
     force_relay?: boolean;
 }
 export interface InitOptions {
-    debug?: boolean | 'all' | DebugLevel[];
+    debug?: boolean | "all" | DebugLevel[];
     callback?: Function;
     dependencies?: DependenciesResult;
 }
@@ -70,8 +70,8 @@ export interface PluginCallbacks {
     error?: (error: string) => void;
     consentDialog?: (on: boolean) => void;
     webrtcState?: (isConnected: boolean) => void;
-    iceState?: (state: 'connected' | 'failed' | 'disconnected' | 'closed') => void;
-    mediaState?: (medium: 'audio' | 'video', receiving: boolean, mid?: number) => void;
+    iceState?: (state: "connected" | "failed" | "disconnected" | "closed") => void;
+    mediaState?: (medium: "audio" | "video", receiving: boolean, mid?: number) => void;
     slowLink?: (uplink: boolean, lost: number, mid: string) => void;
     onmessage?: (message: Message, jsep?: JSEP) => void;
     onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
@@ -85,6 +85,25 @@ export interface PluginOptions extends PluginCallbacks {
     plugin: string;
     opaqueId?: string;
 }
+export interface AnswerParams {
+    media?: {
+        audioSend?: boolean;
+        audioRecv?: boolean;
+        videoSend?: boolean;
+        videoRecv?: boolean;
+        audio?: boolean | {
+            deviceId: string;
+        };
+        video?: boolean | {
+            deviceId: string;
+        } | "lowres" | "lowres-16:9" | "stdres" | "stdres-16:9" | "hires" | "hires-16:9";
+        data?: boolean;
+        failIfNoAudio?: boolean;
+        failIfNoVideo?: boolean;
+        screenshareFrameRate?: number;
+    };
+    jsep: any;
+}
 export interface OfferParams {
     media?: {
         audioSend?: boolean;
@@ -96,7 +115,7 @@ export interface OfferParams {
         };
         video?: boolean | {
             deviceId: string;
-        } | 'lowres' | 'lowres-16:9' | 'stdres' | 'stdres-16:9' | 'hires' | 'hires-16:9';
+        } | "lowres" | "lowres-16:9" | "stdres" | "stdres-16:9" | "hires" | "hires-16:9";
         data?: boolean;
         failIfNoAudio?: boolean;
         failIfNoVideo?: boolean;

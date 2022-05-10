@@ -76,10 +76,34 @@ var JanusSession = /** @class */ (function () {
         finalOptions.ondata = function (data) {
             pluginHandle.ondata(data);
         };
+        finalOptions.error = function (error) {
+            pluginHandle.onerror(error);
+        };
+        finalOptions.webrtcState = function (isConnected) {
+            pluginHandle.webrtcState(isConnected);
+        };
+        finalOptions.ondataopen = function () {
+            pluginHandle.ondataopen();
+        };
+        finalOptions.ondetached = function () {
+            pluginHandle.ondetached();
+        };
+        finalOptions.oncleanup = function () {
+            pluginHandle.oncleanup();
+        };
+        finalOptions.mediaState = function (medium, recieving, mid) {
+            pluginHandle.mediaState(medium, recieving, mid);
+        };
+        finalOptions.slowLink = function (uplink, lost, mid) {
+            pluginHandle.slowLink(uplink, lost, mid);
+        };
+        finalOptions.iceState = function (state) {
+            pluginHandle.iceState(state);
+        };
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
                 pluginHandle.setNativeHandle(plugin);
-                _.assign(pluginHandle, _.omit(plugin, ["send"]));
+                _.assign(pluginHandle, _.omit(plugin, ["send", "createAnswer", "createOffer"]));
                 resolve(pluginHandle);
             };
             finalOptions.error = function (error) {
