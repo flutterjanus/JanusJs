@@ -1,3 +1,5 @@
+import { Subject } from "rxjs";
+
 export interface Dependencies {
   adapter: any;
   WebSocket: (server: string, protocol: string) => WebSocket;
@@ -282,4 +284,16 @@ export interface ConstructorOptions {
   success?: Function;
   error?: (error: any) => void;
   destroyed?: Function;
+}
+
+export interface Controllers {
+  onMessageController: Subject<{ message: Message; jsep: JSEP }>;
+  onLocalTrackController: Subject<{ track: MediaStreamTrack; on: boolean }>;
+  onRemoteTrackController: Subject<{
+    track: MediaStreamTrack;
+    on: boolean;
+    mid: string;
+  }>;
+  onDataController: Subject<any>;
+  onErrorController: Subject<any>;
 }

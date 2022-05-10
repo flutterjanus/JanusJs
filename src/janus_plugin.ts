@@ -1,5 +1,6 @@
 import Janus, {
   AnswerParams,
+  Controllers,
   DetachOptions,
   JSEP,
   Message,
@@ -8,10 +9,14 @@ import Janus, {
   PluginMessage,
   WebRTCInfo,
 } from "./interfaces/janus";
+const noop = () => {};
+import { Observable, Subject } from "rxjs";
 export class JanusPlugin implements PluginHandle {
-  constructor(instance: Janus) {
+  constructor(instance: Janus, controllers: Controllers) {
     this.instance = instance;
+    this.controllers = controllers;
   }
+  protected controllers: Controllers;
   protected instance: Janus;
   protected handle: PluginHandle;
   plugin: string;
@@ -19,25 +24,38 @@ export class JanusPlugin implements PluginHandle {
   token?: string;
   detached: boolean;
   webrtcStuff: WebRTCInfo;
-  consentDialog?: (on: boolean) => void;
-  webrtcState?: (isConnected: boolean) => void;
+
+  get onMessage() {
+    return this.controllers.onMessageController.asObservable();
+  }
+  get onLocalTrack() {
+    return this.controllers.onLocalTrackController.asObservable();
+  }
+  get onData() {
+    return this.controllers.onDataController.asObservable();
+  }
+  get onError() {
+    return this.controllers.onErrorController.asObservable();
+  }
+  get onRemoteTrack() {
+    return this.controllers.onRemoteTrackController.asObservable();
+  }
+  consentDialog?: (on: boolean) => void = noop;
+  webrtcState?: (isConnected: boolean) => void = noop;
   iceState?: (
     state: "connected" | "failed" | "disconnected" | "closed"
-  ) => void;
+  ) => void = noop;
   mediaState?: (
     medium: "audio" | "video",
     receiving: boolean,
     mid?: number
-  ) => void;
-  onerror: (error: string) => void;
-  ondataopen: () => void;
+  ) => void = noop;
+  onerror?: (error: string) => void = noop;
+  ondataopen?: () => void = noop;
   slowLink?: (uplink: boolean, lost: number, mid: string) => void;
-  onmessage?: (message: Message, jsep?: JSEP) => void;
-  onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
-  onremotetrack?: (track: MediaStreamTrack, mid: string, on: boolean) => void;
   ondata?: (data: any) => void;
-  oncleanup: () => void;
-  ondetached: () => void;
+  oncleanup?: () => void;
+  ondetached?: () => void;
 
   setNativeHandle(nativePluginHandle: PluginHandle): void {
     this.handle = nativePluginHandle;

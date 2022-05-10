@@ -1,6 +1,8 @@
-import Janus, { AnswerParams, DetachOptions, JSEP, Message, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
+import Janus, { AnswerParams, Controllers, DetachOptions, JSEP, Message, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
+import { Observable } from "rxjs";
 export declare class JanusPlugin implements PluginHandle {
-    constructor(instance: Janus);
+    constructor(instance: Janus, controllers: Controllers);
+    protected controllers: Controllers;
     protected instance: Janus;
     protected handle: PluginHandle;
     plugin: string;
@@ -8,19 +10,29 @@ export declare class JanusPlugin implements PluginHandle {
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
+    get onMessage(): Observable<{
+        message: Message;
+        jsep: JSEP;
+    }>;
+    get onLocalTrack(): Observable<{
+        track: MediaStreamTrack;
+        on: boolean;
+    }>;
+    get onRemoteTrack(): Observable<{
+        track: MediaStreamTrack;
+        on: boolean;
+        mid: string;
+    }>;
     consentDialog?: (on: boolean) => void;
     webrtcState?: (isConnected: boolean) => void;
     iceState?: (state: "connected" | "failed" | "disconnected" | "closed") => void;
     mediaState?: (medium: "audio" | "video", receiving: boolean, mid?: number) => void;
-    onerror: (error: string) => void;
-    ondataopen: () => void;
+    onerror?: (error: string) => void;
+    ondataopen?: () => void;
     slowLink?: (uplink: boolean, lost: number, mid: string) => void;
-    onmessage?: (message: Message, jsep?: JSEP) => void;
-    onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
-    onremotetrack?: (track: MediaStreamTrack, mid: string, on: boolean) => void;
     ondata?: (data: any) => void;
-    oncleanup: () => void;
-    ondetached: () => void;
+    oncleanup?: () => void;
+    ondetached?: () => void;
     setNativeHandle(nativePluginHandle: PluginHandle): void;
     getId(): string;
     getPlugin(): string;

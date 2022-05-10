@@ -45,10 +45,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var noop = function () { };
 var JanusPlugin = /** @class */ (function () {
-    function JanusPlugin(instance) {
+    function JanusPlugin(instance, controllers) {
+        this.consentDialog = noop;
+        this.webrtcState = noop;
+        this.iceState = noop;
+        this.mediaState = noop;
+        this.onerror = noop;
+        this.ondataopen = noop;
         this.instance = instance;
+        this.controllers = controllers;
     }
+    Object.defineProperty(JanusPlugin.prototype, "onMessage", {
+        get: function () {
+            return this.controllers.onMessageController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onLocalTrack", {
+        get: function () {
+            return this.controllers.onLocalTrackController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onRemoteTrack", {
+        get: function () {
+            return this.controllers.onRemoteTrackController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
     JanusPlugin.prototype.setNativeHandle = function (nativePluginHandle) {
         this.handle = nativePluginHandle;
     };

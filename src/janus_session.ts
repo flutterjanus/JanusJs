@@ -1,6 +1,7 @@
 import Janus from "../janus-gateway/npm/janus";
 import _ from "lodash";
 import {
+  Controllers,
   DestroyOptions,
   JSEP,
   Message,
@@ -8,6 +9,8 @@ import {
   PluginOptions,
 } from "./interfaces/janus";
 import { JanusPlugin } from "./janus_plugin";
+import { Subject } from "rxjs";
+
 export class JanusSession {
   protected instance: Janus;
   constructor(instance: Janus) {
@@ -28,43 +31,37 @@ export class JanusSession {
     options: Pick<PluginOptions, "plugin" | "opaqueId">
   ): Promise<JanusPlugin> {
     const finalOptions: PluginOptions = { ...options };
-    const pluginHandle = new JanusPlugin(this.instance);
+    const controllers: Controllers = {
+      onMessageController: new Subject(),
+      onLocalTrackController: new Subject(),
+      onRemoteTrackController: new Subject(),
+      onDataController: new Subject(),
+      onErrorController: new Subject(),
+    };
+    const pluginHandle = new JanusPlugin(this.instance, controllers);
     finalOptions.onmessage = (message: Message, jsep: JSEP) => {
-      pluginHandle.onmessage(message, jsep);
+      controllers.onMessageController.next({ message, jsep });
     };
     finalOptions.onlocaltrack = (track, on) => {
-      pluginHandle.onlocaltrack(track, on);
+      controllers.onLocalTrackController.next({ on, track });
     };
     finalOptions.onremotetrack = (track, mid, on) => {
-      pluginHandle.onremotetrack(track, mid, on);
+      controllers.onRemoteTrackController.next({ on, track, mid });
     };
     finalOptions.ondata = (data: any) => {
-      pluginHandle.ondata(data);
+      controllers.onDataController.next(data);
     };
     finalOptions.error = (error) => {
-      pluginHandle.onerror(error);
+      controllers.onErrorController.next(error);
     };
-    finalOptions.webrtcState = (isConnected) => {
-      pluginHandle.webrtcState(isConnected);
-    };
-    finalOptions.ondataopen = () => {
-      pluginHandle.ondataopen();
-    };
-    finalOptions.ondetached = () => {
-      pluginHandle.ondetached();
-    };
-    finalOptions.oncleanup = () => {
-      pluginHandle.oncleanup();
-    };
-    finalOptions.mediaState = (medium, recieving, mid) => {
-      pluginHandle.mediaState(medium, recieving, mid);
-    };
-    finalOptions.slowLink = (uplink, lost, mid) => {
-      pluginHandle.slowLink(uplink, lost, mid);
-    };
-    finalOptions.iceState = (state) => {
-      pluginHandle.iceState(state);
-    };
+    finalOptions.mediaState = (medium, recieving, mid) => {};
+    finalOptions.slowLink = (uplink, lost, mid) => {};
+    finalOptions.webrtcState = (isConnected) => {};
+    finalOptions.iceState = (state) => {};
+    finalOptions.ondataopen = () => {};
+    finalOptions.ondetached = () => {};
+    finalOptions.oncleanup = () => {};
+
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
         pluginHandle.setNativeHandle(plugin);

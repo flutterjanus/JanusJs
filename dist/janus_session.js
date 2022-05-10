@@ -47,6 +47,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import _ from "lodash";
 import { JanusPlugin } from "./janus_plugin";
+import { Subject } from "rxjs";
 var JanusSession = /** @class */ (function () {
     function JanusSession(instance) {
         this.instance = instance;
@@ -63,43 +64,51 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.attach = function (options) {
         var _this = this;
         var finalOptions = __assign({}, options);
-        var pluginHandle = new JanusPlugin(this.instance);
+        var controllers = {
+            onMessageController: new Subject(),
+            onLocalTrackController: new Subject(),
+            onRemoteTrackController: new Subject(),
+        };
+        var pluginHandle = new JanusPlugin(this.instance, controllers);
         finalOptions.onmessage = function (message, jsep) {
-            pluginHandle.onmessage(message, jsep);
+            controllers.onMessageController.next({ message: message, jsep: jsep });
         };
         finalOptions.onlocaltrack = function (track, on) {
-            pluginHandle.onlocaltrack(track, on);
+            controllers.onLocalTrackController.next({ on: on, track: track });
         };
         finalOptions.onremotetrack = function (track, mid, on) {
-            pluginHandle.onremotetrack(track, mid, on);
+            controllers.onRemoteTrackController.next({ on: on, track: track, mid: mid });
         };
-        finalOptions.ondata = function (data) {
-            pluginHandle.ondata(data);
-        };
-        finalOptions.error = function (error) {
-            pluginHandle.onerror(error);
-        };
-        finalOptions.webrtcState = function (isConnected) {
-            pluginHandle.webrtcState(isConnected);
-        };
-        finalOptions.ondataopen = function () {
-            pluginHandle.ondataopen();
-        };
-        finalOptions.ondetached = function () {
-            pluginHandle.ondetached();
-        };
-        finalOptions.oncleanup = function () {
-            pluginHandle.oncleanup();
-        };
-        finalOptions.mediaState = function (medium, recieving, mid) {
-            pluginHandle.mediaState(medium, recieving, mid);
-        };
-        finalOptions.slowLink = function (uplink, lost, mid) {
-            pluginHandle.slowLink(uplink, lost, mid);
-        };
-        finalOptions.iceState = function (state) {
-            pluginHandle.iceState(state);
-        };
+        // finalOptions.ondata = (data: any) => {
+        //   if (pluginHandle.ondata) pluginHandle.ondata(data);
+        // };
+        // finalOptions.error = (error) => {
+        //   if (pluginHandle.onerror) pluginHandle.onerror(error);
+        // };
+        // finalOptions.ondataopen = () => {
+        //   if (pluginHandle.ondataopen) pluginHandle.ondataopen();
+        // };
+        // finalOptions.ondetached = () => {
+        //   if (pluginHandle.ondetached) pluginHandle.ondetached();
+        // };
+        // finalOptions.oncleanup = () => {
+        //   if (pluginHandle.oncleanup) {
+        //     pluginHandle.oncleanup();
+        //   }
+        // };
+        // finalOptions.mediaState = (medium, recieving, mid) => {
+        //   if (pluginHandle?.mediaState)
+        //     pluginHandle.mediaState(medium, recieving, mid);
+        // };
+        // finalOptions.slowLink = (uplink, lost, mid) => {
+        //   if (pluginHandle?.slowLink) pluginHandle.slowLink(uplink, lost, mid);
+        // };
+        // finalOptions.webrtcState = (isConnected) => {
+        //   if (pluginHandle.webrtcState) pluginHandle.webrtcState(isConnected);
+        // };
+        // finalOptions.iceState = (state) => {
+        //   if (pluginHandle.iceState) pluginHandle.iceState(state);
+        // };
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
                 pluginHandle.setNativeHandle(plugin);
