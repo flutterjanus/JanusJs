@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "outDir": "./dist",
+    "outDir": "./dist/",
+    "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "module": "es6",
+    "allowSyntheticDefaultImports": true,
     "target": "es5",
-    "module": "UMD",
+    "declarationMap": true,
+    "declaration": true,
+    "allowJs": true,
     "moduleResolution": "node",
-    "lib": ["es2016", "dom", "es5"]
+    "lib": ["ES5", "ES2015", "DOM", "ScriptHost"]
   },
-  "include": [
-    "./*.ts"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "janus-gateway"]
 }
