@@ -5,11 +5,10 @@
   "typings": "dist",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["janusjs","webrtc","janus-gateway","videoroom","sip"],
+  "author": "shivanshtalwar0@gmail.com",
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.21",
