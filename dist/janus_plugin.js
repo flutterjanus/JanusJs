@@ -45,15 +45,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var noop = function () { };
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, controllers) {
-        this.consentDialog = noop;
-        this.webrtcState = noop;
-        this.iceState = noop;
-        this.mediaState = noop;
-        this.onerror = noop;
-        this.ondataopen = noop;
         this.instance = instance;
         this.controllers = controllers;
     }
@@ -71,9 +64,72 @@ var JanusPlugin = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    Object.defineProperty(JanusPlugin.prototype, "onData", {
+        get: function () {
+            return this.controllers.onDataController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onError", {
+        get: function () {
+            return this.controllers.onErrorController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(JanusPlugin.prototype, "onRemoteTrack", {
         get: function () {
             return this.controllers.onRemoteTrackController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onMediaState", {
+        get: function () {
+            return this.controllers.onMediaStateController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onSlowLink", {
+        get: function () {
+            return this.controllers.onSlowLinkController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onWebRTCState", {
+        get: function () {
+            return this.controllers.onWebRTCStateController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onIceState", {
+        get: function () {
+            return this.controllers.onIceStateController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onDataOpen", {
+        get: function () {
+            return this.controllers.onDataOpenController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onDetached", {
+        get: function () {
+            return this.controllers.onDetachedController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onCleanup", {
+        get: function () {
+            return this.controllers.onCleanupController.asObservable();
         },
         enumerable: false,
         configurable: true

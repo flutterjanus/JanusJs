@@ -1,3 +1,14 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -42,6 +53,26 @@ var JanusJs = /** @class */ (function () {
         console.log("JanusJs loaded");
         this.options = options;
     }
+    JanusJs.prototype.init = function (params) {
+        if (params === void 0) { params = {
+            debug: "all",
+            dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
+        }; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
+                            Janus.init(__assign(__assign({}, params), { callback: function () {
+                                    resolve();
+                                } }));
+                        })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     JanusJs.prototype.createSession = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -52,17 +83,6 @@ var JanusJs = /** @class */ (function () {
                             _this.onDestroyed();
                         };
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
-                                Janus.init({
-                                    debug: "all",
-                                    dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
-                                    callback: function () {
-                                        resolve();
-                                    },
-                                });
-                            })];
-                    case 1:
-                        _a.sent();
-                        return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 _this.options.success = function () {
                                     resolve();
                                 };
@@ -71,7 +91,7 @@ var JanusJs = /** @class */ (function () {
                                 };
                                 _this.instance = new Janus(_this.options);
                             })];
-                    case 2:
+                    case 1:
                         _a.sent();
                         return [2 /*return*/, new JanusSession(this.instance)];
                 }

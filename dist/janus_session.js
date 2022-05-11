@@ -68,6 +68,15 @@ var JanusSession = /** @class */ (function () {
             onMessageController: new Subject(),
             onLocalTrackController: new Subject(),
             onRemoteTrackController: new Subject(),
+            onDataController: new Subject(),
+            onErrorController: new Subject(),
+            onMediaStateController: new Subject(),
+            onIceStateController: new Subject(),
+            onSlowLinkController: new Subject(),
+            onWebRTCStateController: new Subject(),
+            onCleanupController: new Subject(),
+            onDataOpenController: new Subject(),
+            onDetachedController: new Subject(),
         };
         var pluginHandle = new JanusPlugin(this.instance, controllers);
         finalOptions.onmessage = function (message, jsep) {
@@ -79,36 +88,33 @@ var JanusSession = /** @class */ (function () {
         finalOptions.onremotetrack = function (track, mid, on) {
             controllers.onRemoteTrackController.next({ on: on, track: track, mid: mid });
         };
-        // finalOptions.ondata = (data: any) => {
-        //   if (pluginHandle.ondata) pluginHandle.ondata(data);
-        // };
-        // finalOptions.error = (error) => {
-        //   if (pluginHandle.onerror) pluginHandle.onerror(error);
-        // };
-        // finalOptions.ondataopen = () => {
-        //   if (pluginHandle.ondataopen) pluginHandle.ondataopen();
-        // };
-        // finalOptions.ondetached = () => {
-        //   if (pluginHandle.ondetached) pluginHandle.ondetached();
-        // };
-        // finalOptions.oncleanup = () => {
-        //   if (pluginHandle.oncleanup) {
-        //     pluginHandle.oncleanup();
-        //   }
-        // };
-        // finalOptions.mediaState = (medium, recieving, mid) => {
-        //   if (pluginHandle?.mediaState)
-        //     pluginHandle.mediaState(medium, recieving, mid);
-        // };
-        // finalOptions.slowLink = (uplink, lost, mid) => {
-        //   if (pluginHandle?.slowLink) pluginHandle.slowLink(uplink, lost, mid);
-        // };
-        // finalOptions.webrtcState = (isConnected) => {
-        //   if (pluginHandle.webrtcState) pluginHandle.webrtcState(isConnected);
-        // };
-        // finalOptions.iceState = (state) => {
-        //   if (pluginHandle.iceState) pluginHandle.iceState(state);
-        // };
+        finalOptions.ondata = function (data) {
+            controllers.onDataController.next(data);
+        };
+        finalOptions.error = function (error) {
+            controllers.onErrorController.next(error);
+        };
+        finalOptions.mediaState = function (medium, recieving, mid) {
+            controllers.onMediaStateController.next({ medium: medium, recieving: recieving, mid: mid });
+        };
+        finalOptions.slowLink = function (uplink, lost, mid) {
+            controllers.onSlowLinkController.next({ uplink: uplink, lost: lost, mid: mid });
+        };
+        finalOptions.webrtcState = function (isConnected) {
+            controllers.onWebRTCStateController.next(isConnected);
+        };
+        finalOptions.iceState = function (state) {
+            controllers.onIceStateController.next(state);
+        };
+        finalOptions.ondataopen = function () {
+            controllers.onDataOpenController.next();
+        };
+        finalOptions.ondetached = function () {
+            controllers.onDetachedController.next();
+        };
+        finalOptions.oncleanup = function () {
+            controllers.onCleanupController.next();
+        };
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
                 pluginHandle.setNativeHandle(plugin);

@@ -261,5 +261,22 @@ export interface Controllers {
         on: boolean;
         mid: string;
     }>;
+    onDataController: Subject<any>;
+    onErrorController: Subject<any>;
+    onMediaStateController: Subject<{
+        medium: "audio" | "video";
+        recieving: boolean;
+        mid: number;
+    }>;
+    onSlowLinkController: Subject<{
+        uplink: boolean;
+        lost: number;
+        mid: string;
+    }>;
+    onWebRTCStateController: Subject<boolean>;
+    onIceStateController: Subject<"connected" | "failed" | "disconnected" | "closed">;
+    onDataOpenController: Subject<void>;
+    onDetachedController: Subject<void>;
+    onCleanupController: Subject<void>;
 }
 //# sourceMappingURL=janus.d.ts.map

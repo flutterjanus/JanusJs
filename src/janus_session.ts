@@ -37,6 +37,13 @@ export class JanusSession {
       onRemoteTrackController: new Subject(),
       onDataController: new Subject(),
       onErrorController: new Subject(),
+      onMediaStateController: new Subject(),
+      onIceStateController: new Subject(),
+      onSlowLinkController: new Subject(),
+      onWebRTCStateController: new Subject(),
+      onCleanupController: new Subject(),
+      onDataOpenController: new Subject(),
+      onDetachedController: new Subject(),
     };
     const pluginHandle = new JanusPlugin(this.instance, controllers);
     finalOptions.onmessage = (message: Message, jsep: JSEP) => {
@@ -54,13 +61,27 @@ export class JanusSession {
     finalOptions.error = (error) => {
       controllers.onErrorController.next(error);
     };
-    finalOptions.mediaState = (medium, recieving, mid) => {};
-    finalOptions.slowLink = (uplink, lost, mid) => {};
-    finalOptions.webrtcState = (isConnected) => {};
-    finalOptions.iceState = (state) => {};
-    finalOptions.ondataopen = () => {};
-    finalOptions.ondetached = () => {};
-    finalOptions.oncleanup = () => {};
+    finalOptions.mediaState = (medium, recieving, mid) => {
+      controllers.onMediaStateController.next({ medium, recieving, mid });
+    };
+    finalOptions.slowLink = (uplink, lost, mid) => {
+      controllers.onSlowLinkController.next({ uplink, lost, mid });
+    };
+    finalOptions.webrtcState = (isConnected) => {
+      controllers.onWebRTCStateController.next(isConnected);
+    };
+    finalOptions.iceState = (state) => {
+      controllers.onIceStateController.next(state);
+    };
+    finalOptions.ondataopen = () => {
+      controllers.onDataOpenController.next();
+    };
+    finalOptions.ondetached = () => {
+      controllers.onDetachedController.next();
+    };
+    finalOptions.oncleanup = () => {
+      controllers.onCleanupController.next();
+    };
 
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {

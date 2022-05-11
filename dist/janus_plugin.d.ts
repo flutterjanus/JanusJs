@@ -1,5 +1,4 @@
-import Janus, { AnswerParams, Controllers, DetachOptions, JSEP, Message, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
-import { Observable } from "rxjs";
+import Janus, { AnswerParams, Controllers, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 export declare class JanusPlugin implements PluginHandle {
     constructor(instance: Janus, controllers: Controllers);
     protected controllers: Controllers;
@@ -10,29 +9,36 @@ export declare class JanusPlugin implements PluginHandle {
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
-    get onMessage(): Observable<{
-        message: Message;
+    get onMessage(): import("rxjs").Observable<{
+        message: import("./interfaces/janus").Message;
         jsep: JSEP;
     }>;
-    get onLocalTrack(): Observable<{
+    get onLocalTrack(): import("rxjs").Observable<{
         track: MediaStreamTrack;
         on: boolean;
     }>;
-    get onRemoteTrack(): Observable<{
+    get onData(): import("rxjs").Observable<any>;
+    get onError(): import("rxjs").Observable<any>;
+    get onRemoteTrack(): import("rxjs").Observable<{
         track: MediaStreamTrack;
         on: boolean;
         mid: string;
     }>;
-    consentDialog?: (on: boolean) => void;
-    webrtcState?: (isConnected: boolean) => void;
-    iceState?: (state: "connected" | "failed" | "disconnected" | "closed") => void;
-    mediaState?: (medium: "audio" | "video", receiving: boolean, mid?: number) => void;
-    onerror?: (error: string) => void;
-    ondataopen?: () => void;
-    slowLink?: (uplink: boolean, lost: number, mid: string) => void;
-    ondata?: (data: any) => void;
-    oncleanup?: () => void;
-    ondetached?: () => void;
+    get onMediaState(): import("rxjs").Observable<{
+        medium: "audio" | "video";
+        recieving: boolean;
+        mid: number;
+    }>;
+    get onSlowLink(): import("rxjs").Observable<{
+        uplink: boolean;
+        lost: number;
+        mid: string;
+    }>;
+    get onWebRTCState(): import("rxjs").Observable<boolean>;
+    get onIceState(): import("rxjs").Observable<"failed" | "closed" | "connected" | "disconnected">;
+    get onDataOpen(): import("rxjs").Observable<void>;
+    get onDetached(): import("rxjs").Observable<void>;
+    get onCleanup(): import("rxjs").Observable<void>;
     setNativeHandle(nativePluginHandle: PluginHandle): void;
     getId(): string;
     getPlugin(): string;

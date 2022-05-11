@@ -3,14 +3,11 @@ import Janus, {
   Controllers,
   DetachOptions,
   JSEP,
-  Message,
   OfferParams,
   PluginHandle,
   PluginMessage,
   WebRTCInfo,
 } from "./interfaces/janus";
-const noop = () => {};
-import { Observable, Subject } from "rxjs";
 export class JanusPlugin implements PluginHandle {
   constructor(instance: Janus, controllers: Controllers) {
     this.instance = instance;
@@ -40,23 +37,27 @@ export class JanusPlugin implements PluginHandle {
   get onRemoteTrack() {
     return this.controllers.onRemoteTrackController.asObservable();
   }
-  consentDialog?: (on: boolean) => void = noop;
-  webrtcState?: (isConnected: boolean) => void = noop;
-  iceState?: (
-    state: "connected" | "failed" | "disconnected" | "closed"
-  ) => void = noop;
-  mediaState?: (
-    medium: "audio" | "video",
-    receiving: boolean,
-    mid?: number
-  ) => void = noop;
-  onerror?: (error: string) => void = noop;
-  ondataopen?: () => void = noop;
-  slowLink?: (uplink: boolean, lost: number, mid: string) => void;
-  ondata?: (data: any) => void;
-  oncleanup?: () => void;
-  ondetached?: () => void;
-
+  get onMediaState() {
+    return this.controllers.onMediaStateController.asObservable();
+  }
+  get onSlowLink() {
+    return this.controllers.onSlowLinkController.asObservable();
+  }
+  get onWebRTCState() {
+    return this.controllers.onWebRTCStateController.asObservable();
+  }
+  get onIceState() {
+    return this.controllers.onIceStateController.asObservable();
+  }
+  get onDataOpen() {
+    return this.controllers.onDataOpenController.asObservable();
+  }
+  get onDetached() {
+    return this.controllers.onDetachedController.asObservable();
+  }
+  get onCleanup() {
+    return this.controllers.onCleanupController.asObservable();
+  }
   setNativeHandle(nativePluginHandle: PluginHandle): void {
     this.handle = nativePluginHandle;
   }

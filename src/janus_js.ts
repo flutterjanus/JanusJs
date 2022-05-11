@@ -1,6 +1,6 @@
 import Janus from "../janus-gateway/npm/janus";
 import adapter from "webrtc-adapter";
-import { ConstructorOptions } from "./interfaces/janus";
+import { ConstructorOptions, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
 
 export class JanusJs {
@@ -14,19 +14,25 @@ export class JanusJs {
     this.options = options;
   }
   onDestroyed: () => void;
-  async createSession(): Promise<JanusSession> {
-    this.options.destroyed = () => {
-      this.onDestroyed();
-    };
+  async init(
+    params: Omit<InitOptions, "callback"> = {
+      debug: "all",
+      dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
+    }
+  ): Promise<void> {
     await new Promise<void>((resolve, reject) => {
       Janus.init({
-        debug: "all",
-        dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
+        ...params,
         callback: () => {
           resolve();
         },
       });
     });
+  }
+  async createSession(): Promise<JanusSession> {
+    this.options.destroyed = () => {
+      this.onDestroyed();
+    };
     await new Promise<void>((resolve, reject) => {
       this.options.success = () => {
         resolve();
