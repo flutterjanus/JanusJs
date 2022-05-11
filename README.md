@@ -5,11 +5,11 @@ Fully functional reactive and promisified wrapper arround native janusjs
 # Installation
 - Specify git https url in your package.json  
 
-`"janus-js":"https://github.com/flutterjanus/JanusJs.git"`
+` "janus-js": "git+https://github.com/visionmedia/express.git" `
 
 - install dependencies  
 
-`npm install`
+` npm install `
 
 # Usage
 ```
