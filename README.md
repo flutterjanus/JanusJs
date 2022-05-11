@@ -3,8 +3,9 @@
 Fully functional reactive and promisified wrapper arround native janusjs
 
 # Usage
+
 ```
-import { JanusJs } from "janus-js";
+import { JanusJs } from "typed_janus_js";
 const a = new JanusJs({ server: "ws://127.0.0.1:8188" });
 await a.init();
 const session = await a.createSession();

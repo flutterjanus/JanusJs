@@ -1,5 +1,5 @@
 {
-  "name": "janus-js",
+  "name": "typed_janus_js",
   "version": "1.0.0",
   "description": "",
   "typings": "dist",
