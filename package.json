@@ -1,6 +1,6 @@
 {
   "name": "typed_janus_js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "typings": "dist",
   "main": "dist/index.js",
