@@ -2,6 +2,10 @@
 
 Fully functional reactive and promisified wrapper arround native janusjs
 
+# Install
+
+`npm install typed_janus_js`
+
 # Usage
 
 ```
