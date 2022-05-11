@@ -1,7 +1,46 @@
 # JanusJs
 
-A minimalist janusjs implementation exposing core apis similar to flutter_janus_client v2
+Fully functional reactive and promisified wrapper arround native janusjs
 
-## What it does?
+# Installation
+- Specify git https url in your package.json  
 
-this repo includes src file JanusJs and public directory which contains single file index.html which implements videoroom example using core api and vanila js just to illustrate how multistream support can be implemented in other javascript projects or even if you are interested in implementing your own custom janus library utilizing JanusJs's core api (minimal stack without webrtc code)
+`"janus-js":"https://github.com/flutterjanus/JanusJs.git"`
+
+- install dependencies  
+
+`npm install`
+
+# Usage
+```
+import { JanusJs } from "janus-js";
+const a = new JanusJs({ server: "ws://127.0.0.1:8188" });
+await a.init();
+const session = await a.createSession();
+const plugin = await session.attach({ plugin: "janus.plugin.videoroom" });
+const myroom = 1234;
+const register = {
+request: "join",
+room: myroom,
+ptype: "publisher",
+display: "shivansh",
+};
+console.log(await plugin.send({ message: register }));
+plugin.onMessage.subscribe((data) => {
+console.log(data);
+});
+plugin.onLocalTrack.subscribe((data) => {
+console.log(data);
+});
+const useAudio = true;
+const offer = await plugin.createOffer({
+media: {
+    audioRecv: false,
+    videoRecv: false,
+    audioSend: useAudio,
+    videoSend: true,
+}, // Publishers are sendonly
+});
+var publish = { request: "configure", audio: useAudio, video: true };
+await plugin.send({ message: publish, jsep: offer });
+```
