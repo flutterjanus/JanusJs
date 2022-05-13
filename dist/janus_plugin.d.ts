@@ -1,4 +1,4 @@
-import Janus, { AnswerParams, Controllers, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
+import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 export declare class JanusPlugin implements PluginHandle {
     constructor(instance: Janus, controllers: Controllers);
     protected controllers: Controllers;
@@ -45,11 +45,11 @@ export declare class JanusPlugin implements PluginHandle {
     send(message: Omit<PluginMessage, "success" | "error">): Promise<any>;
     createOffer(params: Omit<OfferParams, "success" | "error">): Promise<RTCSessionDescription>;
     createAnswer(params: Omit<AnswerParams, "success" | "error">): Promise<RTCSessionDescription>;
+    data(params: DataParams): Promise<void>;
     handleRemoteJsep(params: {
         jsep: JSEP;
     }): void;
     dtmf(params: any): void;
-    data(params: any): void;
     isAudioMuted(): boolean;
     muteAudio(): void;
     unmuteAudio(): void;

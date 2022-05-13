@@ -27,9 +27,9 @@ export class JanusSession {
   getSessionId(): number {
     return this.instance.getSessionId();
   }
-  attach(
+  private getObservableControllers(
     options: Pick<PluginOptions, "plugin" | "opaqueId">
-  ): Promise<JanusPlugin> {
+  ) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
       onMessageController: new Subject(),
@@ -45,7 +45,6 @@ export class JanusSession {
       onDataOpenController: new Subject(),
       onDetachedController: new Subject(),
     };
-    const pluginHandle = new JanusPlugin(this.instance, controllers);
     finalOptions.onmessage = (message: Message, jsep: JSEP) => {
       controllers.onMessageController.next({ message, jsep });
     };
@@ -82,13 +81,20 @@ export class JanusSession {
     finalOptions.oncleanup = () => {
       controllers.onCleanupController.next();
     };
-
+    return { finalOptions, controllers };
+  }
+  attach(
+    options: Pick<PluginOptions, "plugin" | "opaqueId">
+  ): Promise<JanusPlugin> {
+    const { controllers, finalOptions } =
+      this.getObservableControllers(options);
+    const pluginHandle = new JanusPlugin(this.instance, controllers);
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
         pluginHandle.setNativeHandle(plugin);
         _.assign(
           pluginHandle,
-          _.omit(plugin, ["send", "createAnswer", "createOffer"])
+          _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
         );
         resolve(pluginHandle);
       };

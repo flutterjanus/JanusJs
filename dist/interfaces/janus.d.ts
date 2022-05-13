@@ -6,6 +6,9 @@ export interface Dependencies {
     extension: () => boolean;
     httpAPICall: (url: string, options: any) => void;
 }
+export interface DataParams {
+    text: any;
+}
 export interface DependenciesResult {
     adapter: any;
     newWebSocket: (server: string, protocol: string) => WebSocket;

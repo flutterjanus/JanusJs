@@ -61,8 +61,7 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.getSessionId = function () {
         return this.instance.getSessionId();
     };
-    JanusSession.prototype.attach = function (options) {
-        var _this = this;
+    JanusSession.prototype.getObservableControllers = function (options) {
         var finalOptions = __assign({}, options);
         var controllers = {
             onMessageController: new Subject(),
@@ -78,7 +77,6 @@ var JanusSession = /** @class */ (function () {
             onDataOpenController: new Subject(),
             onDetachedController: new Subject(),
         };
-        var pluginHandle = new JanusPlugin(this.instance, controllers);
         finalOptions.onmessage = function (message, jsep) {
             controllers.onMessageController.next({ message: message, jsep: jsep });
         };
@@ -115,10 +113,16 @@ var JanusSession = /** @class */ (function () {
         finalOptions.oncleanup = function () {
             controllers.onCleanupController.next();
         };
+        return { finalOptions: finalOptions, controllers: controllers };
+    };
+    JanusSession.prototype.attach = function (options) {
+        var _this = this;
+        var _a = this.getObservableControllers(options), controllers = _a.controllers, finalOptions = _a.finalOptions;
+        var pluginHandle = new JanusPlugin(this.instance, controllers);
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
                 pluginHandle.setNativeHandle(plugin);
-                _.assign(pluginHandle, _.omit(plugin, ["send", "createAnswer", "createOffer"]));
+                _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
                 resolve(pluginHandle);
             };
             finalOptions.error = function (error) {

@@ -6,7 +6,40 @@ import { JanusSession } from "./janus_session";
 export class JanusJs {
   protected instance: Janus;
   protected options: ConstructorOptions;
-  static helpers = Janus;
+  static isWebrtcSupported(): boolean {
+    return Janus.isWebrtcSupported();
+  }
+  static debug(...args: any[]): void {
+    Janus.debug(args);
+  }
+  static log(...args: any[]): void {
+    Janus.log(args);
+  }
+  static warn(...args: any[]): void {
+    Janus.warn(args);
+  }
+  static error(...args: any[]): void {
+    Janus.error(args);
+  }
+  static randomString(length: number): string {
+    return Janus.randomString(length);
+  }
+  static attachMediaStream(
+    element: HTMLMediaElement,
+    stream: MediaStream
+  ): void {
+    Janus.attachMediaStream(element, stream);
+  }
+  static reattachMediaStream(
+    to: HTMLMediaElement,
+    from: HTMLMediaElement
+  ): void {
+    Janus.reattachMediaStream(to, from);
+  }
+  static stopAllTracks(stream: MediaStream): void {
+    Janus.stopAllTracks(stream);
+  }
+
   constructor(
     options: Omit<ConstructorOptions, "success" | "error" | "destroyed">
   ) {

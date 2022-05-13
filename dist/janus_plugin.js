@@ -177,13 +177,20 @@ var JanusPlugin = /** @class */ (function () {
                 } }));
         });
     };
+    JanusPlugin.prototype.data = function (params) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.handle.data(__assign(__assign({}, params), { success: function () {
+                    resolve();
+                }, error: function (error) {
+                    reject(error);
+                } }));
+        });
+    };
     JanusPlugin.prototype.handleRemoteJsep = function (params) {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.dtmf = function (params) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.data = function (params) {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.isAudioMuted = function () {

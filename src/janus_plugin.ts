@@ -1,6 +1,7 @@
 import Janus, {
   AnswerParams,
   Controllers,
+  DataParams,
   DetachOptions,
   JSEP,
   OfferParams,
@@ -110,13 +111,23 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
+  data(params: DataParams): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.handle.data({
+        ...params,
+        success() {
+          resolve();
+        },
+        error(error: any) {
+          reject(error);
+        },
+      });
+    });
+  }
   handleRemoteJsep(params: { jsep: JSEP }): void {
     throw new Error("Method not implemented.");
   }
   dtmf(params: any): void {
-    throw new Error("Method not implemented.");
-  }
-  data(params: any): void {
     throw new Error("Method not implemented.");
   }
   isAudioMuted(): boolean {

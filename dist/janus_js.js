@@ -53,6 +53,49 @@ var JanusJs = /** @class */ (function () {
         console.log("JanusJs loaded");
         this.options = options;
     }
+    JanusJs.isWebrtcSupported = function () {
+        return Janus.isWebrtcSupported();
+    };
+    JanusJs.debug = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        Janus.debug(args);
+    };
+    JanusJs.log = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        Janus.log(args);
+    };
+    JanusJs.warn = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        Janus.warn(args);
+    };
+    JanusJs.error = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        Janus.error(args);
+    };
+    JanusJs.randomString = function (length) {
+        return Janus.randomString(length);
+    };
+    JanusJs.attachMediaStream = function (element, stream) {
+        Janus.attachMediaStream(element, stream);
+    };
+    JanusJs.reattachMediaStream = function (to, from) {
+        Janus.reattachMediaStream(to, from);
+    };
+    JanusJs.stopAllTracks = function (stream) {
+        Janus.stopAllTracks(stream);
+    };
     JanusJs.prototype.init = function (params) {
         if (params === void 0) { params = {
             debug: "all",
@@ -98,7 +141,6 @@ var JanusJs = /** @class */ (function () {
             });
         });
     };
-    JanusJs.helpers = Janus;
     return JanusJs;
 }());
 export { JanusJs };
