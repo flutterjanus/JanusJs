@@ -53,6 +53,9 @@ export class JanusJs {
       dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
     }
   ): Promise<void> {
+    if (!params.dependencies) {
+      params.dependencies = Janus.useDefaultDependencies({ adapter: adapter });
+    }
     await new Promise<void>((resolve, reject) => {
       Janus.init({
         ...params,

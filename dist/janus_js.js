@@ -104,11 +104,15 @@ var JanusJs = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
-                            Janus.init(__assign(__assign({}, params), { callback: function () {
-                                    resolve();
-                                } }));
-                        })];
+                    case 0:
+                        if (!params.dependencies) {
+                            params.dependencies = Janus.useDefaultDependencies({ adapter: adapter });
+                        }
+                        return [4 /*yield*/, new Promise(function (resolve, reject) {
+                                Janus.init(__assign(__assign({}, params), { callback: function () {
+                                        resolve();
+                                    } }));
+                            })];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];

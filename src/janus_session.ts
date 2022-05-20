@@ -45,7 +45,7 @@ export class JanusSession {
       onDataOpenController: new Subject(),
       onDetachedController: new Subject(),
     };
-    finalOptions.onmessage = (message: Message, jsep: JSEP) => {
+    finalOptions.onmessage = (message: any, jsep: JSEP) => {
       controllers.onMessageController.next({ message, jsep });
     };
     finalOptions.onlocaltrack = (track, on) => {

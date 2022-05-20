@@ -10,7 +10,7 @@ export declare class JanusPlugin implements PluginHandle {
     detached: boolean;
     webrtcStuff: WebRTCInfo;
     get onMessage(): import("rxjs").Observable<{
-        message: import("./interfaces/janus").Message;
+        message: import("./interfaces/janus").MessageCallback;
         jsep: JSEP;
     }>;
     get onLocalTrack(): import("rxjs").Observable<{

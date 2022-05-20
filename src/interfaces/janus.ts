@@ -77,6 +77,13 @@ export interface Message {
   error?: string;
   [key: string]: any;
 }
+export interface MessageCallback extends Object {
+  result: Result;
+}
+
+export interface Result extends Object {
+  event: string;
+}
 
 export interface PluginCallbacks {
   dataChannelOptions?: RTCDataChannelInit;
@@ -93,7 +100,7 @@ export interface PluginCallbacks {
     mid?: number
   ) => void;
   slowLink?: (uplink: boolean, lost: number, mid: string) => void;
-  onmessage?: (message: Message, jsep?: JSEP) => void;
+  onmessage?: (message: any, jsep?: JSEP) => void;
   onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
   onremotetrack?: (track: MediaStreamTrack, mid: string, on: boolean) => void;
   ondataopen?: Function;
@@ -289,7 +296,7 @@ export interface ConstructorOptions {
 }
 
 export interface Controllers {
-  onMessageController: Subject<{ message: Message; jsep: JSEP }>;
+  onMessageController: Subject<{ message: MessageCallback; jsep: JSEP }>;
   onLocalTrackController: Subject<{ track: MediaStreamTrack; on: boolean }>;
   onRemoteTrackController: Subject<{
     track: MediaStreamTrack;
