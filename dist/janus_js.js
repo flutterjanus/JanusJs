@@ -120,6 +120,29 @@ var JanusJs = /** @class */ (function () {
             });
         });
     };
+    JanusJs.mix = function (audioContext, streams) {
+        var dest = audioContext.createMediaStreamDestination();
+        streams.forEach(function (stream) {
+            dest.context.createMediaStreamSource(stream).connect(dest);
+        });
+        return dest.stream.getTracks()[0];
+    };
+    JanusJs.playMediaStream = function (mediaStream) {
+        window.AudioContext =
+            window.AudioContext || window.webkitAudioContext;
+        try {
+            var audioContext = new window.AudioContext();
+            var audio = new Audio();
+            audio.srcObject = mediaStream;
+            var sourceNode = audioContext.createMediaStreamSource(audio.srcObject);
+            sourceNode.connect(audioContext.destination);
+            return audioContext;
+        }
+        catch (err) {
+            JanusJs.error("failed to play media stream", err);
+            throw err;
+        }
+    };
     JanusJs.prototype.createSession = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;

@@ -1,14 +1,19 @@
 import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
+import { JanusSession } from "./janus_session";
 export declare class JanusPlugin implements PluginHandle {
-    constructor(instance: Janus, controllers: Controllers);
+    constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
+    protected statsReportHookTimer: any;
     protected controllers: Controllers;
     protected instance: Janus;
     protected handle: PluginHandle;
+    protected session: JanusSession;
     plugin: string;
     id: string;
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
+    protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): Promise<number>;
+    get onStatReports(): import("rxjs").Observable<any[]>;
     get onMessage(): import("rxjs").Observable<{
         message: import("./interfaces/janus").MessageCallback;
         jsep: JSEP;
@@ -39,7 +44,6 @@ export declare class JanusPlugin implements PluginHandle {
     get onDataOpen(): import("rxjs").Observable<void>;
     get onDetached(): import("rxjs").Observable<void>;
     get onCleanup(): import("rxjs").Observable<void>;
-    setNativeHandle(nativePluginHandle: PluginHandle): void;
     getId(): string;
     getPlugin(): string;
     send(message: Omit<PluginMessage, "success" | "error">): Promise<any>;
@@ -59,5 +63,6 @@ export declare class JanusPlugin implements PluginHandle {
     getBitrate(): string;
     hangup(sendRequest?: boolean): void;
     detach(params?: DetachOptions): void;
+    stopCollectingStats(): void;
 }
 //# sourceMappingURL=janus_plugin.d.ts.map

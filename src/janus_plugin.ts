@@ -14,11 +14,13 @@ export class JanusPlugin implements PluginHandle {
   constructor(
     instance: Janus,
     session: JanusSession,
+    handle: PluginHandle,
     controllers: Controllers
   ) {
     this.instance = instance;
     this.session = session;
     this.controllers = controllers;
+    this.handle = handle;
     this.statsReportHookTimer = this.handleStatsHook(
       this.handle,
       controllers,
@@ -58,7 +60,7 @@ export class JanusPlugin implements PluginHandle {
       controllers.onStatReportsController.next(results);
     });
   }
-  get statReports() {
+  get onStatReports() {
     return this.controllers.onStatReportsController.asObservable();
   }
   get onMessage() {
@@ -97,9 +99,7 @@ export class JanusPlugin implements PluginHandle {
   get onCleanup() {
     return this.controllers.onCleanupController.asObservable();
   }
-  setNativeHandle(nativePluginHandle: PluginHandle): void {
-    this.handle = nativePluginHandle;
-  }
+
   getId(): string {
     throw new Error("Method not implemented.");
   }

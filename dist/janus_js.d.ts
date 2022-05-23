@@ -16,6 +16,8 @@ export declare class JanusJs {
     constructor(options: Omit<ConstructorOptions, "success" | "error" | "destroyed">);
     onDestroyed: () => void;
     init(params?: Omit<InitOptions, "callback">): Promise<void>;
+    static mix(audioContext: AudioContext, streams: MediaStream[]): any;
+    static playMediaStream(mediaStream: MediaStream): AudioContext;
     createSession(): Promise<JanusSession>;
 }
 //# sourceMappingURL=janus_js.d.ts.map

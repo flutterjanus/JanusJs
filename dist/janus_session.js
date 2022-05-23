@@ -64,6 +64,7 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.getObservableControllers = function (options) {
         var finalOptions = __assign({}, options);
         var controllers = {
+            onStatReportsController: new Subject(),
             onMessageController: new Subject(),
             onLocalTrackController: new Subject(),
             onRemoteTrackController: new Subject(),
@@ -118,10 +119,9 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.attach = function (options) {
         var _this = this;
         var _a = this.getObservableControllers(options), controllers = _a.controllers, finalOptions = _a.finalOptions;
-        var pluginHandle = new JanusPlugin(this.instance, controllers);
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
-                pluginHandle.setNativeHandle(plugin);
+                var pluginHandle = new JanusPlugin(_this.instance, _this, plugin, controllers);
                 _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
                 resolve(pluginHandle);
             };

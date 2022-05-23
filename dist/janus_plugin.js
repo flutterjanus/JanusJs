@@ -46,10 +46,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 var JanusPlugin = /** @class */ (function () {
-    function JanusPlugin(instance, controllers) {
+    function JanusPlugin(instance, session, handle, controllers) {
         this.instance = instance;
+        this.session = session;
         this.controllers = controllers;
+        this.handle = handle;
+        this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
     }
+    JanusPlugin.prototype.handleStatsHook = function (plugin, controllers, mediaStreamTrack) {
+        if (mediaStreamTrack === void 0) { mediaStreamTrack = null; }
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var results, reports;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    results = [];
+                                    return [4 /*yield*/, plugin.webrtcStuff.pc.getStats(mediaStreamTrack)];
+                                case 1:
+                                    reports = _a.sent();
+                                    reports.forEach(function (report) {
+                                        if (report.jitter) {
+                                            var info = {
+                                                jitter: report.jitter,
+                                                packetsLost: report.packetsLost,
+                                                roundTripTime: report.roundTripTime,
+                                                type: report.type,
+                                            };
+                                            results.push(info);
+                                        }
+                                    });
+                                    controllers.onStatReportsController.next(results);
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            });
+        });
+    };
+    Object.defineProperty(JanusPlugin.prototype, "onStatReports", {
+        get: function () {
+            return this.controllers.onStatReportsController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(JanusPlugin.prototype, "onMessage", {
         get: function () {
             return this.controllers.onMessageController.asObservable();
@@ -134,9 +177,6 @@ var JanusPlugin = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    JanusPlugin.prototype.setNativeHandle = function (nativePluginHandle) {
-        this.handle = nativePluginHandle;
-    };
     JanusPlugin.prototype.getId = function () {
         throw new Error("Method not implemented.");
     };
@@ -219,6 +259,9 @@ var JanusPlugin = /** @class */ (function () {
     };
     JanusPlugin.prototype.detach = function (params) {
         throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.stopCollectingStats = function () {
+        clearInterval(this.statsReportHookTimer);
     };
     return JanusPlugin;
 }());

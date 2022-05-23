@@ -270,6 +270,7 @@ export interface Controllers {
         on: boolean;
         mid: string;
     }>;
+    onStatReportsController: Subject<any[]>;
     onDataController: Subject<any>;
     onErrorController: Subject<any>;
     onMediaStateController: Subject<{

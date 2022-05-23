@@ -91,10 +91,9 @@ export class JanusSession {
   ): Promise<JanusPlugin> {
     const { controllers, finalOptions } =
       this.getObservableControllers(options);
-    const pluginHandle = new JanusPlugin(this.instance, this, controllers);
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
-        pluginHandle.setNativeHandle(plugin);
+        const pluginHandle = new JanusPlugin(this.instance, this,plugin, controllers);
         _.assign(
           pluginHandle,
           _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])

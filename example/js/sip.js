@@ -2,8 +2,8 @@ import { JanusJs } from "typed_janus_js";
 const register = async (
   plugin,
   server = "c2.pbx.commpeak.com",
-  username = "203",
-  password = "umbJw4Zalxn51uHwEk6PVmq8ct2li1"
+  username = "204",
+  password = "Ss1g8C1snGgCcMg5egkDOqmOTKxUaP"
 ) => {
   const payload = {
     request: "register",
@@ -41,10 +41,14 @@ async function test() {
     console.log(data);
     const stream = new MediaStream();
     stream.addTrack(data.track.clone());
-    const audioElement = document.getElementById("remoteaudio");
-    console.log(audioElement);
-    JanusJs.attachMediaStream(audioElement, stream);
+    // const audioElement = document.getElementById("remoteaudio");
+    // console.log(audioElement);
+    JanusJs.playMediaStream(stream);
   });
+  plugin.onStatReports.subscribe((reports) => {
+    console.log(reports);
+  });
+
   plugin.onMessage.subscribe(async (data) => {
     console.log(data.message.result);
     const result = data.message.result;
@@ -52,7 +56,7 @@ async function test() {
     if (result.event === "registered") {
       // console.log(result);
       // await call(plugin, "sip:00918744849050@sip.theansr.com");
-      // await call(plugin, "sip:451001918744849050@c2.pbx.commpeak.com");
+      await call(plugin, "sip:451001918744849050@c2.pbx.commpeak.com");
     }
     if (data.jsep) {
       plugin.handleRemoteJsep({ jsep: data.jsep });
