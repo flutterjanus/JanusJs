@@ -38,11 +38,8 @@ async function test() {
   const session = await a.createSession();
   const plugin = await session.attach({ plugin: "janus.plugin.sip" });
   plugin.onRemoteTrack.subscribe((data) => {
-    console.log(data);
     const stream = new MediaStream();
     stream.addTrack(data.track.clone());
-    // const audioElement = document.getElementById("remoteaudio");
-    // console.log(audioElement);
     JanusJs.playMediaStream(stream);
   });
   plugin.onStatReports.subscribe((reports) => {
