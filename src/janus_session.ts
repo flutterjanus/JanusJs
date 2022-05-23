@@ -13,6 +13,7 @@ import { Subject } from "rxjs";
 
 export class JanusSession {
   protected instance: Janus;
+
   constructor(instance: Janus) {
     this.instance = instance;
   }
@@ -32,6 +33,7 @@ export class JanusSession {
   ) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
+      onStatReportsController: new Subject(),
       onMessageController: new Subject(),
       onLocalTrackController: new Subject(),
       onRemoteTrackController: new Subject(),
@@ -83,12 +85,13 @@ export class JanusSession {
     };
     return { finalOptions, controllers };
   }
+
   attach(
     options: Pick<PluginOptions, "plugin" | "opaqueId">
   ): Promise<JanusPlugin> {
     const { controllers, finalOptions } =
       this.getObservableControllers(options);
-    const pluginHandle = new JanusPlugin(this.instance, controllers);
+    const pluginHandle = new JanusPlugin(this.instance, this, controllers);
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
         pluginHandle.setNativeHandle(plugin);
@@ -134,10 +137,10 @@ export class JanusSession {
     return new Promise((resolve, reject) => {
       this.instance.destroy({
         ...callbacks,
-        success() {
+        success: () => {
           resolve();
         },
-        error(err: any) {
+        error: (err: any) => {
           reject(err);
         },
       });

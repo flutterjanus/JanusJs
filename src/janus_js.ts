@@ -65,6 +65,28 @@ export class JanusJs {
       });
     });
   }
+  static mix(audioContext: AudioContext, streams: MediaStream[]) {
+    const dest: any = audioContext.createMediaStreamDestination();
+    streams.forEach((stream) => {
+      dest.context.createMediaStreamSource(stream).connect(dest);
+    });
+    return dest.stream.getTracks()[0];
+  }
+  static playMediaStream(mediaStream: MediaStream) {
+    window.AudioContext =
+      window.AudioContext || (window as any).webkitAudioContext;
+    try {
+      const audioContext = new window.AudioContext();
+      const audio = new Audio();
+      audio.srcObject = mediaStream;
+      const sourceNode = audioContext.createMediaStreamSource(audio.srcObject);
+      sourceNode.connect(audioContext.destination);
+      return audioContext;
+    } catch (err) {
+      JanusJs.error("failed to play media stream", err);
+      throw err;
+    }
+  }
   async createSession(): Promise<JanusSession> {
     this.options.destroyed = () => {
       this.onDestroyed();

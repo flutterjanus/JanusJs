@@ -9,20 +9,58 @@ import Janus, {
   PluginMessage,
   WebRTCInfo,
 } from "./interfaces/janus";
+import { JanusSession } from "./janus_session";
 export class JanusPlugin implements PluginHandle {
-  constructor(instance: Janus, controllers: Controllers) {
+  constructor(
+    instance: Janus,
+    session: JanusSession,
+    controllers: Controllers
+  ) {
     this.instance = instance;
+    this.session = session;
     this.controllers = controllers;
+    this.statsReportHookTimer = this.handleStatsHook(
+      this.handle,
+      controllers,
+      null
+    );
   }
+  protected statsReportHookTimer: any;
   protected controllers: Controllers;
   protected instance: Janus;
   protected handle: PluginHandle;
+  protected session: JanusSession;
   plugin: string;
   id: string;
   token?: string;
   detached: boolean;
   webrtcStuff: WebRTCInfo;
 
+  protected async handleStatsHook(
+    plugin: PluginHandle,
+    controllers: Controllers,
+    mediaStreamTrack: MediaStreamTrack = null
+  ) {
+    return setInterval(async () => {
+      const results: any[] = [];
+      const reports = await plugin.webrtcStuff.pc.getStats(mediaStreamTrack);
+      reports.forEach((report) => {
+        if (report.jitter) {
+          const info = {
+            jitter: report.jitter,
+            packetsLost: report.packetsLost,
+            roundTripTime: report.roundTripTime,
+            type: report.type,
+          };
+          results.push(info);
+        }
+      });
+      controllers.onStatReportsController.next(results);
+    });
+  }
+  get statReports() {
+    return this.controllers.onStatReportsController.asObservable();
+  }
   get onMessage() {
     return this.controllers.onMessageController.asObservable();
   }
@@ -156,5 +194,8 @@ export class JanusPlugin implements PluginHandle {
   }
   detach(params?: DetachOptions): void {
     throw new Error("Method not implemented.");
+  }
+  stopCollectingStats() {
+    clearInterval(this.statsReportHookTimer);
   }
 }
