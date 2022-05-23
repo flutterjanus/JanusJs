@@ -48,6 +48,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import Janus from "../janus-gateway/npm/janus";
 import adapter from "webrtc-adapter";
 import { JanusSession } from "./janus_session";
+import _ from "lodash";
+import { Subject } from "rxjs";
 var JanusJs = /** @class */ (function () {
     function JanusJs(options) {
         console.log("JanusJs loaded");
@@ -142,6 +144,39 @@ var JanusJs = /** @class */ (function () {
             JanusJs.error("failed to play media stream", err);
             throw err;
         }
+    };
+    JanusJs.createRecording = function () {
+        var mediaStreams = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            mediaStreams[_i] = arguments[_i];
+        }
+        var streams = [];
+        _.each(mediaStreams, function (stream) {
+            _.each(stream.getTracks(), function (track) {
+                streams.push(new MediaStream([track]));
+            });
+        });
+        var audioContext = new AudioContext();
+        var mixedTrack = this.mix(audioContext, streams);
+        var mixedStream = new MediaStream([mixedTrack]);
+        var mediaRecorder = new MediaRecorder(mixedStream);
+        var controller = new Subject();
+        var totalAudioChunks = 0;
+        mediaRecorder.ondataavailable = function (event) {
+            totalAudioChunks++;
+            controller.next({
+                blob: event.data,
+                chunkNumber: totalAudioChunks,
+            });
+        };
+        mediaRecorder.onstop = function (event) {
+            controller.next({
+                blob: null,
+                chunkNumber: totalAudioChunks,
+            });
+        };
+        mediaRecorder.start(5000);
+        return { mediaRecorder: mediaRecorder, recordingChunks: controller };
     };
     JanusJs.prototype.createSession = function () {
         return __awaiter(this, void 0, void 0, function () {

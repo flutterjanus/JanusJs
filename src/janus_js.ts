@@ -2,7 +2,8 @@ import Janus from "../janus-gateway/npm/janus";
 import adapter from "webrtc-adapter";
 import { ConstructorOptions, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
-
+import _ from "lodash";
+import { Subject } from "rxjs";
 export class JanusJs {
   protected instance: Janus;
   protected options: ConstructorOptions;
@@ -87,6 +88,36 @@ export class JanusJs {
       throw err;
     }
   }
+  static createRecording(...mediaStreams: MediaStream[]) {
+    const streams: MediaStream[] = [];
+    _.each(mediaStreams, (stream) => {
+      _.each(stream.getTracks(), (track) => {
+        streams.push(new MediaStream([track]));
+      });
+    });
+    const audioContext = new AudioContext();
+    const mixedTrack = this.mix(audioContext, streams);
+    const mixedStream = new MediaStream([mixedTrack]);
+    const mediaRecorder = new MediaRecorder(mixedStream);
+    const controller = new Subject();
+    let totalAudioChunks = 0;
+    mediaRecorder.ondataavailable = (event) => {
+      totalAudioChunks++;
+      controller.next({
+        blob: event.data,
+        chunkNumber: totalAudioChunks,
+      });
+    };
+    mediaRecorder.onstop = (event) => {
+      controller.next({
+        blob: null,
+        chunkNumber: totalAudioChunks,
+      });
+    };
+    mediaRecorder.start(5000);
+    return { mediaRecorder, recordingChunks: controller };
+  }
+
   async createSession(): Promise<JanusSession> {
     this.options.destroyed = () => {
       this.onDestroyed();

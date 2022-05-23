@@ -11,6 +11,6 @@
     "vite": "^2.9.9"
   },
   "dependencies": {
-    "typed_janus_js": "file:.."
+    "typed_janus_js": "file:../.."
   }
 }

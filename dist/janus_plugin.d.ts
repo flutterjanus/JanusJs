@@ -12,7 +12,7 @@ export declare class JanusPlugin implements PluginHandle {
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
-    protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): Promise<number>;
+    protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): number;
     get onStatReports(): import("rxjs").Observable<any[]>;
     get onMessage(): import("rxjs").Observable<{
         message: import("./interfaces/janus").MessageCallback;

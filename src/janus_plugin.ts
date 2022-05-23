@@ -38,12 +38,15 @@ export class JanusPlugin implements PluginHandle {
   detached: boolean;
   webrtcStuff: WebRTCInfo;
 
-  protected async handleStatsHook(
+  protected handleStatsHook(
     plugin: PluginHandle,
     controllers: Controllers,
     mediaStreamTrack: MediaStreamTrack = null
   ) {
     return setInterval(async () => {
+      if (!plugin.webrtcStuff.pc) {
+        return;
+      }
       const results: any[] = [];
       const reports = await plugin.webrtcStuff.pc.getStats(mediaStreamTrack);
       reports.forEach((report) => {
@@ -58,7 +61,7 @@ export class JanusPlugin implements PluginHandle {
         }
       });
       controllers.onStatReportsController.next(results);
-    });
+    }, 5000);
   }
   get onStatReports() {
     return this.controllers.onStatReportsController.asObservable();

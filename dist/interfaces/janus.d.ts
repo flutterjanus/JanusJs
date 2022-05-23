@@ -98,8 +98,15 @@ export interface PluginOptions extends PluginCallbacks {
 export interface AnswerParams {
     media?: {
         audioSend?: boolean;
+        addAudio?: boolean;
+        addVideo?: boolean;
+        addData?: boolean;
         audioRecv?: boolean;
         videoSend?: boolean;
+        removeAudio?: boolean;
+        removeVideo?: boolean;
+        replaceAudio?: boolean;
+        replaceVideo?: boolean;
         videoRecv?: boolean;
         audio?: boolean | {
             deviceId: string;
@@ -117,8 +124,15 @@ export interface AnswerParams {
 export interface OfferParams {
     media?: {
         audioSend?: boolean;
+        addAudio?: boolean;
+        addVideo?: boolean;
+        addData?: boolean;
         audioRecv?: boolean;
         videoSend?: boolean;
+        removeAudio?: boolean;
+        removeVideo?: boolean;
+        replaceAudio?: boolean;
+        replaceVideo?: boolean;
         videoRecv?: boolean;
         audio?: boolean | {
             deviceId: string;

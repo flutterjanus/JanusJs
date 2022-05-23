@@ -1,6 +1,7 @@
 import Janus from "../janus-gateway/npm/janus";
 import { ConstructorOptions, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
+import { Subject } from "rxjs";
 export declare class JanusJs {
     protected instance: Janus;
     protected options: ConstructorOptions;
@@ -18,6 +19,10 @@ export declare class JanusJs {
     init(params?: Omit<InitOptions, "callback">): Promise<void>;
     static mix(audioContext: AudioContext, streams: MediaStream[]): any;
     static playMediaStream(mediaStream: MediaStream): AudioContext;
+    static createRecording(...mediaStreams: MediaStream[]): {
+        mediaRecorder: MediaRecorder;
+        recordingChunks: Subject<unknown>;
+    };
     createSession(): Promise<JanusSession>;
 }
 //# sourceMappingURL=janus_js.d.ts.map

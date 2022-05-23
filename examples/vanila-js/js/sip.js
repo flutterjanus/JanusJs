@@ -12,7 +12,6 @@ const register = async (
     rfc2543_cancel: true,
     username: `sip:${username}@${server}`,
     secret: password,
-    proxy: `sip:${server}`,
   };
   await plugin.send({ message: payload });
 };
@@ -38,22 +37,28 @@ async function test() {
   const session = await a.createSession();
   const plugin = await session.attach({ plugin: "janus.plugin.sip" });
   plugin.onRemoteTrack.subscribe((data) => {
-    const stream = new MediaStream();
-    stream.addTrack(data.track.clone());
-    JanusJs.playMediaStream(stream);
+    const remoteStream = new MediaStream();
+    remoteStream.addTrack(data.track.clone());
+    JanusJs.playMediaStream(remoteStream);
   });
   plugin.onStatReports.subscribe((reports) => {
-    console.log(reports);
+    // console.log(reports);
   });
 
   plugin.onMessage.subscribe(async (data) => {
     console.log(data.message.result);
     const result = data.message.result;
-    console.log(result);
+    // console.log(result);
+    if (result.event === "hangup") {
+      plugin.detach();
+    }
     if (result.event === "registered") {
       // console.log(result);
-      // await call(plugin, "sip:00918744849050@sip.theansr.com");
+      // await call(plugin, "sip:00919310303077@sip.theansr.com");
       await call(plugin, "sip:451001918744849050@c2.pbx.commpeak.com");
+      // await call(plugin, "encryptedUri-1-1-00");
+    }
+    if (result.event === "accepted") {
     }
     if (data.jsep) {
       plugin.handleRemoteJsep({ jsep: data.jsep });

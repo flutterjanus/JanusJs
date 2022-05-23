@@ -54,37 +54,36 @@ var JanusPlugin = /** @class */ (function () {
         this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
     }
     JanusPlugin.prototype.handleStatsHook = function (plugin, controllers, mediaStreamTrack) {
+        var _this = this;
         if (mediaStreamTrack === void 0) { mediaStreamTrack = null; }
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
+        return setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+            var results, reports;
             return __generator(this, function (_a) {
-                return [2 /*return*/, setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                        var results, reports;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    results = [];
-                                    return [4 /*yield*/, plugin.webrtcStuff.pc.getStats(mediaStreamTrack)];
-                                case 1:
-                                    reports = _a.sent();
-                                    reports.forEach(function (report) {
-                                        if (report.jitter) {
-                                            var info = {
-                                                jitter: report.jitter,
-                                                packetsLost: report.packetsLost,
-                                                roundTripTime: report.roundTripTime,
-                                                type: report.type,
-                                            };
-                                            results.push(info);
-                                        }
-                                    });
-                                    controllers.onStatReportsController.next(results);
-                                    return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (!plugin.webrtcStuff.pc) {
+                            return [2 /*return*/];
+                        }
+                        results = [];
+                        return [4 /*yield*/, plugin.webrtcStuff.pc.getStats(mediaStreamTrack)];
+                    case 1:
+                        reports = _a.sent();
+                        reports.forEach(function (report) {
+                            if (report.jitter) {
+                                var info = {
+                                    jitter: report.jitter,
+                                    packetsLost: report.packetsLost,
+                                    roundTripTime: report.roundTripTime,
+                                    type: report.type,
+                                };
+                                results.push(info);
                             }
                         });
-                    }); })];
+                        controllers.onStatReportsController.next(results);
+                        return [2 /*return*/];
+                }
             });
-        });
+        }); }, 5000);
     };
     Object.defineProperty(JanusPlugin.prototype, "onStatReports", {
         get: function () {
