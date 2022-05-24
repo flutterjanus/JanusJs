@@ -317,6 +317,7 @@ export interface Controllers {
     on: boolean;
     mid: string;
   }>;
+  onRecordingDataController: Subject<{ blob: Blob; chunkNumber: number }>;
   onStatReportsController: Subject<any[]>;
   onDataController: Subject<any>;
   onErrorController: Subject<any>;

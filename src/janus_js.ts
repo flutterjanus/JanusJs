@@ -91,15 +91,20 @@ export class JanusJs {
   static createRecording(...mediaStreams: MediaStream[]) {
     const streams: MediaStream[] = [];
     _.each(mediaStreams, (stream) => {
-      _.each(stream.getTracks(), (track) => {
-        streams.push(new MediaStream([track]));
-      });
+      if (stream && stream?.getTracks) {
+        _.each(stream.getTracks(), (track) => {
+          streams.push(new MediaStream([track]));
+        });
+      }
     });
+    if (streams.length == 0) {
+      return;
+    }
     const audioContext = new AudioContext();
     const mixedTrack = this.mix(audioContext, streams);
     const mixedStream = new MediaStream([mixedTrack]);
     const mediaRecorder = new MediaRecorder(mixedStream);
-    const controller = new Subject();
+    const controller = new Subject<{ blob: Blob; chunkNumber: number }>();
     let totalAudioChunks = 0;
     mediaRecorder.ondataavailable = (event) => {
       totalAudioChunks++;
@@ -115,7 +120,7 @@ export class JanusJs {
       });
     };
     mediaRecorder.start(5000);
-    return { mediaRecorder, recordingChunks: controller };
+    return { mediaRecorder, controller };
   }
 
   async createSession(): Promise<JanusSession> {

@@ -1,18 +1,25 @@
 import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
 export declare class JanusPlugin implements PluginHandle {
-    constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     protected statsReportHookTimer: any;
     protected controllers: Controllers;
     protected instance: Janus;
     protected handle: PluginHandle;
     protected session: JanusSession;
+    protected mediaRecorder: MediaRecorder;
     plugin: string;
     id: string;
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
+    constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
+    protected handleRecordingSetup(controllers: Controllers): void;
     protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): number;
+    get recorder(): MediaRecorder;
+    get onRecordingData(): import("rxjs").Observable<{
+        blob: Blob;
+        chunkNumber: number;
+    }>;
     get onStatReports(): import("rxjs").Observable<any[]>;
     get onMessage(): import("rxjs").Observable<{
         message: import("./interfaces/janus").MessageCallback;

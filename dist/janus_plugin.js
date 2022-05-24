@@ -45,6 +45,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+import { JanusJs } from "./janus_js";
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
         this.instance = instance;
@@ -52,7 +53,33 @@ var JanusPlugin = /** @class */ (function () {
         this.controllers = controllers;
         this.handle = handle;
         this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
+        this.handleRecordingSetup(controllers);
     }
+    JanusPlugin.prototype.handleRecordingSetup = function (controllers) {
+        var _this = this;
+        var data;
+        this.onMessage.subscribe(function (_a) {
+            var jsep = _a.jsep, message = _a.message;
+            var result = message.result;
+            if (result.event === "accepted" || result.event === "progress") {
+                if (!data) {
+                    console.info("recording initiated");
+                    data = JanusJs.createRecording(_this.webrtcStuff.myStream, _this.webrtcStuff.remoteStream);
+                    console.info(data);
+                }
+                if (data) {
+                    _this.mediaRecorder = data.mediaRecorder;
+                    data.controller.subscribe(function (dat) {
+                        controllers.onRecordingDataController.next(dat);
+                    });
+                }
+            }
+            if (result.event === "hangup") {
+                if (_this.mediaRecorder.state !== "inactive")
+                    _this.mediaRecorder.stop();
+            }
+        });
+    };
     JanusPlugin.prototype.handleStatsHook = function (plugin, controllers, mediaStreamTrack) {
         var _this = this;
         if (mediaStreamTrack === void 0) { mediaStreamTrack = null; }
@@ -85,6 +112,20 @@ var JanusPlugin = /** @class */ (function () {
             });
         }); }, 5000);
     };
+    Object.defineProperty(JanusPlugin.prototype, "recorder", {
+        get: function () {
+            return this.mediaRecorder;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(JanusPlugin.prototype, "onRecordingData", {
+        get: function () {
+            return this.controllers.onRecordingDataController.asObservable();
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(JanusPlugin.prototype, "onStatReports", {
         get: function () {
             return this.controllers.onStatReportsController.asObservable();

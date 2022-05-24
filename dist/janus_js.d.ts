@@ -21,7 +21,10 @@ export declare class JanusJs {
     static playMediaStream(mediaStream: MediaStream): AudioContext;
     static createRecording(...mediaStreams: MediaStream[]): {
         mediaRecorder: MediaRecorder;
-        recordingChunks: Subject<unknown>;
+        controller: Subject<{
+            blob: Blob;
+            chunkNumber: number;
+        }>;
     };
     createSession(): Promise<JanusSession>;
 }

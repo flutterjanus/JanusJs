@@ -1,3 +1,4 @@
+import _ from "lodash";
 import Janus, {
   AnswerParams,
   Controllers,
@@ -9,8 +10,21 @@ import Janus, {
   PluginMessage,
   WebRTCInfo,
 } from "./interfaces/janus";
+import { JanusJs } from "./janus_js";
 import { JanusSession } from "./janus_session";
 export class JanusPlugin implements PluginHandle {
+  protected statsReportHookTimer: any;
+  protected controllers: Controllers;
+  protected instance: Janus;
+  protected handle: PluginHandle;
+  protected session: JanusSession;
+  protected mediaRecorder: MediaRecorder;
+  plugin: string;
+  id: string;
+  token?: string;
+  detached: boolean;
+  webrtcStuff: WebRTCInfo;
+
   constructor(
     instance: Janus,
     session: JanusSession,
@@ -26,17 +40,34 @@ export class JanusPlugin implements PluginHandle {
       controllers,
       null
     );
+    this.handleRecordingSetup(controllers);
   }
-  protected statsReportHookTimer: any;
-  protected controllers: Controllers;
-  protected instance: Janus;
-  protected handle: PluginHandle;
-  protected session: JanusSession;
-  plugin: string;
-  id: string;
-  token?: string;
-  detached: boolean;
-  webrtcStuff: WebRTCInfo;
+
+  protected handleRecordingSetup(controllers: Controllers) {
+    let data: any;
+    this.onMessage.subscribe(({ jsep, message }) => {
+      const result = message.result;
+      if (result.event === "accepted" || result.event === "progress") {
+        if (!data) {
+          console.info("recording initiated");
+          data = JanusJs.createRecording(
+            this.webrtcStuff.myStream,
+            this.webrtcStuff.remoteStream
+          );
+          console.info(data);
+        }
+        if (data) {
+          this.mediaRecorder = data.mediaRecorder;
+          data.controller.subscribe((dat: any) => {
+            controllers.onRecordingDataController.next(dat);
+          });
+        }
+      }
+      if (result.event === "hangup") {
+        if (this.mediaRecorder.state !== "inactive") this.mediaRecorder.stop();
+      }
+    });
+  }
 
   protected handleStatsHook(
     plugin: PluginHandle,
@@ -62,6 +93,12 @@ export class JanusPlugin implements PluginHandle {
       });
       controllers.onStatReportsController.next(results);
     }, 5000);
+  }
+  get recorder(): MediaRecorder {
+    return this.mediaRecorder;
+  }
+  get onRecordingData() {
+    return this.controllers.onRecordingDataController.asObservable();
   }
   get onStatReports() {
     return this.controllers.onStatReportsController.asObservable();

@@ -44,6 +44,19 @@ async function test() {
   plugin.onStatReports.subscribe((reports) => {
     // console.log(reports);
   });
+  const audioChunks = [];
+  plugin.onRecordingData.subscribe(({ blob, chunkNumber }) => {
+    console.log(blob, chunkNumber);
+    if (!blob || chunkNumber === 5) {
+      const audioBlob = new Blob(audioChunks);
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+      if (plugin.recorder.state !== "inactive") plugin.recorder.stop();
+    } else {
+      audioChunks.push(blob);
+    }
+  });
 
   plugin.onMessage.subscribe(async (data) => {
     console.log(data.message.result);

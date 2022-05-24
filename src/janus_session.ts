@@ -33,6 +33,7 @@ export class JanusSession {
   ) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
+      onRecordingDataController: new Subject(),
       onStatReportsController: new Subject(),
       onMessageController: new Subject(),
       onLocalTrackController: new Subject(),
@@ -93,7 +94,12 @@ export class JanusSession {
       this.getObservableControllers(options);
     return new Promise<JanusPlugin>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
-        const pluginHandle = new JanusPlugin(this.instance, this,plugin, controllers);
+        const pluginHandle = new JanusPlugin(
+          this.instance,
+          this,
+          plugin,
+          controllers
+        );
         _.assign(
           pluginHandle,
           _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])

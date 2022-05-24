@@ -64,6 +64,7 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.getObservableControllers = function (options) {
         var finalOptions = __assign({}, options);
         var controllers = {
+            onRecordingDataController: new Subject(),
             onStatReportsController: new Subject(),
             onMessageController: new Subject(),
             onLocalTrackController: new Subject(),
