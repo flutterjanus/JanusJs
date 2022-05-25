@@ -47,12 +47,12 @@ async function test() {
   const audioChunks = [];
   plugin.onRecordingData.subscribe(({ blob, chunkNumber }) => {
     console.log(blob, chunkNumber);
-    if (!blob || chunkNumber === 5) {
+
+    if (!blob) {
       const audioBlob = new Blob(audioChunks);
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
-      if (plugin.recorder.state !== "inactive") plugin.recorder.stop();
     } else {
       audioChunks.push(blob);
     }
@@ -72,6 +72,9 @@ async function test() {
       // await call(plugin, "encryptedUri-1-1-00");
     }
     if (result.event === "accepted") {
+      setTimeout(() => {
+        plugin.recorder.stop();
+      }, 10000);
     }
     if (data.jsep) {
       plugin.handleRemoteJsep({ jsep: data.jsep });

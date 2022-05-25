@@ -145,13 +145,9 @@ var JanusJs = /** @class */ (function () {
             throw err;
         }
     };
-    JanusJs.createRecording = function () {
-        var mediaStreams = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            mediaStreams[_i] = arguments[_i];
-        }
+    JanusJs.createRecording = function (options) {
         var streams = [];
-        _.each(mediaStreams, function (stream) {
+        _.each(options.mediaStreams, function (stream) {
             if (stream && (stream === null || stream === void 0 ? void 0 : stream.getTracks)) {
                 _.each(stream.getTracks(), function (track) {
                     streams.push(new MediaStream([track]));
@@ -180,7 +176,7 @@ var JanusJs = /** @class */ (function () {
                 chunkNumber: totalAudioChunks,
             });
         };
-        mediaRecorder.start(5000);
+        mediaRecorder.start(options.timeSlice);
         return { mediaRecorder: mediaRecorder, controller: controller };
     };
     JanusJs.prototype.createSession = function () {

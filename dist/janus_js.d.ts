@@ -19,7 +19,10 @@ export declare class JanusJs {
     init(params?: Omit<InitOptions, "callback">): Promise<void>;
     static mix(audioContext: AudioContext, streams: MediaStream[]): any;
     static playMediaStream(mediaStream: MediaStream): AudioContext;
-    static createRecording(...mediaStreams: MediaStream[]): {
+    static createRecording(options: {
+        mediaStreams: MediaStream[];
+        timeSlice?: number;
+    }): {
         mediaRecorder: MediaRecorder;
         controller: Subject<{
             blob: Blob;

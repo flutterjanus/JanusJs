@@ -88,9 +88,12 @@ export class JanusJs {
       throw err;
     }
   }
-  static createRecording(...mediaStreams: MediaStream[]) {
+  static createRecording(options: {
+    mediaStreams: MediaStream[];
+    timeSlice?: number;
+  }) {
     const streams: MediaStream[] = [];
-    _.each(mediaStreams, (stream) => {
+    _.each(options.mediaStreams, (stream) => {
       if (stream && stream?.getTracks) {
         _.each(stream.getTracks(), (track) => {
           streams.push(new MediaStream([track]));
@@ -119,7 +122,7 @@ export class JanusJs {
         chunkNumber: totalAudioChunks,
       });
     };
-    mediaRecorder.start(5000);
+    mediaRecorder.start(options.timeSlice);
     return { mediaRecorder, controller };
   }
 

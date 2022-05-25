@@ -64,8 +64,13 @@ var JanusPlugin = /** @class */ (function () {
             if (result.event === "accepted" || result.event === "progress") {
                 if (!data) {
                     console.info("recording initiated");
-                    data = JanusJs.createRecording(_this.webrtcStuff.myStream, _this.webrtcStuff.remoteStream);
-                    console.info(data);
+                    data = JanusJs.createRecording({
+                        mediaStreams: [
+                            _this.webrtcStuff.myStream,
+                            _this.webrtcStuff.remoteStream,
+                        ],
+                        timeSlice: _this.recordingTimeSlice,
+                    });
                 }
                 if (data) {
                     _this.mediaRecorder = data.mediaRecorder;

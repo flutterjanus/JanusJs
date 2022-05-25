@@ -42,6 +42,7 @@ export class JanusPlugin implements PluginHandle {
     );
     this.handleRecordingSetup(controllers);
   }
+  recordingTimeSlice?: number;
 
   protected handleRecordingSetup(controllers: Controllers) {
     let data: any;
@@ -50,11 +51,13 @@ export class JanusPlugin implements PluginHandle {
       if (result.event === "accepted" || result.event === "progress") {
         if (!data) {
           console.info("recording initiated");
-          data = JanusJs.createRecording(
-            this.webrtcStuff.myStream,
-            this.webrtcStuff.remoteStream
-          );
-          console.info(data);
+          data = JanusJs.createRecording({
+            mediaStreams: [
+              this.webrtcStuff.myStream,
+              this.webrtcStuff.remoteStream,
+            ],
+            timeSlice: this.recordingTimeSlice,
+          });
         }
         if (data) {
           this.mediaRecorder = data.mediaRecorder;
