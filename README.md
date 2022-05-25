@@ -14,6 +14,8 @@ npm install typed_janus_js
 npm run build
 ```
 
+## [Api and documentation](https://flutterjanus.github.io/JanusJs/)
+
 ## Usage
 
 ```javascript
