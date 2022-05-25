@@ -1,11 +1,17 @@
 # JanusJs
 
-Fully functional reactive and promisified wrapper arround native janusjs
+Fully functional reactive and promisified wrapper around native janusjs
 
 ## Install
 
 ```sh
 npm install typed_janus_js
+```
+## Build for distribution
+
+```sh
+./build_janus.sh
+npm run build
 ```
 
 ## Usage
