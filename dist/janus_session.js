@@ -46,8 +46,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 import _ from "lodash";
-import { JanusPlugin } from "./janus_plugin";
-import { Subject } from "rxjs";
+import { JanusPlugins } from "./janus_plugin";
+import { BehaviorSubject } from "rxjs";
+import { JanusVideoRoomPlugin } from "./wrapper_plugins/video_room";
+import { JanusAudioBridgePlugin } from "./wrapper_plugins/audio_bridge";
+import { JanusSipPlugin } from "./wrapper_plugins/sip";
+import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
+import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
+import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
 var JanusSession = /** @class */ (function () {
     function JanusSession(instance) {
         this.instance = instance;
@@ -64,20 +70,23 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.getObservableControllers = function (options) {
         var finalOptions = __assign({}, options);
         var controllers = {
-            onRecordingDataController: new Subject(),
-            onStatReportsController: new Subject(),
-            onMessageController: new Subject(),
-            onLocalTrackController: new Subject(),
-            onRemoteTrackController: new Subject(),
-            onDataController: new Subject(),
-            onErrorController: new Subject(),
-            onMediaStateController: new Subject(),
-            onIceStateController: new Subject(),
-            onSlowLinkController: new Subject(),
-            onWebRTCStateController: new Subject(),
-            onCleanupController: new Subject(),
-            onDataOpenController: new Subject(),
-            onDetachedController: new Subject(),
+            onRecordingDataController: new BehaviorSubject(null),
+            onStatReportsController: new BehaviorSubject(null),
+            onMessageController: new BehaviorSubject({
+                jsep: null,
+                message: { result: null },
+            }),
+            onLocalTrackController: new BehaviorSubject(null),
+            onRemoteTrackController: new BehaviorSubject(null),
+            onDataController: new BehaviorSubject(null),
+            onErrorController: new BehaviorSubject(null),
+            onMediaStateController: new BehaviorSubject(null),
+            onIceStateController: new BehaviorSubject(null),
+            onSlowLinkController: new BehaviorSubject(null),
+            onWebRTCStateController: new BehaviorSubject(null),
+            onCleanupController: new BehaviorSubject(null),
+            onDataOpenController: new BehaviorSubject(null),
+            onDetachedController: new BehaviorSubject(null),
         };
         finalOptions.onmessage = function (message, jsep) {
             controllers.onMessageController.next({ message: message, jsep: jsep });
@@ -117,12 +126,36 @@ var JanusSession = /** @class */ (function () {
         };
         return { finalOptions: finalOptions, controllers: controllers };
     };
-    JanusSession.prototype.attach = function (options) {
+    JanusSession.prototype.attach = function (classToCreate, options) {
         var _this = this;
-        var _a = this.getObservableControllers(options), controllers = _a.controllers, finalOptions = _a.finalOptions;
+        var pluginIdentifier;
+        switch (classToCreate.name) {
+            case JanusVideoRoomPlugin.name:
+                pluginIdentifier = JanusPlugins.VIDEO_ROOM;
+                break;
+            case JanusAudioBridgePlugin.name:
+                pluginIdentifier = JanusPlugins.AUDIO_BRIDGE;
+                break;
+            case JanusSipPlugin.name:
+                pluginIdentifier = JanusPlugins.SIP;
+                break;
+            case JanusVideoCallPlugin.name:
+                pluginIdentifier = JanusPlugins.VIDEO_CALL;
+                break;
+            case JanusStreamingPlugin.name:
+                pluginIdentifier = JanusPlugins.STREAMING;
+                break;
+            case JanusEchoTestPlugin.name:
+                pluginIdentifier = JanusPlugins.ECHO_TEST;
+                break;
+            default:
+                throw new Error("Unknown plugin");
+        }
+        var opts = __assign(__assign({}, options), { plugin: pluginIdentifier });
+        var _a = this.getObservableControllers(opts), controllers = _a.controllers, finalOptions = _a.finalOptions;
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
-                var pluginHandle = new JanusPlugin(_this.instance, _this, plugin, controllers);
+                var pluginHandle = new classToCreate(_this.instance, _this, plugin, controllers);
                 _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
                 resolve(pluginHandle);
             };
@@ -132,6 +165,31 @@ var JanusSession = /** @class */ (function () {
             _this.instance.attach(finalOptions);
         });
     };
+    // attach(
+    //   options: Pick<PluginOptions, "plugin" | "opaqueId">
+    // ): Promise<JanusPlugin> {
+    //   const { controllers, finalOptions } =
+    //     this.getObservableControllers(options);
+    //   return new Promise<JanusPlugin>((resolve, reject) => {
+    //     finalOptions.success = (plugin: PluginHandle) => {
+    //       const pluginHandle = new JanusPlugin(
+    //         this.instance,
+    //         this,
+    //         plugin,
+    //         controllers
+    //       );
+    //       _.assign(
+    //         pluginHandle,
+    //         _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
+    //       );
+    //       resolve(pluginHandle);
+    //     };
+    //     finalOptions.error = (error: any) => {
+    //       reject(error);
+    //     };
+    //     this.instance.attach(finalOptions);
+    //   });
+    // }
     JanusSession.prototype.reconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;

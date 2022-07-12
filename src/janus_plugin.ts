@@ -46,9 +46,9 @@ export class JanusPlugin implements PluginHandle {
 
   protected handleRecordingSetup(controllers: Controllers) {
     let data: any;
-    this.onMessage.subscribe(({ jsep, message }) => {
-      const result = message.result;
-      if (result.event === "accepted" || result.event === "progress") {
+    this.onMessage.subscribe(({ message }) => {
+      const result = message?.result;
+      if (result?.event === "accepted" || result?.event === "progress") {
         if (!data) {
           console.info("recording initiated");
           data = JanusJs.createRecording({
@@ -66,7 +66,7 @@ export class JanusPlugin implements PluginHandle {
           });
         }
       }
-      if (result.event === "hangup") {
+      if (result?.event === "hangup") {
         if (this.mediaRecorder.state !== "inactive") this.mediaRecorder.stop();
       }
     });
@@ -241,4 +241,13 @@ export class JanusPlugin implements PluginHandle {
   stopCollectingStats() {
     clearInterval(this.statsReportHookTimer);
   }
+}
+
+export abstract class JanusPlugins {
+  static VIDEO_ROOM = "janus.plugin.videoroom";
+  static VIDEO_CALL = "janus.plugin.videocall";
+  static AUDIO_BRIDGE = "janus.plugin.audiobridge";
+  static SIP = "janus.plugin.sip";
+  static STREAMING = "janus.plugin.streaming";
+  static ECHO_TEST = "janus.plugin.echotest";
 }

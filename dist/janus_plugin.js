@@ -59,9 +59,9 @@ var JanusPlugin = /** @class */ (function () {
         var _this = this;
         var data;
         this.onMessage.subscribe(function (_a) {
-            var jsep = _a.jsep, message = _a.message;
-            var result = message.result;
-            if (result.event === "accepted" || result.event === "progress") {
+            var message = _a.message;
+            var result = message === null || message === void 0 ? void 0 : message.result;
+            if ((result === null || result === void 0 ? void 0 : result.event) === "accepted" || (result === null || result === void 0 ? void 0 : result.event) === "progress") {
                 if (!data) {
                     console.info("recording initiated");
                     data = JanusJs.createRecording({
@@ -79,7 +79,7 @@ var JanusPlugin = /** @class */ (function () {
                     });
                 }
             }
-            if (result.event === "hangup") {
+            if ((result === null || result === void 0 ? void 0 : result.event) === "hangup") {
                 if (_this.mediaRecorder.state !== "inactive")
                     _this.mediaRecorder.stop();
             }
@@ -311,3 +311,15 @@ var JanusPlugin = /** @class */ (function () {
     return JanusPlugin;
 }());
 export { JanusPlugin };
+var JanusPlugins = /** @class */ (function () {
+    function JanusPlugins() {
+    }
+    JanusPlugins.VIDEO_ROOM = "janus.plugin.videoroom";
+    JanusPlugins.VIDEO_CALL = "janus.plugin.videocall";
+    JanusPlugins.AUDIO_BRIDGE = "janus.plugin.audiobridge";
+    JanusPlugins.SIP = "janus.plugin.sip";
+    JanusPlugins.STREAMING = "janus.plugin.streaming";
+    JanusPlugins.ECHO_TEST = "janus.plugin.echotest";
+    return JanusPlugins;
+}());
+export { JanusPlugins };

@@ -1,7 +1,6 @@
 import Janus from "../janus-gateway/npm/janus";
-import { ConstructorOptions, InitOptions } from "./interfaces/janus";
+import { ConstructorOptions, CreateRecordingResult, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
-import { Subject } from "rxjs";
 export declare class JanusJs {
     protected instance: Janus;
     protected options: ConstructorOptions;
@@ -22,13 +21,7 @@ export declare class JanusJs {
     static createRecording(options: {
         mediaStreams: MediaStream[];
         timeSlice?: number;
-    }): {
-        mediaRecorder: MediaRecorder;
-        controller: Subject<{
-            blob: Blob;
-            chunkNumber: number;
-        }>;
-    };
+    }): CreateRecordingResult;
     createSession(): Promise<JanusSession>;
 }
 //# sourceMappingURL=janus_js.d.ts.map

@@ -1,6 +1,11 @@
 import Janus from "../janus-gateway/npm/janus";
 import adapter from "webrtc-adapter";
-import { ConstructorOptions, InitOptions } from "./interfaces/janus";
+import {
+  ConstructorOptions,
+  CreateRecordingController,
+  CreateRecordingResult,
+  InitOptions,
+} from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
 import _ from "lodash";
 import { Subject } from "rxjs";
@@ -91,7 +96,7 @@ export class JanusJs {
   static createRecording(options: {
     mediaStreams: MediaStream[];
     timeSlice?: number;
-  }) {
+  }): CreateRecordingResult {
     const streams: MediaStream[] = [];
     _.each(options.mediaStreams, (stream) => {
       if (stream && stream?.getTracks) {
@@ -107,7 +112,7 @@ export class JanusJs {
     const mixedTrack = this.mix(audioContext, streams);
     const mixedStream = new MediaStream([mixedTrack]);
     const mediaRecorder = new MediaRecorder(mixedStream);
-    const controller = new Subject<{ blob: Blob; chunkNumber: number }>();
+    const controller = new Subject<CreateRecordingController>();
     let totalAudioChunks = 0;
     mediaRecorder.ondataavailable = (event) => {
       totalAudioChunks++;

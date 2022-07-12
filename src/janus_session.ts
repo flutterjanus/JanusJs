@@ -8,8 +8,14 @@ import {
   PluginHandle,
   PluginOptions,
 } from "./interfaces/janus";
-import { JanusPlugin } from "./janus_plugin";
-import { Subject } from "rxjs";
+import { JanusPlugin, JanusPlugins } from "./janus_plugin";
+import { BehaviorSubject, skip } from "rxjs";
+import { JanusVideoRoomPlugin } from "./wrapper_plugins/video_room";
+import { JanusAudioBridgePlugin } from "./wrapper_plugins/audio_bridge";
+import { JanusSipPlugin } from "./wrapper_plugins/sip";
+import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
+import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
+import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
 
 export class JanusSession {
   protected instance: Janus;
@@ -33,20 +39,23 @@ export class JanusSession {
   ) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
-      onRecordingDataController: new Subject(),
-      onStatReportsController: new Subject(),
-      onMessageController: new Subject(),
-      onLocalTrackController: new Subject(),
-      onRemoteTrackController: new Subject(),
-      onDataController: new Subject(),
-      onErrorController: new Subject(),
-      onMediaStateController: new Subject(),
-      onIceStateController: new Subject(),
-      onSlowLinkController: new Subject(),
-      onWebRTCStateController: new Subject(),
-      onCleanupController: new Subject(),
-      onDataOpenController: new Subject(),
-      onDetachedController: new Subject(),
+      onRecordingDataController: new BehaviorSubject(null),
+      onStatReportsController: new BehaviorSubject(null),
+      onMessageController: new BehaviorSubject({
+        jsep: null,
+        message: { result: null },
+      }),
+      onLocalTrackController: new BehaviorSubject(null),
+      onRemoteTrackController: new BehaviorSubject(null),
+      onDataController: new BehaviorSubject(null),
+      onErrorController: new BehaviorSubject(null),
+      onMediaStateController: new BehaviorSubject(null),
+      onIceStateController: new BehaviorSubject(null),
+      onSlowLinkController: new BehaviorSubject(null),
+      onWebRTCStateController: new BehaviorSubject(null),
+      onCleanupController: new BehaviorSubject(null),
+      onDataOpenController: new BehaviorSubject(null),
+      onDetachedController: new BehaviorSubject(null),
     };
     finalOptions.onmessage = (message: any, jsep: JSEP) => {
       controllers.onMessageController.next({ message, jsep });
@@ -87,14 +96,41 @@ export class JanusSession {
     return { finalOptions, controllers };
   }
 
-  attach(
-    options: Pick<PluginOptions, "plugin" | "opaqueId">
-  ): Promise<JanusPlugin> {
-    const { controllers, finalOptions } =
-      this.getObservableControllers(options);
-    return new Promise<JanusPlugin>((resolve, reject) => {
+  attach<Type extends JanusPlugin>(
+    classToCreate: new (...args: any) => Type,
+    options: Pick<PluginOptions, "opaqueId">
+  ): Promise<Type> {
+    let pluginIdentifier;
+    switch (classToCreate.name) {
+      case JanusVideoRoomPlugin.name:
+        pluginIdentifier = JanusPlugins.VIDEO_ROOM;
+        break;
+      case JanusAudioBridgePlugin.name:
+        pluginIdentifier = JanusPlugins.AUDIO_BRIDGE;
+        break;
+      case JanusSipPlugin.name:
+        pluginIdentifier = JanusPlugins.SIP;
+        break;
+      case JanusVideoCallPlugin.name:
+        pluginIdentifier = JanusPlugins.VIDEO_CALL;
+        break;
+      case JanusStreamingPlugin.name:
+        pluginIdentifier = JanusPlugins.STREAMING;
+        break;
+      case JanusEchoTestPlugin.name:
+        pluginIdentifier = JanusPlugins.ECHO_TEST;
+        break;
+      default:
+        throw new Error("Unknown plugin");
+    }
+    const opts: Pick<PluginOptions, "plugin" | "opaqueId"> = {
+      ...options,
+      plugin: pluginIdentifier,
+    };
+    const { controllers, finalOptions } = this.getObservableControllers(opts);
+    return new Promise<Type>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
-        const pluginHandle = new JanusPlugin(
+        const pluginHandle = new classToCreate(
           this.instance,
           this,
           plugin,
@@ -112,6 +148,32 @@ export class JanusSession {
       this.instance.attach(finalOptions);
     });
   }
+
+  // attach(
+  //   options: Pick<PluginOptions, "plugin" | "opaqueId">
+  // ): Promise<JanusPlugin> {
+  //   const { controllers, finalOptions } =
+  //     this.getObservableControllers(options);
+  //   return new Promise<JanusPlugin>((resolve, reject) => {
+  //     finalOptions.success = (plugin: PluginHandle) => {
+  //       const pluginHandle = new JanusPlugin(
+  //         this.instance,
+  //         this,
+  //         plugin,
+  //         controllers
+  //       );
+  //       _.assign(
+  //         pluginHandle,
+  //         _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
+  //       );
+  //       resolve(pluginHandle);
+  //     };
+  //     finalOptions.error = (error: any) => {
+  //       reject(error);
+  //     };
+  //     this.instance.attach(finalOptions);
+  //   });
+  // }
   async reconnect(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.instance.reconnect({

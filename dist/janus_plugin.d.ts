@@ -73,4 +73,12 @@ export declare class JanusPlugin implements PluginHandle {
     detach(params?: DetachOptions): void;
     stopCollectingStats(): void;
 }
+export declare abstract class JanusPlugins {
+    static VIDEO_ROOM: string;
+    static VIDEO_CALL: string;
+    static AUDIO_BRIDGE: string;
+    static SIP: string;
+    static STREAMING: string;
+    static ECHO_TEST: string;
+}
 //# sourceMappingURL=janus_plugin.d.ts.map

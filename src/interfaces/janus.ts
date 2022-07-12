@@ -1,4 +1,4 @@
-import { Subject } from "rxjs";
+import { BehaviorSubject, ReplaySubject, Subject } from "rxjs";
 
 export interface Dependencies {
   adapter: any;
@@ -6,6 +6,14 @@ export interface Dependencies {
   isArray: (array: any) => array is Array<any>;
   extension: () => boolean;
   httpAPICall: (url: string, options: any) => void;
+}
+export interface CreateRecordingController {
+  blob: Blob;
+  chunkNumber: number;
+}
+export interface CreateRecordingResult {
+  mediaRecorder: MediaRecorder;
+  controller: Subject<CreateRecordingController>;
 }
 export interface DataParams {
   text: any;
@@ -310,28 +318,41 @@ export interface ConstructorOptions {
 }
 
 export interface Controllers {
-  onMessageController: Subject<{ message: MessageCallback; jsep: JSEP }>;
-  onLocalTrackController: Subject<{ track: MediaStreamTrack; on: boolean }>;
-  onRemoteTrackController: Subject<{
+  onMessageController: BehaviorSubject<{
+    message: MessageCallback;
+    jsep: JSEP;
+  }>;
+  onLocalTrackController: BehaviorSubject<{
+    track: MediaStreamTrack;
+    on: boolean;
+  }>;
+  onRemoteTrackController: BehaviorSubject<{
     track: MediaStreamTrack;
     on: boolean;
     mid: string;
   }>;
-  onRecordingDataController: Subject<{ blob: Blob; chunkNumber: number }>;
-  onStatReportsController: Subject<any[]>;
-  onDataController: Subject<any>;
-  onErrorController: Subject<any>;
-  onMediaStateController: Subject<{
+  onRecordingDataController: BehaviorSubject<{
+    blob: Blob;
+    chunkNumber: number;
+  }>;
+  onStatReportsController: BehaviorSubject<any[]>;
+  onDataController: BehaviorSubject<any>;
+  onErrorController: BehaviorSubject<any>;
+  onMediaStateController: BehaviorSubject<{
     medium: "audio" | "video";
     recieving: boolean;
     mid: number;
   }>;
-  onSlowLinkController: Subject<{ uplink: boolean; lost: number; mid: string }>;
-  onWebRTCStateController: Subject<boolean>;
-  onIceStateController: Subject<
+  onSlowLinkController: BehaviorSubject<{
+    uplink: boolean;
+    lost: number;
+    mid: string;
+  }>;
+  onWebRTCStateController: BehaviorSubject<boolean>;
+  onIceStateController: BehaviorSubject<
     "connected" | "failed" | "disconnected" | "closed"
   >;
-  onDataOpenController: Subject<void>;
-  onDetachedController: Subject<void>;
-  onCleanupController: Subject<void>;
+  onDataOpenController: BehaviorSubject<void>;
+  onDetachedController: BehaviorSubject<void>;
+  onCleanupController: BehaviorSubject<void>;
 }
