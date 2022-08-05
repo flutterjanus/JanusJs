@@ -7,6 +7,7 @@ Fully functional reactive and promisified wrapper around native janusjs
 ```sh
 npm install typed_janus_js
 ```
+
 ## Build for distribution
 
 ```sh
@@ -16,50 +17,83 @@ npm run build
 
 ## [Api and documentation](https://flutterjanus.github.io/JanusJs/)
 
-## Usage
+## Usage Examples
 
 ```javascript
-import { JanusJs } from "typed_janus_js";
-const client = new JanusJs({ server: "ws://127.0.0.1:8188" });
+// video call screensharing example code
+// you can see complete code in action under vanila-js example
+import { JanusJs, JanusVideoCallPlugin } from "typed_janus_js";
+import { config } from "./conf";
 
-await client.init();
+const janus = new JanusJs(config.meetecho);
+await janus.init({ debug: false });
+const session = await janus.createSession();
+const publisher = await session.attach(JanusVideoCallPlugin);
+publisher.onMessage.subscribe((msg) => {
+  if (msg.jsep) {
+    publisher.handleRemoteJsep({ jsep: msg.jsep });
+  }
+});
+const remoteVideo = document.getElementById("remotevideo");
+let remoteStream = new MediaStream();
+console.log(remoteVideo);
+publisher.onRemoteTrack.subscribe(({ mid, on, track }) => {
+  if (on) {
+    remoteStream.addTrack(track);
+  } else {
+    remoteStream.removeTrack(track);
+  }
+});
+remoteVideo.srcObject = remoteStream;
 
-const session = await client.createSession();
-const plugin = await session.attach({ plugin: "janus.plugin.videoroom" });
-const myroom = 1234;
+const username = prompt("Enter your name: ");
+await publisher.register(username);
+const user = prompt("Enter user you want to call: ");
+await publisher.call(
+  user,
+  await publisher.createOffer({
+    tracks: [
+      { type: "audio", capture: true, recv: true },
+      { type: "screen", capture: true, recv: true },
+    ],
+  })
+);
+```
 
-const register = {
-  request: "join",
-  room: myroom,
-  ptype: "publisher",
-  display: "shivansh",
-};
+```javascript
+// video room example code
+// you can see complete code in action under vanila-js example
+import { JanusJs, JanusVideoRoomPlugin } from "typed_janus_js";
+import { config } from "./conf";
+const janus = new JanusJs(config.meetecho);
+await janus.init({ debug: false });
+const session = await janus.createSession();
+const publisher = await session.attach(JanusVideoRoomPlugin);
+const subscriber = await session.attach(JanusVideoRoomPlugin);
 
-console.log(await plugin.send({ message: register }));
+const username = prompt("Enter your name: ");
+await publisher.joinRoomAsPublisher(1234, { display: username });
+await publisher.publishAsPublisher(
+  await publisher.createOffer({ media: { audio: true, video: true } }),
+  { bitrate: 2000000 }
+);
 
-plugin.onMessage.subscribe((data) => {
-  console.log(data);
+publisher.onMessage.subscribe(async ({ jsep, message }) => {
+  const result = message?.result;
+  const event = result?.event;
+  console.log(message, jsep);
+  if (jsep) {
+    publisher.handleRemoteJsep({ jsep });
+  }
+});
+// console.log(await publisher.listParticipants(1234));
+subscriber.onMessage.subscribe(async ({ jsep, message }) => {
+  if (jsep) {
+    publisher.handleRemoteJsep({ jsep });
+  }
 });
 
-plugin.onLocalTrack.subscribe((data) => {
-  console.log(data);
+subscriber.onRemoteTrack.subscribe((track, on, mid) => {
+  console.log({ track, on, mid });
 });
-
-const useAudio = true;
-const offer = await plugin.createOffer({
-  media: {
-    audioRecv: false,
-    videoRecv: false,
-    audioSend: useAudio,
-    videoSend: true,
-  } // Publishers are sendonly
-});
-
-const publish = { 
-  request: "configure", 
-  audio: useAudio, 
-  video: true 
-};
-
-await plugin.send({ message: publish, jsep: offer });
 ```
