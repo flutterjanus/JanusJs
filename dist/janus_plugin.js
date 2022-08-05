@@ -59,10 +59,15 @@ var JanusPlugin = /** @class */ (function () {
         var _this = this;
         var data;
         this.onMessage.subscribe(function (_a) {
+            var _b, _c;
             var message = _a.message;
             var result = message === null || message === void 0 ? void 0 : message.result;
             if ((result === null || result === void 0 ? void 0 : result.event) === "accepted" || (result === null || result === void 0 ? void 0 : result.event) === "progress") {
                 if (!data) {
+                    var remoteStream = new MediaStream();
+                    if (!_this.webrtcStuff.remoteStream || !_this.webrtcStuff.myStream) {
+                        return;
+                    }
                     console.info("recording initiated");
                     data = JanusJs.createRecording({
                         mediaStreams: [
@@ -80,8 +85,8 @@ var JanusPlugin = /** @class */ (function () {
                 }
             }
             if ((result === null || result === void 0 ? void 0 : result.event) === "hangup") {
-                if (_this.mediaRecorder.state !== "inactive")
-                    _this.mediaRecorder.stop();
+                if (((_b = _this.mediaRecorder) === null || _b === void 0 ? void 0 : _b.state) !== "inactive")
+                    (_c = _this.mediaRecorder) === null || _c === void 0 ? void 0 : _c.stop();
             }
         });
     };

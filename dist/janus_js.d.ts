@@ -1,4 +1,4 @@
-import Janus from "../janus-gateway/npm/janus";
+import Janus from "../js/janus";
 import { ConstructorOptions, CreateRecordingResult, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
 export declare class JanusJs {

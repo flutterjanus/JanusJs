@@ -16,6 +16,7 @@ import { JanusSipPlugin } from "./wrapper_plugins/sip";
 import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
 import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
 import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
+import { Subject } from "rxjs";
 
 export class JanusSession {
   protected instance: Janus;
@@ -46,7 +47,7 @@ export class JanusSession {
         message: { result: null },
       }),
       onLocalTrackController: new BehaviorSubject(null),
-      onRemoteTrackController: new BehaviorSubject(null),
+      onRemoteTrackController: new Subject(),
       onDataController: new BehaviorSubject(null),
       onErrorController: new BehaviorSubject(null),
       onMediaStateController: new BehaviorSubject(null),

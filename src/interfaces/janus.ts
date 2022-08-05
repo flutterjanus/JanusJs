@@ -326,7 +326,7 @@ export interface Controllers {
     track: MediaStreamTrack;
     on: boolean;
   }>;
-  onRemoteTrackController: BehaviorSubject<{
+  onRemoteTrackController: Subject<{
     track: MediaStreamTrack;
     on: boolean;
     mid: string;

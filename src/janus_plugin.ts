@@ -50,6 +50,10 @@ export class JanusPlugin implements PluginHandle {
       const result = message?.result;
       if (result?.event === "accepted" || result?.event === "progress") {
         if (!data) {
+          const remoteStream = new MediaStream();
+          if (!this.webrtcStuff.remoteStream || !this.webrtcStuff.myStream) {
+            return;
+          }
           console.info("recording initiated");
           data = JanusJs.createRecording({
             mediaStreams: [
@@ -67,7 +71,7 @@ export class JanusPlugin implements PluginHandle {
         }
       }
       if (result?.event === "hangup") {
-        if (this.mediaRecorder.state !== "inactive") this.mediaRecorder.stop();
+        if (this.mediaRecorder?.state !== "inactive") this.mediaRecorder?.stop();
       }
     });
   }
