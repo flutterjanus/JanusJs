@@ -1,4 +1,4 @@
-import Janus from "../janus-gateway/npm/janus";
+import Janus from "../js/janus";
 import adapter from "webrtc-adapter";
 import {
   ConstructorOptions,
