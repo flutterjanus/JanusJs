@@ -1,4 +1,4 @@
-import Janus from "../janus-gateway/npm/janus";
+import Janus from "../js/janus";
 import { DestroyOptions, PluginOptions } from "./interfaces/janus";
 import { JanusPlugin } from "./janus_plugin";
 export declare class JanusSession {
