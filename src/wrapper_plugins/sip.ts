@@ -14,6 +14,7 @@ export class JanusSipPlugin extends JanusPlugin {
 
   async register(
     username: string,
+    server:string,
     options: {
       type?: "guest" | "helper";
       send_register?: boolean;
@@ -38,7 +39,7 @@ export class JanusSipPlugin extends JanusPlugin {
   ): Promise<void> {
     const payload = {
       request: "register",
-      username,
+      username:`sip:${username}@${server}`,
       ...options,
     };
     await this.send({ message: payload });

@@ -3,7 +3,7 @@ import { JanusPlugin } from "../janus_plugin";
 import { JanusSession } from "../janus_session";
 export declare class JanusSipPlugin extends JanusPlugin {
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
-    register(username: string, options: {
+    register(username: string, server: string, options: {
         type?: "guest" | "helper";
         send_register?: boolean;
         force_udp?: boolean;

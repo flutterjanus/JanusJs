@@ -66,13 +66,13 @@ var JanusSipPlugin = /** @class */ (function (_super) {
     function JanusSipPlugin(instance, session, handle, controllers) {
         return _super.call(this, instance, session, handle, controllers) || this;
     }
-    JanusSipPlugin.prototype.register = function (username, options) {
+    JanusSipPlugin.prototype.register = function (username, server, options) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        payload = __assign({ request: "register", username: username }, options);
+                        payload = __assign({ request: "register", username: "sip:".concat(username, "@").concat(server) }, options);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
                         _a.sent();
