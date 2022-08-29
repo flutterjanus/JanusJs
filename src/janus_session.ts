@@ -40,12 +40,9 @@ export class JanusSession {
   ) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
-      onRecordingDataController: new BehaviorSubject(null),
+      onRecordingDataController: new Subject(),
       onStatReportsController: new BehaviorSubject(null),
-      onMessageController: new BehaviorSubject({
-        jsep: null,
-        message: { result: null },
-      }),
+      onMessageController: new Subject(),
       onLocalTrackController: new BehaviorSubject(null),
       onRemoteTrackController: new Subject(),
       onDataController: new BehaviorSubject(null),
@@ -150,31 +147,6 @@ export class JanusSession {
     });
   }
 
-  // attach(
-  //   options: Pick<PluginOptions, "plugin" | "opaqueId">
-  // ): Promise<JanusPlugin> {
-  //   const { controllers, finalOptions } =
-  //     this.getObservableControllers(options);
-  //   return new Promise<JanusPlugin>((resolve, reject) => {
-  //     finalOptions.success = (plugin: PluginHandle) => {
-  //       const pluginHandle = new JanusPlugin(
-  //         this.instance,
-  //         this,
-  //         plugin,
-  //         controllers
-  //       );
-  //       _.assign(
-  //         pluginHandle,
-  //         _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
-  //       );
-  //       resolve(pluginHandle);
-  //     };
-  //     finalOptions.error = (error: any) => {
-  //       reject(error);
-  //     };
-  //     this.instance.attach(finalOptions);
-  //   });
-  // }
   async reconnect(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this.instance.reconnect({

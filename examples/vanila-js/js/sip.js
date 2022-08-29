@@ -5,6 +5,7 @@ async function test() {
   await a.init({ debug: false });
   const session = await a.createSession();
   const plugin = await session.attach(JanusSipPlugin);
+  plugin.recording = true;
   plugin.onRemoteTrack.subscribe((data) => {
     const remoteStream = new MediaStream();
     remoteStream.addTrack(data.track.clone());
@@ -51,4 +52,5 @@ async function test() {
     secret: "+iBBfWDygkaF8P21tXkV",
   });
 }
+
 test();

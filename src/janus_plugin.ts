@@ -24,6 +24,7 @@ export class JanusPlugin implements PluginHandle {
   token?: string;
   detached: boolean;
   webrtcStuff: WebRTCInfo;
+  recording: boolean = false;
 
   constructor(
     instance: Janus,
@@ -40,7 +41,10 @@ export class JanusPlugin implements PluginHandle {
       controllers,
       null
     );
-    this.handleRecordingSetup(controllers);
+    if (this.recording) {
+      console.info("recording enabled");
+      this.handleRecordingSetup(controllers);
+    }
   }
   recordingTimeSlice?: number;
 
@@ -50,7 +54,6 @@ export class JanusPlugin implements PluginHandle {
       const result = message?.result;
       if (result?.event === "accepted" || result?.event === "progress") {
         if (!data) {
-          const remoteStream = new MediaStream();
           if (!this.webrtcStuff.remoteStream || !this.webrtcStuff.myStream) {
             return;
           }
@@ -71,7 +74,8 @@ export class JanusPlugin implements PluginHandle {
         }
       }
       if (result?.event === "hangup") {
-        if (this.mediaRecorder?.state !== "inactive") this.mediaRecorder?.stop();
+        if (this.mediaRecorder?.state !== "inactive")
+          this.mediaRecorder?.stop();
       }
     });
   }

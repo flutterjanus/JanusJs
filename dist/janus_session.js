@@ -71,12 +71,9 @@ var JanusSession = /** @class */ (function () {
     JanusSession.prototype.getObservableControllers = function (options) {
         var finalOptions = __assign({}, options);
         var controllers = {
-            onRecordingDataController: new BehaviorSubject(null),
+            onRecordingDataController: new Subject(),
             onStatReportsController: new BehaviorSubject(null),
-            onMessageController: new BehaviorSubject({
-                jsep: null,
-                message: { result: null },
-            }),
+            onMessageController: new Subject(),
             onLocalTrackController: new BehaviorSubject(null),
             onRemoteTrackController: new Subject(),
             onDataController: new BehaviorSubject(null),
@@ -166,31 +163,6 @@ var JanusSession = /** @class */ (function () {
             _this.instance.attach(finalOptions);
         });
     };
-    // attach(
-    //   options: Pick<PluginOptions, "plugin" | "opaqueId">
-    // ): Promise<JanusPlugin> {
-    //   const { controllers, finalOptions } =
-    //     this.getObservableControllers(options);
-    //   return new Promise<JanusPlugin>((resolve, reject) => {
-    //     finalOptions.success = (plugin: PluginHandle) => {
-    //       const pluginHandle = new JanusPlugin(
-    //         this.instance,
-    //         this,
-    //         plugin,
-    //         controllers
-    //       );
-    //       _.assign(
-    //         pluginHandle,
-    //         _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
-    //       );
-    //       resolve(pluginHandle);
-    //     };
-    //     finalOptions.error = (error: any) => {
-    //       reject(error);
-    //     };
-    //     this.instance.attach(finalOptions);
-    //   });
-    // }
     JanusSession.prototype.reconnect = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;

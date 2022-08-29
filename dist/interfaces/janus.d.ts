@@ -279,7 +279,7 @@ export interface ConstructorOptions {
     destroyed?: Function;
 }
 export interface Controllers {
-    onMessageController: BehaviorSubject<{
+    onMessageController: Subject<{
         message: MessageCallback;
         jsep: JSEP;
     }>;
@@ -292,7 +292,7 @@ export interface Controllers {
         on: boolean;
         mid: string;
     }>;
-    onRecordingDataController: BehaviorSubject<{
+    onRecordingDataController: Subject<{
         blob: Blob;
         chunkNumber: number;
     }>;

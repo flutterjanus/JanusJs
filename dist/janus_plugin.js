@@ -48,12 +48,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { JanusJs } from "./janus_js";
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
+        this.recording = false;
         this.instance = instance;
         this.session = session;
         this.controllers = controllers;
         this.handle = handle;
         this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
-        this.handleRecordingSetup(controllers);
+        if (this.recording) {
+            console.info("recording enabled");
+            this.handleRecordingSetup(controllers);
+        }
     }
     JanusPlugin.prototype.handleRecordingSetup = function (controllers) {
         var _this = this;
@@ -64,7 +68,6 @@ var JanusPlugin = /** @class */ (function () {
             var result = message === null || message === void 0 ? void 0 : message.result;
             if ((result === null || result === void 0 ? void 0 : result.event) === "accepted" || (result === null || result === void 0 ? void 0 : result.event) === "progress") {
                 if (!data) {
-                    var remoteStream = new MediaStream();
                     if (!_this.webrtcStuff.remoteStream || !_this.webrtcStuff.myStream) {
                         return;
                     }
