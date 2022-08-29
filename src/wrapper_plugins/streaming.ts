@@ -12,5 +12,6 @@ export class JanusStreamingPlugin extends JanusPlugin {
     super(instance, session, handle, controllers);
   }
 
-  boomCall() {}
+  async streamingTest(){}
+
 }
