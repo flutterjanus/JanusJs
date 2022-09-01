@@ -14,7 +14,7 @@ export class JanusSipPlugin extends JanusPlugin {
 
   async register(
     username: string,
-    server:string,
+    server: string,
     options: {
       type?: "guest" | "helper";
       send_register?: boolean;
@@ -39,7 +39,7 @@ export class JanusSipPlugin extends JanusPlugin {
   ): Promise<void> {
     const payload = {
       request: "register",
-      username:`sip:${username}@${server}`,
+      username: `sip:${username}@${server}`,
       ...options,
     };
     await this.send({ message: payload });
@@ -75,6 +75,23 @@ export class JanusSipPlugin extends JanusPlugin {
       request: "call",
       uri,
       ...options,
+    };
+    await this.send({ message: payload, jsep: offer.toJSON() });
+  }
+
+  async update(offer?: RTCSessionDescription) {
+    if (!offer) {
+      offer = await this.createOffer({
+        media: {
+          audioRecv: true,
+          audioSend: true,
+          videoRecv: false,
+          videoSend: false,
+        },
+      });
+    }
+    const payload = {
+      request: "update",
     };
     await this.send({ message: payload, jsep: offer.toJSON() });
   }
@@ -114,6 +131,30 @@ export class JanusSipPlugin extends JanusPlugin {
   async unhold() {
     const payload = {
       request: "unhold",
+    };
+    await this.send({ message: payload });
+  }
+
+  async record(
+    action: "start" | "stop",
+    options: {
+      audio?: boolean;
+      video?: boolean;
+      peer_audio?: boolean;
+      peer_video?: boolean;
+      filename?: string;
+    } = {
+      peer_audio: true,
+      peer_video: false,
+      audio: true,
+      video: false,
+      filename: "recording_" + new Date().toDateString(),
+    }
+  ) {
+    const payload = {
+      request: "recording",
+      action: action,
+      ...options,
     };
     await this.send({ message: payload });
   }

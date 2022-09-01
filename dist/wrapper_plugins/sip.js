@@ -109,6 +109,36 @@ var JanusSipPlugin = /** @class */ (function (_super) {
             });
         });
     };
+    JanusSipPlugin.prototype.update = function (offer) {
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!!offer) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.createOffer({
+                                media: {
+                                    audioRecv: true,
+                                    audioSend: true,
+                                    videoRecv: false,
+                                    videoSend: false,
+                                },
+                            })];
+                    case 1:
+                        offer = _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        payload = {
+                            request: "update",
+                        };
+                        return [4 /*yield*/, this.send({ message: payload, jsep: offer.toJSON() })];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
     JanusSipPlugin.prototype.decline = function (code, headers) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;
@@ -188,6 +218,28 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                         payload = {
                             request: "unhold",
                         };
+                        return [4 /*yield*/, this.send({ message: payload })];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    JanusSipPlugin.prototype.record = function (action, options) {
+        if (options === void 0) { options = {
+            peer_audio: true,
+            peer_video: false,
+            audio: true,
+            video: false,
+            filename: "recording_" + new Date().toDateString(),
+        }; }
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        payload = __assign({ request: "recording", action: action }, options);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
                         _a.sent();

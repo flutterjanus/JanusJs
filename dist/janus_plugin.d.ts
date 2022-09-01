@@ -24,7 +24,7 @@ export declare class JanusPlugin implements PluginHandle {
     }>;
     get onStatReports(): import("rxjs").Observable<any[]>;
     get onMessage(): import("rxjs").Observable<{
-        message: import("./interfaces/janus").MessageCallback;
+        message: any;
         jsep: JSEP;
     }>;
     get onLocalTrack(): import("rxjs").Observable<{
@@ -63,13 +63,17 @@ export declare class JanusPlugin implements PluginHandle {
         jsep: JSEP;
     }): void;
     dtmf(params: any): void;
-    isAudioMuted(): boolean;
-    muteAudio(): void;
-    unmuteAudio(): void;
-    isVideoMuted(): boolean;
-    muteVideo(): void;
-    unmuteVideo(): void;
-    getBitrate(): string;
+    setMaxBitrate(mid: string, bitrate: number): void;
+    isAudioMuted(mid: string): boolean;
+    muteAudio(mid: string): void;
+    unmuteAudio(mid: string): void;
+    isVideoMuted(mid: string): boolean;
+    muteVideo(mid: string): void;
+    unmuteVideo(mid: string): void;
+    getBitrate(mid: string): string;
+    getVolume(mid: string, result: any): void;
+    getRemoteVolume(mid: string, result: any): void;
+    getLocalVolume(mid: string, result: any): void;
     hangup(sendRequest?: boolean): void;
     detach(params?: DetachOptions): void;
     stopCollectingStats(): void;

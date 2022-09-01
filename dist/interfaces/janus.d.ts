@@ -226,13 +226,13 @@ export interface PluginHandle {
     }): void;
     dtmf(params: any): void;
     data(params: any): void;
-    isAudioMuted(): boolean;
-    muteAudio(): void;
-    unmuteAudio(): void;
-    isVideoMuted(): boolean;
-    muteVideo(): void;
-    unmuteVideo(): void;
-    getBitrate(): string;
+    isAudioMuted(mid: string): boolean;
+    muteAudio(mid: string): void;
+    unmuteAudio(mid: string): void;
+    isVideoMuted(mid: string): boolean;
+    muteVideo(mid: string): void;
+    unmuteVideo(mid: string): void;
+    getBitrate(mid: string): string;
     hangup(sendRequest?: boolean): void;
     detach(params?: DetachOptions): void;
 }
@@ -280,7 +280,7 @@ export interface ConstructorOptions {
 }
 export interface Controllers {
     onMessageController: Subject<{
-        message: MessageCallback;
+        message: MessageCallback | any;
         jsep: JSEP;
     }>;
     onLocalTrackController: BehaviorSubject<{

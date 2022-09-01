@@ -153,6 +153,7 @@ export interface AnswerParams {
 }
 export interface OfferParams {
   media?: {
+    tracks?: { type: string; capture: boolean; recv: boolean }[];
     audioSend?: boolean;
     addAudio?: boolean;
     addVideo?: boolean;
@@ -253,13 +254,13 @@ export interface PluginHandle {
   handleRemoteJsep(params: { jsep: JSEP }): void;
   dtmf(params: any): void;
   data(params: any): void;
-  isAudioMuted(): boolean;
-  muteAudio(): void;
-  unmuteAudio(): void;
-  isVideoMuted(): boolean;
-  muteVideo(): void;
-  unmuteVideo(): void;
-  getBitrate(): string;
+  isAudioMuted(mid: string): boolean;
+  muteAudio(mid: string): void;
+  unmuteAudio(mid: string): void;
+  isVideoMuted(mid: string): boolean;
+  muteVideo(mid: string): void;
+  unmuteVideo(mid: string): void;
+  getBitrate(mid: string): string;
   hangup(sendRequest?: boolean): void;
   detach(params?: DetachOptions): void;
 }
@@ -319,7 +320,7 @@ export interface ConstructorOptions {
 
 export interface Controllers {
   onMessageController: Subject<{
-    message: MessageCallback;
+    message: MessageCallback | any;
     jsep: JSEP;
   }>;
   onLocalTrackController: BehaviorSubject<{

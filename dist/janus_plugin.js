@@ -286,25 +286,37 @@ var JanusPlugin = /** @class */ (function () {
     JanusPlugin.prototype.dtmf = function (params) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.isAudioMuted = function () {
+    JanusPlugin.prototype.setMaxBitrate = function (mid, bitrate) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.muteAudio = function () {
+    JanusPlugin.prototype.isAudioMuted = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.unmuteAudio = function () {
+    JanusPlugin.prototype.muteAudio = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.isVideoMuted = function () {
+    JanusPlugin.prototype.unmuteAudio = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.muteVideo = function () {
+    JanusPlugin.prototype.isVideoMuted = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.unmuteVideo = function () {
+    JanusPlugin.prototype.muteVideo = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.getBitrate = function () {
+    JanusPlugin.prototype.unmuteVideo = function (mid) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getBitrate = function (mid) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getVolume = function (mid, result) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getRemoteVolume = function (mid, result) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getLocalVolume = function (mid, result) {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.hangup = function (sendRequest) {

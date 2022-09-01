@@ -219,27 +219,40 @@ export class JanusPlugin implements PluginHandle {
   dtmf(params: any): void {
     throw new Error("Method not implemented.");
   }
-  isAudioMuted(): boolean {
+  setMaxBitrate(mid: string, bitrate: number) {
     throw new Error("Method not implemented.");
   }
-  muteAudio(): void {
+  isAudioMuted(mid: string): boolean {
     throw new Error("Method not implemented.");
   }
-  unmuteAudio(): void {
+  muteAudio(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  isVideoMuted(): boolean {
+  unmuteAudio(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  muteVideo(): void {
+  isVideoMuted(mid: string): boolean {
     throw new Error("Method not implemented.");
   }
-  unmuteVideo(): void {
+  muteVideo(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  getBitrate(): string {
+  unmuteVideo(mid: string): void {
     throw new Error("Method not implemented.");
   }
+  getBitrate(mid: string): string {
+    throw new Error("Method not implemented.");
+  }
+  getVolume(mid: string, result: any) {
+    throw new Error("Method not implemented.");
+  }
+  getRemoteVolume(mid: string, result: any) {
+    throw new Error("Method not implemented.");
+  }
+  getLocalVolume(mid: string, result: any) {
+    throw new Error("Method not implemented.");
+  }
+
   hangup(sendRequest?: boolean): void {
     throw new Error("Method not implemented.");
   }
