@@ -42,6 +42,7 @@ export class JanusSipPlugin extends JanusPlugin {
       username: `sip:${username}@${server}`,
       ...options,
     };
+    payload.proxy=`sip:${server}`;
     await this.send({ message: payload });
   }
 

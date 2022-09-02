@@ -15,6 +15,7 @@ export declare class JanusJs {
     static stopAllTracks(stream: MediaStream): void;
     constructor(options: Omit<ConstructorOptions, "success" | "error" | "destroyed">);
     onDestroyed: () => void;
+    onError: (err: any) => void;
     init(params?: Omit<InitOptions, "callback">): Promise<void>;
     static mix(audioContext: AudioContext, streams: MediaStream[]): any;
     static playMediaStream(mediaStream: MediaStream): AudioContext;

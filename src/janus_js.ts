@@ -53,6 +53,7 @@ export class JanusJs {
     this.options = options;
   }
   onDestroyed: () => void;
+  onError: (err: any) => void;
   async init(
     params: Omit<InitOptions, "callback"> = {
       debug: "all",
@@ -133,7 +134,14 @@ export class JanusJs {
 
   async createSession(): Promise<JanusSession> {
     this.options.destroyed = () => {
-      this.onDestroyed();
+      if (this.onDestroyed) {
+        this.onDestroyed();
+      }
+    };
+    this.options.error = (err) => {
+      if (this.onError) {
+        this.onError(err);
+      }
     };
     await new Promise<void>((resolve, reject) => {
       this.options.success = () => {
@@ -142,7 +150,7 @@ export class JanusJs {
       this.options.error = (error: any) => {
         reject(error);
       };
-      this.instance = new Janus(this.options);
+      this.instance = new Janus({ ...this.options });
     });
     return new JanusSession(this.instance);
   }

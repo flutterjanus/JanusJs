@@ -73,6 +73,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         payload = __assign({ request: "register", username: "sip:".concat(username, "@").concat(server) }, options);
+                        payload.proxy = "sip:".concat(server);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
                         _a.sent();

@@ -131,6 +131,11 @@ export interface AnswerParams {
 }
 export interface OfferParams {
     media?: {
+        tracks?: {
+            type: string;
+            capture: boolean;
+            recv: boolean;
+        }[];
         audioSend?: boolean;
         addAudio?: boolean;
         addVideo?: boolean;

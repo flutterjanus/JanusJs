@@ -186,7 +186,14 @@ var JanusJs = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.options.destroyed = function () {
-                            _this.onDestroyed();
+                            if (_this.onDestroyed) {
+                                _this.onDestroyed();
+                            }
+                        };
+                        this.options.error = function (err) {
+                            if (_this.onError) {
+                                _this.onError(err);
+                            }
                         };
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 _this.options.success = function () {
@@ -195,7 +202,7 @@ var JanusJs = /** @class */ (function () {
                                 _this.options.error = function (error) {
                                     reject(error);
                                 };
-                                _this.instance = new Janus(_this.options);
+                                _this.instance = new Janus(__assign({}, _this.options));
                             })];
                     case 1:
                         _a.sent();
