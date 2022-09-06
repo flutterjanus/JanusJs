@@ -102,7 +102,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                         _a.label = 2;
                     case 2:
                         payload = __assign({ request: "call", uri: uri }, options);
-                        return [4 /*yield*/, this.send({ message: payload, jsep: offer.toJSON() })];
+                        return [4 /*yield*/, this.send({ message: payload, jsep: offer })];
                     case 3:
                         _a.sent();
                         return [2 /*return*/];

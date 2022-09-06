@@ -323,7 +323,14 @@ var JanusPlugin = /** @class */ (function () {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.detach = function (params) {
-        throw new Error("Method not implemented.");
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.handle.data(__assign(__assign({}, params), { success: function () {
+                    resolve();
+                }, error: function (error) {
+                    reject(error);
+                } }));
+        });
     };
     JanusPlugin.prototype.stopCollectingStats = function () {
         clearInterval(this.statsReportHookTimer);

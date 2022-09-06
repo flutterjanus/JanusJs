@@ -61,7 +61,7 @@ export declare class JanusPlugin implements PluginHandle {
     data(params: DataParams): Promise<void>;
     handleRemoteJsep(params: {
         jsep: JSEP;
-    }): void;
+    }): Promise<void>;
     dtmf(params: any): void;
     setMaxBitrate(mid: string, bitrate: number): void;
     isAudioMuted(mid: string): boolean;
@@ -74,8 +74,8 @@ export declare class JanusPlugin implements PluginHandle {
     getVolume(mid: string, result: any): void;
     getRemoteVolume(mid: string, result: any): void;
     getLocalVolume(mid: string, result: any): void;
-    hangup(sendRequest?: boolean): void;
-    detach(params?: DetachOptions): void;
+    hangup(sendRequest?: boolean): Promise<void>;
+    detach(params?: Omit<DetachOptions, "success" | "error">): Promise<void>;
     stopCollectingStats(): void;
 }
 export declare abstract class JanusPlugins {

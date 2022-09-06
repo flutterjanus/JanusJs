@@ -42,7 +42,7 @@ export class JanusSipPlugin extends JanusPlugin {
       username: `sip:${username}@${server}`,
       ...options,
     };
-    payload.proxy=`sip:${server}`;
+    payload.proxy = `sip:${server}`;
     await this.send({ message: payload });
   }
 
@@ -77,7 +77,7 @@ export class JanusSipPlugin extends JanusPlugin {
       uri,
       ...options,
     };
-    await this.send({ message: payload, jsep: offer.toJSON() });
+    await this.send({ message: payload, jsep: offer });
   }
 
   async update(offer?: RTCSessionDescription) {

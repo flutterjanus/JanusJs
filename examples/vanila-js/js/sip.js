@@ -1,7 +1,7 @@
 import { JanusJs, JanusSipPlugin } from "typed_janus_js";
 import { config } from "./conf";
 async function test() {
-  const a = new JanusJs({ server: "ws://107.152.35.248/websocket" });
+  const a = new JanusJs({ server: "ws://192.168.10.138:8188" });
   a.onDestroyed = () => {
     console.log("destroyed");
   };
@@ -10,7 +10,7 @@ async function test() {
   };
   await a.init({ debug: false });
   const session = await a.createSession();
-  
+
   const plugin = await session.attach(JanusSipPlugin);
   plugin.recording = true;
   const remoteStream = new MediaStream();
@@ -43,6 +43,7 @@ async function test() {
 
   plugin.register("204", "c2.pbx.commpeak.com", {
     secret: "Ss1g8C1snGgCcMg5egkDOqmOTKxUaP",
+    sips: false,
   });
 }
 

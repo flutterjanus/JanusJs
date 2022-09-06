@@ -213,7 +213,7 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  handleRemoteJsep(params: { jsep: JSEP }): void {
+  handleRemoteJsep(params: { jsep: JSEP }): Promise<void> {
     throw new Error("Method not implemented.");
   }
   dtmf(params: any): void {
@@ -253,11 +253,21 @@ export class JanusPlugin implements PluginHandle {
     throw new Error("Method not implemented.");
   }
 
-  hangup(sendRequest?: boolean): void {
+  hangup(sendRequest?: boolean): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  detach(params?: DetachOptions): void {
-    throw new Error("Method not implemented.");
+  detach(params?: Omit<DetachOptions, "success" | "error">): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.handle.data({
+        ...params,
+        success() {
+          resolve();
+        },
+        error(error: any) {
+          reject(error);
+        },
+      });
+    });
   }
   stopCollectingStats() {
     clearInterval(this.statsReportHookTimer);
