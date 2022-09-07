@@ -37,7 +37,6 @@ export declare class JanusSipPlugin extends JanusPlugin {
     }, offer?: RTCSessionDescription): Promise<void>;
     update(offer?: RTCSessionDescription): Promise<void>;
     decline(code?: number, headers?: any): Promise<void>;
-    hangup(headers?: any): Promise<void>;
     accept(options?: {
         srtp?: string;
         headers: any;

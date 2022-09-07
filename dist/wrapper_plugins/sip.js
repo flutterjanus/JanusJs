@@ -159,24 +159,13 @@ var JanusSipPlugin = /** @class */ (function (_super) {
             });
         });
     };
-    JanusSipPlugin.prototype.hangup = function (headers) {
-        return __awaiter(this, void 0, void 0, function () {
-            var payload;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        payload = {
-                            request: "hangup",
-                            headers: headers,
-                        };
-                        return [4 /*yield*/, this.send({ message: payload })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    };
+    // async hangup(headers?: any) {
+    //   const payload = {
+    //     request: "hangup",
+    //     headers,
+    //   };
+    //   await this.send({ message: payload });
+    // }
     JanusSipPlugin.prototype.accept = function (options) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;

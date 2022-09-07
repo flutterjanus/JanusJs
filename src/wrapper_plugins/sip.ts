@@ -104,13 +104,13 @@ export class JanusSipPlugin extends JanusPlugin {
     };
     await this.send({ message: payload });
   }
-  async hangup(headers?: any) {
-    const payload = {
-      request: "hangup",
-      headers,
-    };
-    await this.send({ message: payload });
-  }
+  // async hangup(headers?: any) {
+  //   const payload = {
+  //     request: "hangup",
+  //     headers,
+  //   };
+  //   await this.send({ message: payload });
+  // }
   async accept(options?: {
     srtp?: string;
     headers: any;
