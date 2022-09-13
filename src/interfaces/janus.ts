@@ -336,7 +336,7 @@ export interface Controllers {
     blob: Blob;
     chunkNumber: number;
   }>;
-  onStatReportsController: BehaviorSubject<any[]>;
+  onStatReportsController: Subject<any[]>;
   onDataController: BehaviorSubject<any>;
   onErrorController: BehaviorSubject<any>;
   onMediaStateController: BehaviorSubject<{

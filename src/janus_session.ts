@@ -41,7 +41,7 @@ export class JanusSession {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
       onRecordingDataController: new Subject(),
-      onStatReportsController: new BehaviorSubject(null),
+      onStatReportsController: new Subject(),
       onMessageController: new Subject(),
       onLocalTrackController: new BehaviorSubject(null),
       onRemoteTrackController: new Subject(),
