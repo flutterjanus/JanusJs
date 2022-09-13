@@ -72,7 +72,7 @@ var JanusSession = /** @class */ (function () {
         var finalOptions = __assign({}, options);
         var controllers = {
             onRecordingDataController: new Subject(),
-            onStatReportsController: new BehaviorSubject(null),
+            onStatReportsController: new Subject(),
             onMessageController: new Subject(),
             onLocalTrackController: new BehaviorSubject(null),
             onRemoteTrackController: new Subject(),
