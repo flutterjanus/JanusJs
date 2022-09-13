@@ -1933,7 +1933,7 @@ function Janus(gatewayCallbacks) {
 				Janus.log('Remote track removed:', ev);
 				clearTimeout(trackMutedTimeoutId);
 				// Notify the application
-				let transceiver = config.pc.getTransceivers().find(
+				let transceiver = config?.pc?.getTransceivers().find(
 					t => t.receiver.track === ev.target);
 				let mid = transceiver ? transceiver.mid : ev.target.id;
 				try {
@@ -1948,7 +1948,7 @@ function Janus(gatewayCallbacks) {
 					trackMutedTimeoutId = setTimeout(function() {
 						Janus.log('Removing remote track');
 						// Notify the application the track is gone
-						let transceiver = config.pc.getTransceivers().find(
+						let transceiver = config?.pc?.getTransceivers().find(
 							t => t.receiver.track === ev.target);
 						let mid = transceiver ? transceiver.mid : ev.target.id;
 						try {
