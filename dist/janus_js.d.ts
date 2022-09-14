@@ -4,6 +4,7 @@ import { JanusSession } from "./janus_session";
 export declare class JanusJs {
     protected instance: Janus;
     protected options: ConstructorOptions;
+    statsQueryInterval: number;
     static isWebrtcSupported(): boolean;
     static debug(...args: any[]): void;
     static log(...args: any[]): void;

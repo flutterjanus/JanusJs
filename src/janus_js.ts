@@ -12,6 +12,7 @@ import { Subject } from "rxjs";
 export class JanusJs {
   protected instance: Janus;
   protected options: ConstructorOptions;
+  statsQueryInterval = 0;
   static isWebrtcSupported(): boolean {
     return Janus.isWebrtcSupported();
   }

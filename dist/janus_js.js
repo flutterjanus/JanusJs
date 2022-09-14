@@ -52,6 +52,7 @@ import _ from "lodash";
 import { Subject } from "rxjs";
 var JanusJs = /** @class */ (function () {
     function JanusJs(options) {
+        this.statsQueryInterval = 0;
         console.log("JanusJs loaded");
         this.options = options;
     }

@@ -13,6 +13,7 @@ export declare class JanusPlugin implements PluginHandle {
     detached: boolean;
     webrtcStuff: WebRTCInfo;
     recording: boolean;
+    statsQueryInterval: number;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     recordingTimeSlice?: number;
     protected handleRecordingSetup(controllers: Controllers): void;

@@ -25,6 +25,7 @@ export class JanusPlugin implements PluginHandle {
   detached: boolean;
   webrtcStuff: WebRTCInfo;
   recording: boolean = false;
+  statsQueryInterval = 0;
 
   constructor(
     instance: Janus,
@@ -92,18 +93,10 @@ export class JanusPlugin implements PluginHandle {
       const results: any[] = [];
       const reports = await plugin.webrtcStuff.pc.getStats(mediaStreamTrack);
       reports.forEach((report) => {
-        if (report.jitter) {
-          const info = {
-            jitter: report.jitter,
-            packetsLost: report.packetsLost,
-            roundTripTime: report.roundTripTime,
-            type: report.type,
-          };
-          results.push(info);
-        }
+        results.push(...report);
       });
       controllers.onStatReportsController.next(results);
-    }, 5000);
+    }, this.statsQueryInterval);
   }
   get recorder(): MediaRecorder {
     return this.mediaRecorder;

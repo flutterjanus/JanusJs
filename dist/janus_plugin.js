@@ -49,6 +49,7 @@ import { JanusJs } from "./janus_js";
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
         this.recording = false;
+        this.statsQueryInterval = 0;
         this.instance = instance;
         this.session = session;
         this.controllers = controllers;
@@ -109,21 +110,13 @@ var JanusPlugin = /** @class */ (function () {
                     case 1:
                         reports = _a.sent();
                         reports.forEach(function (report) {
-                            if (report.jitter) {
-                                var info = {
-                                    jitter: report.jitter,
-                                    packetsLost: report.packetsLost,
-                                    roundTripTime: report.roundTripTime,
-                                    type: report.type,
-                                };
-                                results.push(info);
-                            }
+                            results.push.apply(results, report);
                         });
                         controllers.onStatReportsController.next(results);
                         return [2 /*return*/];
                 }
             });
-        }); }, 5000);
+        }); }, this.statsQueryInterval);
     };
     Object.defineProperty(JanusPlugin.prototype, "recorder", {
         get: function () {
