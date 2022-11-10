@@ -1,0 +1,8 @@
+node_modules/
+.idea/
+js/node_modules
+docs/
+examples/
+janus-gateway/
+build_janus.sh
+
