@@ -1,6 +1,11 @@
 import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
 import { JanusPlugin } from "../janus_plugin";
 import { JanusSession } from "../janus_session";
+export interface UpdateAsSubscriberStream {
+    feed: any;
+    mid?: any;
+    crossrefid?: any;
+}
 export declare class JanusVideoRoomPlugin extends JanusPlugin {
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     createRoom(options?: {
@@ -22,7 +27,7 @@ export declare class JanusVideoRoomPlugin extends JanusPlugin {
         feed_id?: number;
         private_id?: number;
         streams?: {
-            feed_id: number;
+            feed: number;
             mid: number;
         }[];
     }): Promise<any>;
@@ -41,5 +46,11 @@ export declare class JanusVideoRoomPlugin extends JanusPlugin {
             description: string;
         }[];
     }): Promise<any>;
+    unpublishAsPublisher(): Promise<any>;
+    updateAsSubscriber({ subscribe, unsubscribe }: {
+        subscribe: UpdateAsSubscriberStream[] | undefined;
+        unsubscribe: UpdateAsSubscriberStream[] | undefined;
+    }): Promise<any>;
+    leave(): Promise<any>;
 }
 //# sourceMappingURL=video_room.d.ts.map

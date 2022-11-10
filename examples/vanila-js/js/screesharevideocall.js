@@ -1,8 +1,8 @@
 import { JanusJs, JanusVideoCallPlugin } from "typed_janus_js";
 import { config } from "./conf";
 
-const janus = new JanusJs(config.meetecho);
-await janus.init({ debug: false });
+const janus = new JanusJs(config.servercheap);
+await janus.init({ debug: true });
 const session = await janus.createSession();
 const publisher = await session.attach(JanusVideoCallPlugin);
 publisher.onMessage.subscribe((msg) => {

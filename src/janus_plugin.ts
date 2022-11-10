@@ -1,15 +1,5 @@
 import _ from "lodash";
-import Janus, {
-  AnswerParams,
-  Controllers,
-  DataParams,
-  DetachOptions,
-  JSEP,
-  OfferParams,
-  PluginHandle,
-  PluginMessage,
-  WebRTCInfo,
-} from "./interfaces/janus";
+import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 import { JanusJs } from "./janus_js";
 import { JanusSession } from "./janus_session";
 export class JanusPlugin implements PluginHandle {
@@ -27,21 +17,12 @@ export class JanusPlugin implements PluginHandle {
   recording: boolean = false;
   statsQueryInterval = 0;
 
-  constructor(
-    instance: Janus,
-    session: JanusSession,
-    handle: PluginHandle,
-    controllers: Controllers
-  ) {
+  constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers) {
     this.instance = instance;
     this.session = session;
     this.controllers = controllers;
     this.handle = handle;
-    this.statsReportHookTimer = this.handleStatsHook(
-      this.handle,
-      controllers,
-      null
-    );
+    this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
     if (this.recording) {
       console.info("recording enabled");
       this.handleRecordingSetup(controllers);
@@ -60,10 +41,7 @@ export class JanusPlugin implements PluginHandle {
           }
           console.info("recording initiated");
           data = JanusJs.createRecording({
-            mediaStreams: [
-              this.webrtcStuff.myStream,
-              this.webrtcStuff.remoteStream,
-            ],
+            mediaStreams: [this.webrtcStuff.myStream, this.webrtcStuff.remoteStream],
             timeSlice: this.recordingTimeSlice,
           });
         }
@@ -75,17 +53,12 @@ export class JanusPlugin implements PluginHandle {
         }
       }
       if (result?.event === "hangup") {
-        if (this.mediaRecorder?.state !== "inactive")
-          this.mediaRecorder?.stop();
+        if (this.mediaRecorder?.state !== "inactive") this.mediaRecorder?.stop();
       }
     });
   }
 
-  protected handleStatsHook(
-    plugin: PluginHandle,
-    controllers: Controllers,
-    mediaStreamTrack: MediaStreamTrack = null
-  ) {
+  protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack: MediaStreamTrack = null) {
     return setInterval(async () => {
       if (!plugin.webrtcStuff.pc) {
         return;
@@ -163,9 +136,7 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  createOffer(
-    params: Omit<OfferParams, "success" | "error">
-  ): Promise<RTCSessionDescription> {
+  createOffer(params: Omit<OfferParams, "success" | "error">): Promise<RTCSessionDescription> {
     return new Promise<RTCSessionDescription>((resolve, reject) => {
       this.handle.createOffer({
         ...params,
@@ -178,9 +149,7 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  createAnswer(
-    params: Omit<AnswerParams, "success" | "error">
-  ): Promise<RTCSessionDescription> {
+  createAnswer(params: Omit<AnswerParams, "success" | "error">): Promise<RTCSessionDescription> {
     return new Promise<RTCSessionDescription>((resolve, reject) => {
       this.handle.createAnswer({
         ...params,

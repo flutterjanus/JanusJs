@@ -1,13 +1,6 @@
 import Janus from "../js/janus";
 import _ from "lodash";
-import {
-  Controllers,
-  DestroyOptions,
-  JSEP,
-  Message,
-  PluginHandle,
-  PluginOptions,
-} from "./interfaces/janus";
+import { Controllers, DestroyOptions, JSEP, Message, PluginHandle, PluginOptions } from "./interfaces/janus";
 import { JanusPlugin, JanusPlugins } from "./janus_plugin";
 import { BehaviorSubject, skip } from "rxjs";
 import { JanusVideoRoomPlugin } from "./wrapper_plugins/video_room";
@@ -35,9 +28,7 @@ export class JanusSession {
   getSessionId(): number {
     return this.instance.getSessionId();
   }
-  private getObservableControllers(
-    options: Pick<PluginOptions, "plugin" | "opaqueId">
-  ) {
+  private getObservableControllers(options: Pick<PluginOptions, "plugin" | "opaqueId">) {
     const finalOptions: PluginOptions = { ...options };
     const controllers: Controllers = {
       onRecordingDataController: new Subject(),
@@ -94,10 +85,7 @@ export class JanusSession {
     return { finalOptions, controllers };
   }
 
-  attach<Type extends JanusPlugin>(
-    classToCreate: new (...args: any) => Type,
-    options: Pick<PluginOptions, "opaqueId">
-  ): Promise<Type> {
+  attach<Type extends JanusPlugin>(classToCreate: new (...args: any) => Type, options: Pick<PluginOptions, "opaqueId">): Promise<Type> {
     let pluginIdentifier;
     switch (classToCreate.name) {
       case JanusVideoRoomPlugin.name:
@@ -128,16 +116,8 @@ export class JanusSession {
     const { controllers, finalOptions } = this.getObservableControllers(opts);
     return new Promise<Type>((resolve, reject) => {
       finalOptions.success = (plugin: PluginHandle) => {
-        const pluginHandle = new classToCreate(
-          this.instance,
-          this,
-          plugin,
-          controllers
-        );
-        _.assign(
-          pluginHandle,
-          _.omit(plugin, ["data", "send", "createAnswer", "createOffer"])
-        );
+        const pluginHandle = new classToCreate(this.instance, this, plugin, controllers);
+        _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
         resolve(pluginHandle);
       };
       finalOptions.error = (error: any) => {
@@ -171,9 +151,7 @@ export class JanusSession {
       });
     });
   }
-  async destroy(
-    callbacks: Omit<DestroyOptions, "success" | "error">
-  ): Promise<void> {
+  async destroy(callbacks: Omit<DestroyOptions, "success" | "error">): Promise<void> {
     return new Promise((resolve, reject) => {
       this.instance.destroy({
         ...callbacks,

@@ -99,14 +99,8 @@ export interface PluginCallbacks {
   error?: (error: string) => void;
   consentDialog?: (on: boolean) => void;
   webrtcState?: (isConnected: boolean) => void;
-  iceState?: (
-    state: "connected" | "failed" | "disconnected" | "closed"
-  ) => void;
-  mediaState?: (
-    medium: "audio" | "video",
-    receiving: boolean,
-    mid?: number
-  ) => void;
+  iceState?: (state: "connected" | "failed" | "disconnected" | "closed") => void;
+  mediaState?: (medium: "audio" | "video", receiving: boolean, mid?: number) => void;
   slowLink?: (uplink: boolean, lost: number, mid: string) => void;
   onmessage?: (message: any, jsep?: JSEP) => void;
   onlocaltrack?: (track: MediaStreamTrack, on: boolean) => void;
@@ -122,6 +116,7 @@ export interface PluginOptions extends PluginCallbacks {
   opaqueId?: string;
 }
 export interface AnswerParams {
+  tracks?: { type: "video" | "audio" | "data"; capture: boolean; recv: boolean }[];
   media?: {
     audioSend?: boolean;
     addAudio?: boolean;
@@ -135,15 +130,7 @@ export interface AnswerParams {
     replaceVideo?: boolean;
     videoRecv?: boolean;
     audio?: boolean | { deviceId: string };
-    video?:
-      | boolean
-      | { deviceId: string }
-      | "lowres"
-      | "lowres-16:9"
-      | "stdres"
-      | "stdres-16:9"
-      | "hires"
-      | "hires-16:9";
+    video?: boolean | { deviceId: string } | "lowres" | "lowres-16:9" | "stdres" | "stdres-16:9" | "hires" | "hires-16:9";
     data?: boolean;
     failIfNoAudio?: boolean;
     failIfNoVideo?: boolean;
@@ -152,29 +139,14 @@ export interface AnswerParams {
   jsep: any;
 }
 export interface OfferParams {
+  tracks?: { type: "video" | "audio" | "data"; capture: boolean; recv: boolean }[];
   media?: {
-    tracks?: { type: string; capture: boolean; recv: boolean }[];
     audioSend?: boolean;
-    addAudio?: boolean;
-    addVideo?: boolean;
-    addData?: boolean;
     audioRecv?: boolean;
     videoSend?: boolean;
-    removeAudio?: boolean;
-    removeVideo?: boolean;
-    replaceAudio?: boolean;
-    replaceVideo?: boolean;
     videoRecv?: boolean;
     audio?: boolean | { deviceId: string };
-    video?:
-      | boolean
-      | { deviceId: string }
-      | "lowres"
-      | "lowres-16:9"
-      | "stdres"
-      | "stdres-16:9"
-      | "hires"
-      | "hires-16:9";
+    video?: boolean | { deviceId: string } | "lowres" | "lowres-16:9" | "stdres" | "stdres-16:9" | "hires" | "hires-16:9";
     data?: boolean;
     failIfNoAudio?: boolean;
     failIfNoVideo?: boolean;
@@ -268,9 +240,7 @@ declare namespace JanusJS {
   class Janus {
     static webRTCAdapter: any;
     static safariVp8: boolean;
-    static useDefaultDependencies(
-      deps: Partial<Dependencies>
-    ): DependenciesResult;
+    static useDefaultDependencies(deps: Partial<Dependencies>): DependenciesResult;
     static useOldDependencies(deps: Partial<Dependencies>): DependenciesResult;
     static init(options: InitOptions): void;
     static isWebrtcSupported(): boolean;
@@ -279,14 +249,8 @@ declare namespace JanusJS {
     static warn(...args: any[]): void;
     static error(...args: any[]): void;
     static randomString(length: number): string;
-    static attachMediaStream(
-      element: HTMLMediaElement,
-      stream: MediaStream
-    ): void;
-    static reattachMediaStream(
-      to: HTMLMediaElement,
-      from: HTMLMediaElement
-    ): void;
+    static attachMediaStream(element: HTMLMediaElement, stream: MediaStream): void;
+    static reattachMediaStream(to: HTMLMediaElement, from: HTMLMediaElement): void;
 
     static stopAllTracks(stream: MediaStream): void;
 
@@ -350,9 +314,7 @@ export interface Controllers {
     mid: string;
   }>;
   onWebRTCStateController: BehaviorSubject<boolean>;
-  onIceStateController: BehaviorSubject<
-    "connected" | "failed" | "disconnected" | "closed"
-  >;
+  onIceStateController: BehaviorSubject<"connected" | "failed" | "disconnected" | "closed">;
   onDataOpenController: BehaviorSubject<void>;
   onDetachedController: BehaviorSubject<void>;
   onCleanupController: BehaviorSubject<void>;

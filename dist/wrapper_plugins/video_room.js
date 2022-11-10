@@ -121,6 +121,42 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             });
         });
     };
+    JanusVideoRoomPlugin.prototype.unpublishAsPublisher = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                payload = {
+                    request: "unpublish",
+                };
+                return [2 /*return*/, this.send({ message: payload })];
+            });
+        });
+    };
+    JanusVideoRoomPlugin.prototype.updateAsSubscriber = function (_a) {
+        var subscribe = _a.subscribe, unsubscribe = _a.unsubscribe;
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_b) {
+                payload = {
+                    request: "update",
+                    subscribe: subscribe,
+                    unsubscribe: unsubscribe,
+                };
+                return [2 /*return*/, this.send({ message: payload })];
+            });
+        });
+    };
+    JanusVideoRoomPlugin.prototype.leave = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                payload = {
+                    request: "leave",
+                };
+                return [2 /*return*/, this.send({ message: payload })];
+            });
+        });
+    };
     return JanusVideoRoomPlugin;
 }(JanusPlugin));
 export { JanusVideoRoomPlugin };

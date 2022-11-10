@@ -104,6 +104,11 @@ export interface PluginOptions extends PluginCallbacks {
     opaqueId?: string;
 }
 export interface AnswerParams {
+    tracks?: {
+        type: "video" | "audio" | "data";
+        capture: boolean;
+        recv: boolean;
+    }[];
     media?: {
         audioSend?: boolean;
         addAudio?: boolean;
@@ -130,22 +135,15 @@ export interface AnswerParams {
     jsep: any;
 }
 export interface OfferParams {
+    tracks?: {
+        type: "video" | "audio" | "data";
+        capture: boolean;
+        recv: boolean;
+    }[];
     media?: {
-        tracks?: {
-            type: string;
-            capture: boolean;
-            recv: boolean;
-        }[];
         audioSend?: boolean;
-        addAudio?: boolean;
-        addVideo?: boolean;
-        addData?: boolean;
         audioRecv?: boolean;
         videoSend?: boolean;
-        removeAudio?: boolean;
-        removeVideo?: boolean;
-        replaceAudio?: boolean;
-        replaceVideo?: boolean;
         videoRecv?: boolean;
         audio?: boolean | {
             deviceId: string;

@@ -74,10 +74,7 @@ var JanusPlugin = /** @class */ (function () {
                     }
                     console.info("recording initiated");
                     data = JanusJs.createRecording({
-                        mediaStreams: [
-                            _this.webrtcStuff.myStream,
-                            _this.webrtcStuff.remoteStream,
-                        ],
+                        mediaStreams: [_this.webrtcStuff.myStream, _this.webrtcStuff.remoteStream],
                         timeSlice: _this.recordingTimeSlice,
                     });
                 }
