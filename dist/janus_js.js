@@ -45,13 +45,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import Janus from "../janus-gateway/npm/janus";
+import Janus from "../js/janus";
 import adapter from "webrtc-adapter";
 import { JanusSession } from "./janus_session";
 import _ from "lodash";
 import { Subject } from "rxjs";
 var JanusJs = /** @class */ (function () {
     function JanusJs(options) {
+        this.statsQueryInterval = 0;
         console.log("JanusJs loaded");
         this.options = options;
     }
@@ -186,7 +187,14 @@ var JanusJs = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.options.destroyed = function () {
-                            _this.onDestroyed();
+                            if (_this.onDestroyed) {
+                                _this.onDestroyed();
+                            }
+                        };
+                        this.options.error = function (err) {
+                            if (_this.onError) {
+                                _this.onError(err);
+                            }
                         };
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
                                 _this.options.success = function () {
@@ -195,7 +203,7 @@ var JanusJs = /** @class */ (function () {
                                 _this.options.error = function (error) {
                                     reject(error);
                                 };
-                                _this.instance = new Janus(_this.options);
+                                _this.instance = new Janus(__assign({}, _this.options));
                             })];
                     case 1:
                         _a.sent();

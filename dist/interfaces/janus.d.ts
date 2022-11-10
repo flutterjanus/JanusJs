@@ -1,10 +1,18 @@
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 export interface Dependencies {
     adapter: any;
     WebSocket: (server: string, protocol: string) => WebSocket;
     isArray: (array: any) => array is Array<any>;
     extension: () => boolean;
     httpAPICall: (url: string, options: any) => void;
+}
+export interface CreateRecordingController {
+    blob: Blob;
+    chunkNumber: number;
+}
+export interface CreateRecordingResult {
+    mediaRecorder: MediaRecorder;
+    controller: Subject<CreateRecordingController>;
 }
 export interface DataParams {
     text: any;
@@ -96,6 +104,11 @@ export interface PluginOptions extends PluginCallbacks {
     opaqueId?: string;
 }
 export interface AnswerParams {
+    tracks?: {
+        type: "video" | "audio" | "data";
+        capture: boolean;
+        recv: boolean;
+    }[];
     media?: {
         audioSend?: boolean;
         addAudio?: boolean;
@@ -122,17 +135,15 @@ export interface AnswerParams {
     jsep: any;
 }
 export interface OfferParams {
+    tracks?: {
+        type: "video" | "audio" | "data";
+        capture: boolean;
+        recv: boolean;
+    }[];
     media?: {
         audioSend?: boolean;
-        addAudio?: boolean;
-        addVideo?: boolean;
-        addData?: boolean;
         audioRecv?: boolean;
         videoSend?: boolean;
-        removeAudio?: boolean;
-        removeVideo?: boolean;
-        replaceAudio?: boolean;
-        replaceVideo?: boolean;
         videoRecv?: boolean;
         audio?: boolean | {
             deviceId: string;
@@ -218,13 +229,13 @@ export interface PluginHandle {
     }): void;
     dtmf(params: any): void;
     data(params: any): void;
-    isAudioMuted(): boolean;
-    muteAudio(): void;
-    unmuteAudio(): void;
-    isVideoMuted(): boolean;
-    muteVideo(): void;
-    unmuteVideo(): void;
-    getBitrate(): string;
+    isAudioMuted(mid: string): boolean;
+    muteAudio(mid: string): void;
+    unmuteAudio(mid: string): void;
+    isVideoMuted(mid: string): boolean;
+    muteVideo(mid: string): void;
+    unmuteVideo(mid: string): void;
+    getBitrate(mid: string): string;
     hangup(sendRequest?: boolean): void;
     detach(params?: DetachOptions): void;
 }
@@ -272,10 +283,10 @@ export interface ConstructorOptions {
 }
 export interface Controllers {
     onMessageController: Subject<{
-        message: MessageCallback;
+        message: MessageCallback | any;
         jsep: JSEP;
     }>;
-    onLocalTrackController: Subject<{
+    onLocalTrackController: BehaviorSubject<{
         track: MediaStreamTrack;
         on: boolean;
     }>;
@@ -289,22 +300,22 @@ export interface Controllers {
         chunkNumber: number;
     }>;
     onStatReportsController: Subject<any[]>;
-    onDataController: Subject<any>;
-    onErrorController: Subject<any>;
-    onMediaStateController: Subject<{
+    onDataController: BehaviorSubject<any>;
+    onErrorController: BehaviorSubject<any>;
+    onMediaStateController: BehaviorSubject<{
         medium: "audio" | "video";
         recieving: boolean;
         mid: number;
     }>;
-    onSlowLinkController: Subject<{
+    onSlowLinkController: BehaviorSubject<{
         uplink: boolean;
         lost: number;
         mid: string;
     }>;
-    onWebRTCStateController: Subject<boolean>;
-    onIceStateController: Subject<"connected" | "failed" | "disconnected" | "closed">;
-    onDataOpenController: Subject<void>;
-    onDetachedController: Subject<void>;
-    onCleanupController: Subject<void>;
+    onWebRTCStateController: BehaviorSubject<boolean>;
+    onIceStateController: BehaviorSubject<"connected" | "failed" | "disconnected" | "closed">;
+    onDataOpenController: BehaviorSubject<void>;
+    onDetachedController: BehaviorSubject<void>;
+    onCleanupController: BehaviorSubject<void>;
 }
 //# sourceMappingURL=janus.d.ts.map

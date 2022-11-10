@@ -1,97 +1,50 @@
-import { JanusJs } from "typed_janus_js";
-const register = async (
-  plugin,
-  server = "c2.pbx.commpeak.com",
-  username = "204",
-  password = "Ss1g8C1snGgCcMg5egkDOqmOTKxUaP"
-) => {
-  const payload = {
-    request: "register",
-    force_udp: true,
-    sips: true,
-    rfc2543_cancel: true,
-    username: `sip:${username}@${server}`,
-    secret: password,
-  };
-  await plugin.send({ message: payload });
-};
-const call = async (plugin, uri) => {
-  console.log("calling..");
-  const payload = {
-    request: "call",
-    uri: uri,
-  };
-  const offer = await plugin.createOffer({
-    media: {
-      audioRecv: true,
-      audioSend: true,
-      videoRecv: false,
-      videoSend: false,
-    },
-  });
-  await plugin.send({ message: payload, jsep: offer });
-};
+import { JanusJs, JanusSipPlugin } from "typed_janus_js";
+import { config } from "./conf";
 async function test() {
-  const a = new JanusJs({ server: "ws://127.0.0.1:8188" });
+  const a = new JanusJs({ server: "ws://192.168.10.138:8188" });
+  a.onDestroyed = () => {
+    console.log("destroyed");
+  };
+  a.onError = (err) => {
+    console.warn(err);
+  };
   await a.init({ debug: false });
   const session = await a.createSession();
-  const plugin = await session.attach({ plugin: "janus.plugin.sip" });
+
+  const plugin = await session.attach(JanusSipPlugin);
+  plugin.recording = true;
+  const remoteStream = new MediaStream();
   plugin.onRemoteTrack.subscribe((data) => {
-    const remoteStream = new MediaStream();
     remoteStream.addTrack(data.track.clone());
     JanusJs.playMediaStream(remoteStream);
   });
-  plugin.onStatReports.subscribe((reports) => {
-    // console.log(reports);
-  });
-  const audioChunks = [];
-  plugin.onRecordingData.subscribe(({ blob, chunkNumber }) => {
-    console.log(blob, chunkNumber);
-
-    if (!blob) {
-      const audioBlob = new Blob(audioChunks);
-      const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      audio.play();
-    } else {
-      audioChunks.push(blob);
-    }
-  });
+  // plugin.onStatReports.subscribe((reports) => {
+  //   console.log(reports);
+  // });
 
   plugin.onMessage.subscribe(async (data) => {
     console.log(data.message.result);
     const result = data.message.result;
-    // console.log(result);
     if (result.event === "hangup") {
+      // plugin.record("stop");
       plugin.detach();
     }
     if (result.event === "registered") {
-      // console.log(result);
-      // await call(plugin, "sip:00919310303077@sip.theansr.com");
-      await call(plugin, "sip:451001918744849050@c2.pbx.commpeak.com");
-      // await call(plugin, "encryptedUri-1-1-00");
+      plugin.call("sip:45100135794425460@c2.pbx.commpeak.com");
     }
     if (result.event === "accepted") {
-      setTimeout(() => {
-        plugin.recorder.stop();
-      }, 10000);
+      // plugin.record("start");
+      // plugin.muteAudio();
     }
     if (data.jsep) {
       plugin.handleRemoteJsep({ jsep: data.jsep });
     }
   });
 
-  // await register(
-  //   plugin,
-  //   "sip.theansr.com",
-  //   "test_janus",
-  //   "+iBBfWDygkaF8P21tXkV"
-  // );
-  await register(
-    plugin,
-    "c2.pbx.commpeak.com",
-    "204",
-    "Ss1g8C1snGgCcMg5egkDOqmOTKxUaP"
-  );
+  plugin.register("204", "c2.pbx.commpeak.com", {
+    secret: "Ss1g8C1snGgCcMg5egkDOqmOTKxUaP",
+    sips: false,
+  });
 }
+
 test();

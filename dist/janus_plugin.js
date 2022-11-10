@@ -48,27 +48,33 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import { JanusJs } from "./janus_js";
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
+        this.recording = false;
+        this.statsQueryInterval = 0;
         this.instance = instance;
         this.session = session;
         this.controllers = controllers;
         this.handle = handle;
         this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
-        this.handleRecordingSetup(controllers);
+        if (this.recording) {
+            console.info("recording enabled");
+            this.handleRecordingSetup(controllers);
+        }
     }
     JanusPlugin.prototype.handleRecordingSetup = function (controllers) {
         var _this = this;
         var data;
         this.onMessage.subscribe(function (_a) {
-            var jsep = _a.jsep, message = _a.message;
-            var result = message.result;
-            if (result.event === "accepted" || result.event === "progress") {
+            var _b, _c;
+            var message = _a.message;
+            var result = message === null || message === void 0 ? void 0 : message.result;
+            if ((result === null || result === void 0 ? void 0 : result.event) === "accepted" || (result === null || result === void 0 ? void 0 : result.event) === "progress") {
                 if (!data) {
+                    if (!_this.webrtcStuff.remoteStream || !_this.webrtcStuff.myStream) {
+                        return;
+                    }
                     console.info("recording initiated");
                     data = JanusJs.createRecording({
-                        mediaStreams: [
-                            _this.webrtcStuff.myStream,
-                            _this.webrtcStuff.remoteStream,
-                        ],
+                        mediaStreams: [_this.webrtcStuff.myStream, _this.webrtcStuff.remoteStream],
                         timeSlice: _this.recordingTimeSlice,
                     });
                 }
@@ -79,9 +85,9 @@ var JanusPlugin = /** @class */ (function () {
                     });
                 }
             }
-            if (result.event === "hangup") {
-                if (_this.mediaRecorder.state !== "inactive")
-                    _this.mediaRecorder.stop();
+            if ((result === null || result === void 0 ? void 0 : result.event) === "hangup") {
+                if (((_b = _this.mediaRecorder) === null || _b === void 0 ? void 0 : _b.state) !== "inactive")
+                    (_c = _this.mediaRecorder) === null || _c === void 0 ? void 0 : _c.stop();
             }
         });
     };
@@ -101,21 +107,13 @@ var JanusPlugin = /** @class */ (function () {
                     case 1:
                         reports = _a.sent();
                         reports.forEach(function (report) {
-                            if (report.jitter) {
-                                var info = {
-                                    jitter: report.jitter,
-                                    packetsLost: report.packetsLost,
-                                    roundTripTime: report.roundTripTime,
-                                    type: report.type,
-                                };
-                                results.push(info);
-                            }
+                            results.push.apply(results, report);
                         });
                         controllers.onStatReportsController.next(results);
                         return [2 /*return*/];
                 }
             });
-        }); }, 5000);
+        }); }, this.statsQueryInterval);
     };
     Object.defineProperty(JanusPlugin.prototype, "recorder", {
         get: function () {
@@ -278,32 +276,51 @@ var JanusPlugin = /** @class */ (function () {
     JanusPlugin.prototype.dtmf = function (params) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.isAudioMuted = function () {
+    JanusPlugin.prototype.setMaxBitrate = function (mid, bitrate) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.muteAudio = function () {
+    JanusPlugin.prototype.isAudioMuted = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.unmuteAudio = function () {
+    JanusPlugin.prototype.muteAudio = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.isVideoMuted = function () {
+    JanusPlugin.prototype.unmuteAudio = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.muteVideo = function () {
+    JanusPlugin.prototype.isVideoMuted = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.unmuteVideo = function () {
+    JanusPlugin.prototype.muteVideo = function (mid) {
         throw new Error("Method not implemented.");
     };
-    JanusPlugin.prototype.getBitrate = function () {
+    JanusPlugin.prototype.unmuteVideo = function (mid) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getBitrate = function (mid) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getVolume = function (mid, result) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getRemoteVolume = function (mid, result) {
+        throw new Error("Method not implemented.");
+    };
+    JanusPlugin.prototype.getLocalVolume = function (mid, result) {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.hangup = function (sendRequest) {
         throw new Error("Method not implemented.");
     };
     JanusPlugin.prototype.detach = function (params) {
-        throw new Error("Method not implemented.");
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.handle.data(__assign(__assign({}, params), { success: function () {
+                    resolve();
+                }, error: function (error) {
+                    reject(error);
+                } }));
+        });
     };
     JanusPlugin.prototype.stopCollectingStats = function () {
         clearInterval(this.statsReportHookTimer);
@@ -311,3 +328,15 @@ var JanusPlugin = /** @class */ (function () {
     return JanusPlugin;
 }());
 export { JanusPlugin };
+var JanusPlugins = /** @class */ (function () {
+    function JanusPlugins() {
+    }
+    JanusPlugins.VIDEO_ROOM = "janus.plugin.videoroom";
+    JanusPlugins.VIDEO_CALL = "janus.plugin.videocall";
+    JanusPlugins.AUDIO_BRIDGE = "janus.plugin.audiobridge";
+    JanusPlugins.SIP = "janus.plugin.sip";
+    JanusPlugins.STREAMING = "janus.plugin.streaming";
+    JanusPlugins.ECHO_TEST = "janus.plugin.echotest";
+    return JanusPlugins;
+}());
+export { JanusPlugins };

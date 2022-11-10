@@ -1,10 +1,10 @@
-import Janus from "../janus-gateway/npm/janus";
-import { ConstructorOptions, InitOptions } from "./interfaces/janus";
+import Janus from "../js/janus";
+import { ConstructorOptions, CreateRecordingResult, InitOptions } from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
-import { Subject } from "rxjs";
 export declare class JanusJs {
     protected instance: Janus;
     protected options: ConstructorOptions;
+    statsQueryInterval: number;
     static isWebrtcSupported(): boolean;
     static debug(...args: any[]): void;
     static log(...args: any[]): void;
@@ -16,19 +16,14 @@ export declare class JanusJs {
     static stopAllTracks(stream: MediaStream): void;
     constructor(options: Omit<ConstructorOptions, "success" | "error" | "destroyed">);
     onDestroyed: () => void;
+    onError: (err: any) => void;
     init(params?: Omit<InitOptions, "callback">): Promise<void>;
     static mix(audioContext: AudioContext, streams: MediaStream[]): any;
     static playMediaStream(mediaStream: MediaStream): AudioContext;
     static createRecording(options: {
         mediaStreams: MediaStream[];
         timeSlice?: number;
-    }): {
-        mediaRecorder: MediaRecorder;
-        controller: Subject<{
-            blob: Blob;
-            chunkNumber: number;
-        }>;
-    };
+    }): CreateRecordingResult;
     createSession(): Promise<JanusSession>;
 }
 //# sourceMappingURL=janus_js.d.ts.map

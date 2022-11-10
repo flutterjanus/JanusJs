@@ -1,15 +1,5 @@
 import _ from "lodash";
-import Janus, {
-  AnswerParams,
-  Controllers,
-  DataParams,
-  DetachOptions,
-  JSEP,
-  OfferParams,
-  PluginHandle,
-  PluginMessage,
-  WebRTCInfo,
-} from "./interfaces/janus";
+import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
 import { JanusJs } from "./janus_js";
 import { JanusSession } from "./janus_session";
 export class JanusPlugin implements PluginHandle {
@@ -24,38 +14,34 @@ export class JanusPlugin implements PluginHandle {
   token?: string;
   detached: boolean;
   webrtcStuff: WebRTCInfo;
+  recording: boolean = false;
+  statsQueryInterval = 0;
 
-  constructor(
-    instance: Janus,
-    session: JanusSession,
-    handle: PluginHandle,
-    controllers: Controllers
-  ) {
+  constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers) {
     this.instance = instance;
     this.session = session;
     this.controllers = controllers;
     this.handle = handle;
-    this.statsReportHookTimer = this.handleStatsHook(
-      this.handle,
-      controllers,
-      null
-    );
-    this.handleRecordingSetup(controllers);
+    this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
+    if (this.recording) {
+      console.info("recording enabled");
+      this.handleRecordingSetup(controllers);
+    }
   }
   recordingTimeSlice?: number;
 
   protected handleRecordingSetup(controllers: Controllers) {
     let data: any;
-    this.onMessage.subscribe(({ jsep, message }) => {
-      const result = message.result;
-      if (result.event === "accepted" || result.event === "progress") {
+    this.onMessage.subscribe(({ message }) => {
+      const result = message?.result;
+      if (result?.event === "accepted" || result?.event === "progress") {
         if (!data) {
+          if (!this.webrtcStuff.remoteStream || !this.webrtcStuff.myStream) {
+            return;
+          }
           console.info("recording initiated");
           data = JanusJs.createRecording({
-            mediaStreams: [
-              this.webrtcStuff.myStream,
-              this.webrtcStuff.remoteStream,
-            ],
+            mediaStreams: [this.webrtcStuff.myStream, this.webrtcStuff.remoteStream],
             timeSlice: this.recordingTimeSlice,
           });
         }
@@ -66,17 +52,13 @@ export class JanusPlugin implements PluginHandle {
           });
         }
       }
-      if (result.event === "hangup") {
-        if (this.mediaRecorder.state !== "inactive") this.mediaRecorder.stop();
+      if (result?.event === "hangup") {
+        if (this.mediaRecorder?.state !== "inactive") this.mediaRecorder?.stop();
       }
     });
   }
 
-  protected handleStatsHook(
-    plugin: PluginHandle,
-    controllers: Controllers,
-    mediaStreamTrack: MediaStreamTrack = null
-  ) {
+  protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack: MediaStreamTrack = null) {
     return setInterval(async () => {
       if (!plugin.webrtcStuff.pc) {
         return;
@@ -84,18 +66,10 @@ export class JanusPlugin implements PluginHandle {
       const results: any[] = [];
       const reports = await plugin.webrtcStuff.pc.getStats(mediaStreamTrack);
       reports.forEach((report) => {
-        if (report.jitter) {
-          const info = {
-            jitter: report.jitter,
-            packetsLost: report.packetsLost,
-            roundTripTime: report.roundTripTime,
-            type: report.type,
-          };
-          results.push(info);
-        }
+        results.push(...report);
       });
       controllers.onStatReportsController.next(results);
-    }, 5000);
+    }, this.statsQueryInterval);
   }
   get recorder(): MediaRecorder {
     return this.mediaRecorder;
@@ -162,9 +136,7 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  createOffer(
-    params: Omit<OfferParams, "success" | "error">
-  ): Promise<RTCSessionDescription> {
+  createOffer(params: Omit<OfferParams, "success" | "error">): Promise<RTCSessionDescription> {
     return new Promise<RTCSessionDescription>((resolve, reject) => {
       this.handle.createOffer({
         ...params,
@@ -177,9 +149,7 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  createAnswer(
-    params: Omit<AnswerParams, "success" | "error">
-  ): Promise<RTCSessionDescription> {
+  createAnswer(params: Omit<AnswerParams, "success" | "error">): Promise<RTCSessionDescription> {
     return new Promise<RTCSessionDescription>((resolve, reject) => {
       this.handle.createAnswer({
         ...params,
@@ -205,40 +175,72 @@ export class JanusPlugin implements PluginHandle {
       });
     });
   }
-  handleRemoteJsep(params: { jsep: JSEP }): void {
+  handleRemoteJsep(params: { jsep: JSEP }): Promise<void> {
     throw new Error("Method not implemented.");
   }
   dtmf(params: any): void {
     throw new Error("Method not implemented.");
   }
-  isAudioMuted(): boolean {
+  setMaxBitrate(mid: string, bitrate: number) {
     throw new Error("Method not implemented.");
   }
-  muteAudio(): void {
+  isAudioMuted(mid: string): boolean {
     throw new Error("Method not implemented.");
   }
-  unmuteAudio(): void {
+  muteAudio(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  isVideoMuted(): boolean {
+  unmuteAudio(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  muteVideo(): void {
+  isVideoMuted(mid: string): boolean {
     throw new Error("Method not implemented.");
   }
-  unmuteVideo(): void {
+  muteVideo(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  getBitrate(): string {
+  unmuteVideo(mid: string): void {
     throw new Error("Method not implemented.");
   }
-  hangup(sendRequest?: boolean): void {
+  getBitrate(mid: string): string {
     throw new Error("Method not implemented.");
   }
-  detach(params?: DetachOptions): void {
+  getVolume(mid: string, result: any) {
     throw new Error("Method not implemented.");
+  }
+  getRemoteVolume(mid: string, result: any) {
+    throw new Error("Method not implemented.");
+  }
+  getLocalVolume(mid: string, result: any) {
+    throw new Error("Method not implemented.");
+  }
+
+  hangup(sendRequest?: boolean): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
+  detach(params?: Omit<DetachOptions, "success" | "error">): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.handle.data({
+        ...params,
+        success() {
+          resolve();
+        },
+        error(error: any) {
+          reject(error);
+        },
+      });
+    });
   }
   stopCollectingStats() {
     clearInterval(this.statsReportHookTimer);
   }
+}
+
+export abstract class JanusPlugins {
+  static VIDEO_ROOM = "janus.plugin.videoroom";
+  static VIDEO_CALL = "janus.plugin.videocall";
+  static AUDIO_BRIDGE = "janus.plugin.audiobridge";
+  static SIP = "janus.plugin.sip";
+  static STREAMING = "janus.plugin.streaming";
+  static ECHO_TEST = "janus.plugin.echotest";
 }

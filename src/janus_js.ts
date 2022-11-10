@@ -1,12 +1,18 @@
-import Janus from "../janus-gateway/npm/janus";
+import Janus from "../js/janus";
 import adapter from "webrtc-adapter";
-import { ConstructorOptions, InitOptions } from "./interfaces/janus";
+import {
+  ConstructorOptions,
+  CreateRecordingController,
+  CreateRecordingResult,
+  InitOptions,
+} from "./interfaces/janus";
 import { JanusSession } from "./janus_session";
 import _ from "lodash";
 import { Subject } from "rxjs";
 export class JanusJs {
   protected instance: Janus;
   protected options: ConstructorOptions;
+  statsQueryInterval = 0;
   static isWebrtcSupported(): boolean {
     return Janus.isWebrtcSupported();
   }
@@ -48,6 +54,7 @@ export class JanusJs {
     this.options = options;
   }
   onDestroyed: () => void;
+  onError: (err: any) => void;
   async init(
     params: Omit<InitOptions, "callback"> = {
       debug: "all",
@@ -91,7 +98,7 @@ export class JanusJs {
   static createRecording(options: {
     mediaStreams: MediaStream[];
     timeSlice?: number;
-  }) {
+  }): CreateRecordingResult {
     const streams: MediaStream[] = [];
     _.each(options.mediaStreams, (stream) => {
       if (stream && stream?.getTracks) {
@@ -107,7 +114,7 @@ export class JanusJs {
     const mixedTrack = this.mix(audioContext, streams);
     const mixedStream = new MediaStream([mixedTrack]);
     const mediaRecorder = new MediaRecorder(mixedStream);
-    const controller = new Subject<{ blob: Blob; chunkNumber: number }>();
+    const controller = new Subject<CreateRecordingController>();
     let totalAudioChunks = 0;
     mediaRecorder.ondataavailable = (event) => {
       totalAudioChunks++;
@@ -128,7 +135,14 @@ export class JanusJs {
 
   async createSession(): Promise<JanusSession> {
     this.options.destroyed = () => {
-      this.onDestroyed();
+      if (this.onDestroyed) {
+        this.onDestroyed();
+      }
+    };
+    this.options.error = (err) => {
+      if (this.onError) {
+        this.onError(err);
+      }
     };
     await new Promise<void>((resolve, reject) => {
       this.options.success = () => {
@@ -137,7 +151,7 @@ export class JanusJs {
       this.options.error = (error: any) => {
         reject(error);
       };
-      this.instance = new Janus(this.options);
+      this.instance = new Janus({ ...this.options });
     });
     return new JanusSession(this.instance);
   }

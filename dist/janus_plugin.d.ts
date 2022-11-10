@@ -12,6 +12,8 @@ export declare class JanusPlugin implements PluginHandle {
     token?: string;
     detached: boolean;
     webrtcStuff: WebRTCInfo;
+    recording: boolean;
+    statsQueryInterval: number;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     recordingTimeSlice?: number;
     protected handleRecordingSetup(controllers: Controllers): void;
@@ -23,7 +25,7 @@ export declare class JanusPlugin implements PluginHandle {
     }>;
     get onStatReports(): import("rxjs").Observable<any[]>;
     get onMessage(): import("rxjs").Observable<{
-        message: import("./interfaces/janus").MessageCallback;
+        message: any;
         jsep: JSEP;
     }>;
     get onLocalTrack(): import("rxjs").Observable<{
@@ -60,17 +62,29 @@ export declare class JanusPlugin implements PluginHandle {
     data(params: DataParams): Promise<void>;
     handleRemoteJsep(params: {
         jsep: JSEP;
-    }): void;
+    }): Promise<void>;
     dtmf(params: any): void;
-    isAudioMuted(): boolean;
-    muteAudio(): void;
-    unmuteAudio(): void;
-    isVideoMuted(): boolean;
-    muteVideo(): void;
-    unmuteVideo(): void;
-    getBitrate(): string;
-    hangup(sendRequest?: boolean): void;
-    detach(params?: DetachOptions): void;
+    setMaxBitrate(mid: string, bitrate: number): void;
+    isAudioMuted(mid: string): boolean;
+    muteAudio(mid: string): void;
+    unmuteAudio(mid: string): void;
+    isVideoMuted(mid: string): boolean;
+    muteVideo(mid: string): void;
+    unmuteVideo(mid: string): void;
+    getBitrate(mid: string): string;
+    getVolume(mid: string, result: any): void;
+    getRemoteVolume(mid: string, result: any): void;
+    getLocalVolume(mid: string, result: any): void;
+    hangup(sendRequest?: boolean): Promise<void>;
+    detach(params?: Omit<DetachOptions, "success" | "error">): Promise<void>;
     stopCollectingStats(): void;
+}
+export declare abstract class JanusPlugins {
+    static VIDEO_ROOM: string;
+    static VIDEO_CALL: string;
+    static AUDIO_BRIDGE: string;
+    static SIP: string;
+    static STREAMING: string;
+    static ECHO_TEST: string;
 }
 //# sourceMappingURL=janus_plugin.d.ts.map
