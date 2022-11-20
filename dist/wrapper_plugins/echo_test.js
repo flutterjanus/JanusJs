@@ -13,13 +13,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 var JanusEchoTestPlugin = /** @class */ (function (_super) {
     __extends(JanusEchoTestPlugin, _super);
     function JanusEchoTestPlugin(instance, session, handle, controllers) {
         return _super.call(this, instance, session, handle, controllers) || this;
     }
     JanusEchoTestPlugin.prototype.boomCall = function () { };
+    JanusEchoTestPlugin.identifier = JanusPlugins.ECHO_TEST;
     return JanusEchoTestPlugin;
 }(JanusPlugin));
 export { JanusEchoTestPlugin };

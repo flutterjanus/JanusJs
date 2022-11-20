@@ -1,3 +1,4 @@
+import { Subject } from "rxjs";
 import Janus from "../js/janus";
 import _ from "lodash";
 import { Controllers, DestroyOptions, JSEP, Message, PluginHandle, PluginOptions } from "./interfaces/janus";
@@ -9,7 +10,6 @@ import { JanusSipPlugin } from "./wrapper_plugins/sip";
 import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
 import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
 import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
-import { Subject } from "rxjs";
 
 export class JanusSession {
   protected instance: Janus;
@@ -85,33 +85,10 @@ export class JanusSession {
     return { finalOptions, controllers };
   }
 
-  attach<Type extends JanusPlugin>(classToCreate: new (...args: any) => Type, options: Pick<PluginOptions, "opaqueId">): Promise<Type> {
-    let pluginIdentifier;
-    switch (classToCreate.name) {
-      case JanusVideoRoomPlugin.name:
-        pluginIdentifier = JanusPlugins.VIDEO_ROOM;
-        break;
-      case JanusAudioBridgePlugin.name:
-        pluginIdentifier = JanusPlugins.AUDIO_BRIDGE;
-        break;
-      case JanusSipPlugin.name:
-        pluginIdentifier = JanusPlugins.SIP;
-        break;
-      case JanusVideoCallPlugin.name:
-        pluginIdentifier = JanusPlugins.VIDEO_CALL;
-        break;
-      case JanusStreamingPlugin.name:
-        pluginIdentifier = JanusPlugins.STREAMING;
-        break;
-      case JanusEchoTestPlugin.name:
-        pluginIdentifier = JanusPlugins.ECHO_TEST;
-        break;
-      default:
-        throw new Error("Unknown plugin");
-    }
+  attach<Type extends JanusPlugin>(classToCreate: any, options: Pick<PluginOptions, "opaqueId">): Promise<Type> {
     const opts: Pick<PluginOptions, "plugin" | "opaqueId"> = {
       ...options,
-      plugin: pluginIdentifier,
+      plugin: classToCreate.identifier,
     };
     const { controllers, finalOptions } = this.getObservableControllers(opts);
     return new Promise<Type>((resolve, reject) => {

@@ -13,13 +13,14 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 var JanusAudioBridgePlugin = /** @class */ (function (_super) {
     __extends(JanusAudioBridgePlugin, _super);
     function JanusAudioBridgePlugin(instance, session, handle, controllers) {
         return _super.call(this, instance, session, handle, controllers) || this;
     }
     JanusAudioBridgePlugin.prototype.boomCall = function () { };
+    JanusAudioBridgePlugin.identifier = JanusPlugins.AUDIO_BRIDGE;
     return JanusAudioBridgePlugin;
 }(JanusPlugin));
 export { JanusAudioBridgePlugin };

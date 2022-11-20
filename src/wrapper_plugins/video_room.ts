@@ -1,5 +1,5 @@
 import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 import { JanusSession } from "../janus_session";
 import _ from "lodash";
 export interface UpdateAsSubscriberStream {
@@ -9,6 +9,7 @@ export interface UpdateAsSubscriberStream {
 }
 
 export class JanusVideoRoomPlugin extends JanusPlugin {
+  static identifier: string = JanusPlugins.VIDEO_ROOM;
   constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers) {
     super(instance, session, handle, controllers);
   }
@@ -105,7 +106,7 @@ export class JanusVideoRoomPlugin extends JanusPlugin {
     return this.send({ message: payload });
   }
   async updateAsSubscriber({ subscribe, unsubscribe }: { subscribe: UpdateAsSubscriberStream[] | undefined; unsubscribe: UpdateAsSubscriberStream[] | undefined }): Promise<any> {
-    const payload ={
+    const payload = {
       request: "update",
       subscribe,
       unsubscribe,

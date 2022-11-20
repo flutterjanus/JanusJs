@@ -60,7 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 var JanusVideoRoomPlugin = /** @class */ (function (_super) {
     __extends(JanusVideoRoomPlugin, _super);
     function JanusVideoRoomPlugin(instance, session, handle, controllers) {
@@ -157,6 +157,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             });
         });
     };
+    JanusVideoRoomPlugin.identifier = JanusPlugins.VIDEO_ROOM;
     return JanusVideoRoomPlugin;
 }(JanusPlugin));
 export { JanusVideoRoomPlugin };

@@ -1,8 +1,9 @@
 import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 import { JanusSession } from "../janus_session";
 
 export class JanusStreamingPlugin extends JanusPlugin {
+  static identifier: string = JanusPlugins.STREAMING;
   constructor(
     instance: Janus,
     session: JanusSession,

@@ -7,6 +7,7 @@ export interface UpdateAsSubscriberStream {
     crossrefid?: any;
 }
 export declare class JanusVideoRoomPlugin extends JanusPlugin {
+    static identifier: string;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     createRoom(options?: {
         room?: number;

@@ -45,16 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import _ from "lodash";
-import { JanusPlugins } from "./janus_plugin";
-import { BehaviorSubject } from "rxjs";
-import { JanusVideoRoomPlugin } from "./wrapper_plugins/video_room";
-import { JanusAudioBridgePlugin } from "./wrapper_plugins/audio_bridge";
-import { JanusSipPlugin } from "./wrapper_plugins/sip";
-import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
-import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
-import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
 import { Subject } from "rxjs";
+import _ from "lodash";
+import { BehaviorSubject } from "rxjs";
 var JanusSession = /** @class */ (function () {
     function JanusSession(instance) {
         this.instance = instance;
@@ -126,30 +119,7 @@ var JanusSession = /** @class */ (function () {
     };
     JanusSession.prototype.attach = function (classToCreate, options) {
         var _this = this;
-        var pluginIdentifier;
-        switch (classToCreate.name) {
-            case JanusVideoRoomPlugin.name:
-                pluginIdentifier = JanusPlugins.VIDEO_ROOM;
-                break;
-            case JanusAudioBridgePlugin.name:
-                pluginIdentifier = JanusPlugins.AUDIO_BRIDGE;
-                break;
-            case JanusSipPlugin.name:
-                pluginIdentifier = JanusPlugins.SIP;
-                break;
-            case JanusVideoCallPlugin.name:
-                pluginIdentifier = JanusPlugins.VIDEO_CALL;
-                break;
-            case JanusStreamingPlugin.name:
-                pluginIdentifier = JanusPlugins.STREAMING;
-                break;
-            case JanusEchoTestPlugin.name:
-                pluginIdentifier = JanusPlugins.ECHO_TEST;
-                break;
-            default:
-                throw new Error("Unknown plugin");
-        }
-        var opts = __assign(__assign({}, options), { plugin: pluginIdentifier });
+        var opts = __assign(__assign({}, options), { plugin: classToCreate.identifier });
         var _a = this.getObservableControllers(opts), controllers = _a.controllers, finalOptions = _a.finalOptions;
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {

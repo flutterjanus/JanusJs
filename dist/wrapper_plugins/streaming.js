@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 var JanusStreamingPlugin = /** @class */ (function (_super) {
     __extends(JanusStreamingPlugin, _super);
     function JanusStreamingPlugin(instance, session, handle, controllers) {
@@ -60,6 +60,7 @@ var JanusStreamingPlugin = /** @class */ (function (_super) {
             return [2 /*return*/];
         }); });
     };
+    JanusStreamingPlugin.identifier = JanusPlugins.STREAMING;
     return JanusStreamingPlugin;
 }(JanusPlugin));
 export { JanusStreamingPlugin };

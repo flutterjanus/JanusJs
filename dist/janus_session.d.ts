@@ -8,7 +8,7 @@ export declare class JanusSession {
     isConnected(): boolean;
     getSessionId(): number;
     private getObservableControllers;
-    attach<Type extends JanusPlugin>(classToCreate: new (...args: any) => Type, options: Pick<PluginOptions, "opaqueId">): Promise<Type>;
+    attach<Type extends JanusPlugin>(classToCreate: any, options: Pick<PluginOptions, "opaqueId">): Promise<Type>;
     reconnect(): Promise<boolean>;
     getInfo(): Promise<any>;
     destroy(callbacks: Omit<DestroyOptions, "success" | "error">): Promise<void>;

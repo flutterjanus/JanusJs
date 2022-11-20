@@ -1,8 +1,9 @@
 import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from "../janus_plugin";
 import { JanusSession } from "../janus_session";
 
 export class JanusEchoTestPlugin extends JanusPlugin {
+  static identifier: string = JanusPlugins.ECHO_TEST;
   constructor(
     instance: Janus,
     session: JanusSession,
