@@ -3,6 +3,12 @@ export const config = {
     server: "wss://janus.conf.meetecho.com/ws",
   },
   servercheap: {
-    server: "ws://107.152.35.248/websocket",
+    server: "wss://janus1.proficientio.top/websocket",
+  },
+  s1: {
+    server: "ws://10.7.0.7:8188",
+  },
+  s2: {
+    server: "ws://10.7.0.8:8188",
   },
 };

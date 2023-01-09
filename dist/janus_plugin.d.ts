@@ -4,6 +4,7 @@ export declare class JanusPlugin implements PluginHandle {
     protected statsReportHookTimer: any;
     protected controllers: Controllers;
     protected instance: Janus;
+    static identifier: string;
     protected handle: PluginHandle;
     protected session: JanusSession;
     protected mediaRecorder: MediaRecorder;

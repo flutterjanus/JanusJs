@@ -325,6 +325,7 @@ var JanusPlugin = /** @class */ (function () {
     JanusPlugin.prototype.stopCollectingStats = function () {
         clearInterval(this.statsReportHookTimer);
     };
+    JanusPlugin.identifier = null;
     return JanusPlugin;
 }());
 export { JanusPlugin };

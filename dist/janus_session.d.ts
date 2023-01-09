@@ -1,6 +1,6 @@
-import Janus from "../js/janus";
-import { DestroyOptions, PluginOptions } from "./interfaces/janus";
-import { JanusPlugin } from "./janus_plugin";
+import Janus from '../js/janus';
+import { DestroyOptions, PluginOptions } from './interfaces/janus';
+import { JanusPlugin } from './janus_plugin';
 export declare class JanusSession {
     protected instance: Janus;
     constructor(instance: Janus);
@@ -8,9 +8,10 @@ export declare class JanusSession {
     isConnected(): boolean;
     getSessionId(): number;
     private getObservableControllers;
-    attach<Type extends JanusPlugin>(classToCreate: any, options: Pick<PluginOptions, "opaqueId">): Promise<Type>;
+    cast<T>(t: T): T;
+    attach<T extends JanusPlugin>(classToCreate: new (...args: any) => T, options: Pick<PluginOptions, 'opaqueId'>): Promise<T>;
     reconnect(): Promise<boolean>;
     getInfo(): Promise<any>;
-    destroy(callbacks: Omit<DestroyOptions, "success" | "error">): Promise<void>;
+    destroy(callbacks: Omit<DestroyOptions, 'success' | 'error'>): Promise<void>;
 }
 //# sourceMappingURL=janus_session.d.ts.map

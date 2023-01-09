@@ -1,144 +1,177 @@
-import { Subject } from "rxjs";
-import Janus from "../js/janus";
-import _ from "lodash";
-import { Controllers, DestroyOptions, JSEP, Message, PluginHandle, PluginOptions } from "./interfaces/janus";
-import { JanusPlugin, JanusPlugins } from "./janus_plugin";
-import { BehaviorSubject, skip } from "rxjs";
-import { JanusVideoRoomPlugin } from "./wrapper_plugins/video_room";
-import { JanusAudioBridgePlugin } from "./wrapper_plugins/audio_bridge";
-import { JanusSipPlugin } from "./wrapper_plugins/sip";
-import { JanusVideoCallPlugin } from "./wrapper_plugins/video_call";
-import { JanusStreamingPlugin } from "./wrapper_plugins/streaming";
-import { JanusEchoTestPlugin } from "./wrapper_plugins/echo_test";
-
+import { Subject } from 'rxjs'
+import Janus from '../js/janus'
+import _ from 'lodash'
+import {
+    Controllers,
+    DestroyOptions,
+    JSEP,
+    Message,
+    PluginHandle,
+    PluginOptions,
+} from './interfaces/janus'
+import { JanusPlugin, JanusPlugins } from './janus_plugin'
+import { BehaviorSubject, skip } from 'rxjs'
+import { JanusVideoRoomPlugin } from './wrapper_plugins/video_room'
+import { JanusAudioBridgePlugin } from './wrapper_plugins/audio_bridge'
+import { JanusSipPlugin } from './wrapper_plugins/sip'
+import { JanusVideoCallPlugin } from './wrapper_plugins/video_call'
+import { JanusStreamingPlugin } from './wrapper_plugins/streaming'
+import { JanusEchoTestPlugin } from './wrapper_plugins/echo_test'
+interface Constructable<T> {
+    new (...args: any): T
+}
 export class JanusSession {
-  protected instance: Janus;
+    protected instance: Janus
 
-  constructor(instance: Janus) {
-    this.instance = instance;
-  }
+    constructor(instance: Janus) {
+        this.instance = instance
+    }
 
-  getServer(): string {
-    return this.instance.getServer();
-  }
-  isConnected(): boolean {
-    return this.instance.isConnected();
-  }
+    getServer(): string {
+        return this.instance.getServer()
+    }
+    isConnected(): boolean {
+        return this.instance.isConnected()
+    }
 
-  getSessionId(): number {
-    return this.instance.getSessionId();
-  }
-  private getObservableControllers(options: Pick<PluginOptions, "plugin" | "opaqueId">) {
-    const finalOptions: PluginOptions = { ...options };
-    const controllers: Controllers = {
-      onRecordingDataController: new Subject(),
-      onStatReportsController: new Subject(),
-      onMessageController: new Subject(),
-      onLocalTrackController: new BehaviorSubject(null),
-      onRemoteTrackController: new Subject(),
-      onDataController: new BehaviorSubject(null),
-      onErrorController: new BehaviorSubject(null),
-      onMediaStateController: new BehaviorSubject(null),
-      onIceStateController: new BehaviorSubject(null),
-      onSlowLinkController: new BehaviorSubject(null),
-      onWebRTCStateController: new BehaviorSubject(null),
-      onCleanupController: new BehaviorSubject(null),
-      onDataOpenController: new BehaviorSubject(null),
-      onDetachedController: new BehaviorSubject(null),
-    };
-    finalOptions.onmessage = (message: any, jsep: JSEP) => {
-      controllers.onMessageController.next({ message, jsep });
-    };
-    finalOptions.onlocaltrack = (track, on) => {
-      controllers.onLocalTrackController.next({ on, track });
-    };
-    finalOptions.onremotetrack = (track, mid, on) => {
-      controllers.onRemoteTrackController.next({ on, track, mid });
-    };
-    finalOptions.ondata = (data: any) => {
-      controllers.onDataController.next(data);
-    };
-    finalOptions.error = (error) => {
-      controllers.onErrorController.next(error);
-    };
-    finalOptions.mediaState = (medium, recieving, mid) => {
-      controllers.onMediaStateController.next({ medium, recieving, mid });
-    };
-    finalOptions.slowLink = (uplink, lost, mid) => {
-      controllers.onSlowLinkController.next({ uplink, lost, mid });
-    };
-    finalOptions.webrtcState = (isConnected) => {
-      controllers.onWebRTCStateController.next(isConnected);
-    };
-    finalOptions.iceState = (state) => {
-      controllers.onIceStateController.next(state);
-    };
-    finalOptions.ondataopen = () => {
-      controllers.onDataOpenController.next();
-    };
-    finalOptions.ondetached = () => {
-      controllers.onDetachedController.next();
-    };
-    finalOptions.oncleanup = () => {
-      controllers.onCleanupController.next();
-    };
-    return { finalOptions, controllers };
-  }
+    getSessionId(): number {
+        return this.instance.getSessionId()
+    }
+    private getObservableControllers(
+        options: Pick<PluginOptions, 'plugin' | 'opaqueId'>
+    ) {
+        const finalOptions: PluginOptions = { ...options }
+        const controllers: Controllers = {
+            onRecordingDataController: new Subject(),
+            onStatReportsController: new Subject(),
+            onMessageController: new Subject(),
+            onLocalTrackController: new BehaviorSubject(null),
+            onRemoteTrackController: new Subject(),
+            onDataController: new BehaviorSubject(null),
+            onErrorController: new BehaviorSubject(null),
+            onMediaStateController: new BehaviorSubject(null),
+            onIceStateController: new BehaviorSubject(null),
+            onSlowLinkController: new BehaviorSubject(null),
+            onWebRTCStateController: new BehaviorSubject(null),
+            onCleanupController: new BehaviorSubject(null),
+            onDataOpenController: new BehaviorSubject(null),
+            onDetachedController: new BehaviorSubject(null),
+        }
+        finalOptions.onmessage = (message: any, jsep: JSEP) => {
+            controllers.onMessageController.next({ message, jsep })
+        }
+        finalOptions.onlocaltrack = (track, on) => {
+            controllers.onLocalTrackController.next({ on, track })
+        }
+        finalOptions.onremotetrack = (track, mid, on) => {
+            controllers.onRemoteTrackController.next({ on, track, mid })
+        }
+        finalOptions.ondata = (data: any) => {
+            controllers.onDataController.next(data)
+        }
+        finalOptions.error = (error) => {
+            controllers.onErrorController.next(error)
+        }
+        finalOptions.mediaState = (medium, recieving, mid) => {
+            controllers.onMediaStateController.next({ medium, recieving, mid })
+        }
+        finalOptions.slowLink = (uplink, lost, mid) => {
+            controllers.onSlowLinkController.next({ uplink, lost, mid })
+        }
+        finalOptions.webrtcState = (isConnected) => {
+            controllers.onWebRTCStateController.next(isConnected)
+        }
+        finalOptions.iceState = (state) => {
+            controllers.onIceStateController.next(state)
+        }
+        finalOptions.ondataopen = () => {
+            controllers.onDataOpenController.next()
+        }
+        finalOptions.ondetached = () => {
+            controllers.onDetachedController.next()
+        }
+        finalOptions.oncleanup = () => {
+            controllers.onCleanupController.next()
+        }
+        return { finalOptions, controllers }
+    }
 
-  attach<Type extends JanusPlugin>(classToCreate: any, options: Pick<PluginOptions, "opaqueId">): Promise<Type> {
-    const opts: Pick<PluginOptions, "plugin" | "opaqueId"> = {
-      ...options,
-      plugin: classToCreate.identifier,
-    };
-    const { controllers, finalOptions } = this.getObservableControllers(opts);
-    return new Promise<Type>((resolve, reject) => {
-      finalOptions.success = (plugin: PluginHandle) => {
-        const pluginHandle = new classToCreate(this.instance, this, plugin, controllers);
-        _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
-        resolve(pluginHandle);
-      };
-      finalOptions.error = (error: any) => {
-        reject(error);
-      };
-      this.instance.attach(finalOptions);
-    });
-  }
+    cast<T>(t: T): T {
+        return t as T
+    }
+    attach<T extends JanusPlugin>(
+        classToCreate: new (...args: any) => T,
+        options: Pick<PluginOptions, 'opaqueId'>
+    ): Promise<T> {
+        const opts: Pick<PluginOptions, 'plugin' | 'opaqueId'> = {
+            ...options,
+            plugin: (classToCreate as any).identifier,
+        }
+        const { controllers, finalOptions } =
+            this.getObservableControllers(opts)
+        return new Promise<T>((resolve, reject) => {
+            finalOptions.success = (plugin: PluginHandle) => {
+                const pluginHandle = new (classToCreate as any)(
+                    this.instance,
+                    this,
+                    plugin,
+                    controllers
+                )
+                _.assign(
+                    pluginHandle,
+                    _.omit(plugin, [
+                        'data',
+                        'send',
+                        'createAnswer',
+                        'createOffer',
+                    ])
+                )
+                resolve(pluginHandle)
+            }
+            finalOptions.error = (error: any) => {
+                reject(error)
+            }
+            this.instance.attach(finalOptions)
+        })
+    }
 
-  async reconnect(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.instance.reconnect({
-        success() {
-          resolve(true);
-        },
-        error(err: any) {
-          reject(err);
-        },
-      });
-    });
-  }
-  async getInfo(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.instance.getInfo({
-        success(info: any) {
-          resolve(info);
-        },
-        error(err: any) {
-          reject(err);
-        },
-      });
-    });
-  }
-  async destroy(callbacks: Omit<DestroyOptions, "success" | "error">): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.instance.destroy({
-        ...callbacks,
-        success: () => {
-          resolve();
-        },
-        error: (err: any) => {
-          reject(err);
-        },
-      });
-    });
-  }
+    async reconnect(): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            this.instance.reconnect({
+                success() {
+                    resolve(true)
+                },
+                error(err: any) {
+                    reject(err)
+                },
+            })
+        })
+    }
+    async getInfo(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.instance.getInfo({
+                success(info: any) {
+                    resolve(info)
+                },
+                error(err: any) {
+                    reject(err)
+                },
+            })
+        })
+    }
+    async destroy(
+        callbacks: Omit<DestroyOptions, 'success' | 'error'>
+    ): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.instance.destroy({
+                ...callbacks,
+                success: () => {
+                    resolve()
+                },
+                error: (err: any) => {
+                    reject(err)
+                },
+            })
+        })
+    }
 }

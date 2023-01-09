@@ -1,31 +1,39 @@
 {
-  "name": "typed_janus_js",
-  "version": "1.0.14",
-  "description": "scalable and battle tested wrapper around janusjs providing typed and promisified version of janusjs",
-  "typings": "dist",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc",
-    "doc":"npx typedoc src/index.ts"
-  },
-  "keywords": [
-    "janusjs",
-    "webrtc",
-    "janus-gateway",
-    "videoroom",
-    "sip"
-  ],
-  "author": "shivanshtalwar0@gmail.com",
-  "license": "ISC",
-  "dependencies": {
-    "lodash": "^4.17.21",
-    "rxjs": "^7.5.5",
-    "typedoc": "^0.22.15",
-    "webrtc-adapter": "^8.1.1"
-  },
-  "devDependencies": {
-    "@types/es6-promise": "^3.3.0",
-    "@types/lodash": "^4.14.182",
-    "typescript": "^4.6.4"
-  }
+    "name": "typed_janus_js",
+    "version": "1.0.14",
+    "description": "scalable and battle tested wrapper around janusjs providing typed and promisified version of janusjs",
+    "typings": "dist",
+    "main": "dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "doc": "npx typedoc src/index.ts"
+    },
+    "keywords": [
+        "janusjs",
+        "webrtc",
+        "janus-gateway",
+        "videoroom",
+        "sip"
+    ],
+    "author": "shivanshtalwar0@gmail.com",
+    "license": "ISC",
+    "dependencies": {
+        "lodash": "^4.17.21",
+        "rxjs": "^7.5.5",
+        "typedoc": "^0.22.15",
+        "webrtc-adapter": "^8.1.1"
+    },
+    "devDependencies": {
+        "@types/es6-promise": "^3.3.0",
+        "@types/lodash": "^4.14.182",
+        "typescript": "^4.6.4"
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "proseWrap": "preserve",
+        "printWidth": 80,
+        "semi": false,
+        "singleQuote": true
+    }
 }

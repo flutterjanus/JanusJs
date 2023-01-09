@@ -45,9 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { Subject } from "rxjs";
-import _ from "lodash";
-import { BehaviorSubject } from "rxjs";
+import { Subject } from 'rxjs';
+import _ from 'lodash';
+import { BehaviorSubject } from 'rxjs';
 var JanusSession = /** @class */ (function () {
     function JanusSession(instance) {
         this.instance = instance;
@@ -117,6 +117,9 @@ var JanusSession = /** @class */ (function () {
         };
         return { finalOptions: finalOptions, controllers: controllers };
     };
+    JanusSession.prototype.cast = function (t) {
+        return t;
+    };
     JanusSession.prototype.attach = function (classToCreate, options) {
         var _this = this;
         var opts = __assign(__assign({}, options), { plugin: classToCreate.identifier });
@@ -124,7 +127,12 @@ var JanusSession = /** @class */ (function () {
         return new Promise(function (resolve, reject) {
             finalOptions.success = function (plugin) {
                 var pluginHandle = new classToCreate(_this.instance, _this, plugin, controllers);
-                _.assign(pluginHandle, _.omit(plugin, ["data", "send", "createAnswer", "createOffer"]));
+                _.assign(pluginHandle, _.omit(plugin, [
+                    'data',
+                    'send',
+                    'createAnswer',
+                    'createOffer',
+                ]));
                 resolve(pluginHandle);
             };
             finalOptions.error = function (error) {
