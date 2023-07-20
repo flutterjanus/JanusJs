@@ -1,12 +1,5 @@
 import Janus from '../js/janus'
 import adapter from 'webrtc-adapter'
-
-// import {
-//   ConstructorOptions,
-//   CreateRecordingController,
-//   CreateRecordingResult,
-//   InitOptions,
-// } from "./interfaces/janus";
 import { JanusSession } from './janus_session'
 import _ from 'lodash'
 import { Subject } from 'rxjs'
@@ -76,7 +69,9 @@ export class JanusJs {
         await new Promise<void>((resolve, reject) => {
             Janus.init({
                 ...params,
-                callback: () => {},
+                callback: () => {
+                    resolve()
+                },
             })
         })
     }
@@ -110,7 +105,7 @@ export class JanusJs {
     }): CreateRecordingResult {
         const streams: MediaStream[] = []
         _.each(options.mediaStreams, (stream) => {
-            if (stream && stream?.getTracks) {
+            if (stream?.getTracks) {
                 _.each(stream.getTracks(), (track) => {
                     streams.push(new MediaStream([track]))
                 })
@@ -161,6 +156,7 @@ export class JanusJs {
                 reject(error)
             }
             this.instance = new Janus({ ...this.options })
+            console.log(this.instance)
         })
         return new JanusSession(this.instance)
     }

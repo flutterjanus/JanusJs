@@ -1,7 +1,7 @@
 import { JanusJs, JanusSipPlugin } from 'typed_janus_js'
 import { config } from './conf'
 async function test() {
-    const a = new JanusJs({ server: 'ws://107.152.35.248/websocket' })
+    const a = new JanusJs({ server: 'ws://107.152.35.248:8188' })
     a.onDestroyed = () => {
         console.log('destroyed')
     }

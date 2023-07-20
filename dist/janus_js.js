@@ -47,12 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 import Janus from '../js/janus';
 import adapter from 'webrtc-adapter';
-// import {
-//   ConstructorOptions,
-//   CreateRecordingController,
-//   CreateRecordingResult,
-//   InitOptions,
-// } from "./interfaces/janus";
 import { JanusSession } from './janus_session';
 import _ from 'lodash';
 import { Subject } from 'rxjs';
@@ -120,7 +114,9 @@ var JanusJs = /** @class */ (function () {
                             });
                         }
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
-                                Janus.init(__assign(__assign({}, params), { callback: function () { } }));
+                                Janus.init(__assign(__assign({}, params), { callback: function () {
+                                        resolve();
+                                    } }));
                             })];
                     case 1:
                         _a.sent();
@@ -155,7 +151,7 @@ var JanusJs = /** @class */ (function () {
     JanusJs.createRecording = function (options) {
         var streams = [];
         _.each(options.mediaStreams, function (stream) {
-            if (stream && (stream === null || stream === void 0 ? void 0 : stream.getTracks)) {
+            if (stream === null || stream === void 0 ? void 0 : stream.getTracks) {
                 _.each(stream.getTracks(), function (track) {
                     streams.push(new MediaStream([track]));
                 });
@@ -210,6 +206,7 @@ var JanusJs = /** @class */ (function () {
                                     reject(error);
                                 };
                                 _this.instance = new Janus(__assign({}, _this.options));
+                                console.log(_this.instance);
                             })];
                     case 1:
                         _a.sent();
