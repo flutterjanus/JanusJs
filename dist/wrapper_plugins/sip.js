@@ -60,7 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin, JanusPlugins } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from '../janus_plugin';
 var JanusSipPlugin = /** @class */ (function (_super) {
     __extends(JanusSipPlugin, _super);
     function JanusSipPlugin(instance, session, handle, controllers) {
@@ -72,7 +72,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        payload = __assign({ request: "register", username: "sip:".concat(username, "@").concat(server) }, options);
+                        payload = __assign({ request: 'register', username: "sip:".concat(username, "@").concat(server) }, options);
                         payload.proxy = "sip:".concat(server);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
@@ -101,7 +101,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                         offer = _a.sent();
                         _a.label = 2;
                     case 2:
-                        payload = __assign({ request: "call", uri: uri }, options);
+                        payload = __assign({ request: 'call', uri: uri }, options);
                         return [4 /*yield*/, this.send({ message: payload, jsep: offer })];
                     case 3:
                         _a.sent();
@@ -130,7 +130,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                         _a.label = 2;
                     case 2:
                         payload = {
-                            request: "update",
+                            request: 'update',
                         };
                         return [4 /*yield*/, this.send({ message: payload, jsep: offer.toJSON() })];
                     case 3:
@@ -147,7 +147,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         payload = {
-                            request: "decline",
+                            request: 'decline',
                             code: code,
                             headers: headers,
                         };
@@ -172,7 +172,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        payload = __assign({ request: "accept" }, options);
+                        payload = __assign({ request: 'accept' }, options);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
                         _a.sent();
@@ -188,7 +188,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         payload = {
-                            request: "hold",
+                            request: 'hold',
                             direction: direction,
                         };
                         return [4 /*yield*/, this.send({ message: payload })];
@@ -206,7 +206,7 @@ var JanusSipPlugin = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0:
                         payload = {
-                            request: "unhold",
+                            request: 'unhold',
                         };
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
@@ -222,14 +222,14 @@ var JanusSipPlugin = /** @class */ (function (_super) {
             peer_video: false,
             audio: true,
             video: false,
-            filename: "recording_" + new Date().toDateString(),
+            filename: 'recording_' + new Date().toDateString(),
         }; }
         return __awaiter(this, void 0, void 0, function () {
             var payload;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        payload = __assign({ request: "recording", action: action }, options);
+                        payload = __assign({ request: 'recording', action: action }, options);
                         return [4 /*yield*/, this.send({ message: payload })];
                     case 1:
                         _a.sent();

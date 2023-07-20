@@ -1,5 +1,5 @@
-import Janus, { AnswerParams, Controllers, DataParams, DetachOptions, JSEP, OfferParams, PluginHandle, PluginMessage, WebRTCInfo } from "./interfaces/janus";
-import { JanusSession } from "./janus_session";
+import Janus, { Controllers, DetachOptions, JSEP, PluginCreateAnswerParam, OfferParams, PluginHandle, PluginMessage, WebRTCInfo, PluginReplaceTracksParam, TrackDesc, DataParams } from './interfaces/janus';
+import { JanusSession } from './janus_session';
 export declare class JanusPlugin implements PluginHandle {
     protected statsReportHookTimer: any;
     protected controllers: Controllers;
@@ -16,6 +16,17 @@ export declare class JanusPlugin implements PluginHandle {
     recording: boolean;
     statsQueryInterval: number;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
+    isAudioMuted(): boolean;
+    muteAudio(): void;
+    unmuteAudio(): void;
+    isVideoMuted(): boolean;
+    muteVideo(): void;
+    unmuteVideo(): void;
+    getBitrate(): string;
+    setMaxBitrate(bitrate: number): void;
+    replaceTracks(params: PluginReplaceTracksParam): void;
+    getLocalTracks(): TrackDesc[];
+    getRemoteTracks(): TrackDesc[];
     recordingTimeSlice?: number;
     protected handleRecordingSetup(controllers: Controllers): void;
     protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): number;
@@ -57,27 +68,19 @@ export declare class JanusPlugin implements PluginHandle {
     get onCleanup(): import("rxjs").Observable<void>;
     getId(): string;
     getPlugin(): string;
-    send(message: Omit<PluginMessage, "success" | "error">): Promise<any>;
-    createOffer(params: Omit<OfferParams, "success" | "error">): Promise<RTCSessionDescription>;
-    createAnswer(params: Omit<AnswerParams, "success" | "error">): Promise<RTCSessionDescription>;
+    send(message: Omit<PluginMessage, 'success' | 'error'>): Promise<any>;
+    createOffer(params: Omit<OfferParams, 'success' | 'error'>): Promise<RTCSessionDescription>;
+    createAnswer(params: Omit<PluginCreateAnswerParam, 'success' | 'error'>): Promise<RTCSessionDescription>;
     data(params: DataParams): Promise<void>;
     handleRemoteJsep(params: {
         jsep: JSEP;
     }): Promise<void>;
     dtmf(params: any): void;
-    setMaxBitrate(mid: string, bitrate: number): void;
-    isAudioMuted(mid: string): boolean;
-    muteAudio(mid: string): void;
-    unmuteAudio(mid: string): void;
-    isVideoMuted(mid: string): boolean;
-    muteVideo(mid: string): void;
-    unmuteVideo(mid: string): void;
-    getBitrate(mid: string): string;
     getVolume(mid: string, result: any): void;
     getRemoteVolume(mid: string, result: any): void;
     getLocalVolume(mid: string, result: any): void;
     hangup(sendRequest?: boolean): Promise<void>;
-    detach(params?: Omit<DetachOptions, "success" | "error">): Promise<void>;
+    detach(params?: Omit<DetachOptions, 'success' | 'error'>): Promise<void>;
     stopCollectingStats(): void;
 }
 export declare abstract class JanusPlugins {

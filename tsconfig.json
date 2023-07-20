@@ -1,17 +1,17 @@
 {
-  "compilerOptions": {
-    "outDir": "./dist/",
-    "experimentalDecorators": true,
-    "noImplicitAny": true,
-    "module": "es6",
-    "allowSyntheticDefaultImports": true,
-    "target": "es5",
-    "declarationMap": true,
-    "declaration": true,
-    "allowJs": true,
-    "moduleResolution": "node",
-    "lib": ["ES5", "ES2015", "DOM", "ScriptHost"]
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "janus-gateway"]
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "module": "es6",
+        "allowSyntheticDefaultImports": true,
+        "target": "es5",
+        "declarationMap": true,
+        "declaration": true,
+        "allowJs": true,
+        "moduleResolution": "node",
+        "lib": ["ES5", "ES2015", "DOM", "ScriptHost"]
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "janus-gateway"]
 }

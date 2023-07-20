@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin, JanusPlugins } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from '../janus_plugin';
 var JanusVideoCallPlugin = /** @class */ (function (_super) {
     __extends(JanusVideoCallPlugin, _super);
     function JanusVideoCallPlugin(instance, session, handle, controllers) {
@@ -65,7 +65,7 @@ var JanusVideoCallPlugin = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.send({
                             message: {
-                                request: "register",
+                                request: 'register',
                                 username: username,
                             },
                         })];
@@ -101,7 +101,7 @@ var JanusVideoCallPlugin = /** @class */ (function (_super) {
                         _a.label = 2;
                     case 2: return [4 /*yield*/, this.send({
                             message: {
-                                request: "call",
+                                request: 'call',
                                 username: username,
                             },
                             jsep: offer.toJSON(),

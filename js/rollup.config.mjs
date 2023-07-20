@@ -1,21 +1,21 @@
-import strip from '@rollup/plugin-strip';
-import replace from '@rollup/plugin-replace';
-import { readFileSync } from 'fs';
+import strip from '@rollup/plugin-strip'
+import replace from '@rollup/plugin-replace'
+import { readFileSync } from 'fs'
 
 export default {
     input: 'module.js',
     output: {
-        strict: false
+        strict: false,
     },
     plugins: [
         replace({
             JANUS_CODE: readFileSync('../html/janus.js', 'utf-8'),
-            delimiters: ['@','@'],
+            delimiters: ['@', '@'],
             includes: 'module.js',
-            preventAssignment: true
+            preventAssignment: true,
         }),
         strip({
-            labels: ['to_remove']
-        })
-    ]
-};
+            labels: ['to_remove'],
+        }),
+    ],
+}

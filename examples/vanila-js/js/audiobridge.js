@@ -19,4 +19,3 @@ await audioBridgePlugin.configure({
         tracks: [{ capture: true, recv: true, type: 'audio' }],
     }),
 })
-

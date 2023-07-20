@@ -45,7 +45,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusJs } from "./janus_js";
+import { JanusJs } from './janus_js';
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
         this.recording = false;
@@ -56,10 +56,43 @@ var JanusPlugin = /** @class */ (function () {
         this.handle = handle;
         this.statsReportHookTimer = this.handleStatsHook(this.handle, controllers, null);
         if (this.recording) {
-            console.info("recording enabled");
+            console.info('recording enabled');
             this.handleRecordingSetup(controllers);
         }
     }
+    JanusPlugin.prototype.isAudioMuted = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.muteAudio = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.unmuteAudio = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.isVideoMuted = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.muteVideo = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.unmuteVideo = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.getBitrate = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.setMaxBitrate = function (bitrate) {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.replaceTracks = function (params) {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.getLocalTracks = function () {
+        throw new Error('Method not implemented.');
+    };
+    JanusPlugin.prototype.getRemoteTracks = function () {
+        throw new Error('Method not implemented.');
+    };
     JanusPlugin.prototype.handleRecordingSetup = function (controllers) {
         var _this = this;
         var data;
@@ -67,14 +100,18 @@ var JanusPlugin = /** @class */ (function () {
             var _b, _c;
             var message = _a.message;
             var result = message === null || message === void 0 ? void 0 : message.result;
-            if ((result === null || result === void 0 ? void 0 : result.event) === "accepted" || (result === null || result === void 0 ? void 0 : result.event) === "progress") {
+            if ((result === null || result === void 0 ? void 0 : result.event) === 'accepted' || (result === null || result === void 0 ? void 0 : result.event) === 'progress') {
                 if (!data) {
-                    if (!_this.webrtcStuff.remoteStream || !_this.webrtcStuff.myStream) {
+                    if (!_this.webrtcStuff.remoteStream ||
+                        !_this.webrtcStuff.myStream) {
                         return;
                     }
-                    console.info("recording initiated");
+                    console.info('recording initiated');
                     data = JanusJs.createRecording({
-                        mediaStreams: [_this.webrtcStuff.myStream, _this.webrtcStuff.remoteStream],
+                        mediaStreams: [
+                            _this.webrtcStuff.myStream,
+                            _this.webrtcStuff.remoteStream,
+                        ],
                         timeSlice: _this.recordingTimeSlice,
                     });
                 }
@@ -85,8 +122,8 @@ var JanusPlugin = /** @class */ (function () {
                     });
                 }
             }
-            if ((result === null || result === void 0 ? void 0 : result.event) === "hangup") {
-                if (((_b = _this.mediaRecorder) === null || _b === void 0 ? void 0 : _b.state) !== "inactive")
+            if ((result === null || result === void 0 ? void 0 : result.event) === 'hangup') {
+                if (((_b = _this.mediaRecorder) === null || _b === void 0 ? void 0 : _b.state) !== 'inactive')
                     (_c = _this.mediaRecorder) === null || _c === void 0 ? void 0 : _c.stop();
             }
         });
@@ -221,10 +258,10 @@ var JanusPlugin = /** @class */ (function () {
         configurable: true
     });
     JanusPlugin.prototype.getId = function () {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.getPlugin = function () {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.send = function (message) {
         return __awaiter(this, void 0, void 0, function () {
@@ -271,51 +308,27 @@ var JanusPlugin = /** @class */ (function () {
         });
     };
     JanusPlugin.prototype.handleRemoteJsep = function (params) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.dtmf = function (params) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.setMaxBitrate = function (mid, bitrate) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.isAudioMuted = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.muteAudio = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.unmuteAudio = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.isVideoMuted = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.muteVideo = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.unmuteVideo = function (mid) {
-        throw new Error("Method not implemented.");
-    };
-    JanusPlugin.prototype.getBitrate = function (mid) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.getVolume = function (mid, result) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.getRemoteVolume = function (mid, result) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.getLocalVolume = function (mid, result) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.hangup = function (sendRequest) {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.detach = function (params) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.handle.data(__assign(__assign({}, params), { success: function () {
+            _this.handle.detach(__assign(__assign({}, params), { success: function () {
                     resolve();
                 }, error: function (error) {
                     reject(error);
@@ -332,12 +345,12 @@ export { JanusPlugin };
 var JanusPlugins = /** @class */ (function () {
     function JanusPlugins() {
     }
-    JanusPlugins.VIDEO_ROOM = "janus.plugin.videoroom";
-    JanusPlugins.VIDEO_CALL = "janus.plugin.videocall";
-    JanusPlugins.AUDIO_BRIDGE = "janus.plugin.audiobridge";
-    JanusPlugins.SIP = "janus.plugin.sip";
-    JanusPlugins.STREAMING = "janus.plugin.streaming";
-    JanusPlugins.ECHO_TEST = "janus.plugin.echotest";
+    JanusPlugins.VIDEO_ROOM = 'janus.plugin.videoroom';
+    JanusPlugins.VIDEO_CALL = 'janus.plugin.videocall';
+    JanusPlugins.AUDIO_BRIDGE = 'janus.plugin.audiobridge';
+    JanusPlugins.SIP = 'janus.plugin.sip';
+    JanusPlugins.STREAMING = 'janus.plugin.streaming';
+    JanusPlugins.ECHO_TEST = 'janus.plugin.echotest';
     return JanusPlugins;
 }());
 export { JanusPlugins };

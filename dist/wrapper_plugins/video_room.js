@@ -60,7 +60,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin, JanusPlugins } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from '../janus_plugin';
 var JanusVideoRoomPlugin = /** @class */ (function (_super) {
     __extends(JanusVideoRoomPlugin, _super);
     function JanusVideoRoomPlugin(instance, session, handle, controllers) {
@@ -71,13 +71,13 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;
             return __generator(this, function (_a) {
-                payload = __assign({ request: "create" }, options);
+                payload = __assign({ request: 'create' }, options);
                 return [2 /*return*/, this.send({ message: payload })];
             });
         });
     };
     JanusVideoRoomPlugin.prototype.joinRoomAsPublisher = function (roomId, options) {
-        var payload = __assign({ request: "join", room: roomId, ptype: "publisher" }, options);
+        var payload = __assign({ request: 'join', room: roomId, ptype: 'publisher' }, options);
         return this.send({ message: payload });
     };
     JanusVideoRoomPlugin.prototype.listParticipants = function (room) {
@@ -85,7 +85,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             var payload;
             return __generator(this, function (_a) {
                 payload = {
-                    request: "listparticipants",
+                    request: 'listparticipants',
                     room: room,
                 };
                 return [2 /*return*/, this.send({ message: payload })];
@@ -96,7 +96,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;
             return __generator(this, function (_a) {
-                payload = __assign({ request: "join", ptype: "subscriber", room: room }, options);
+                payload = __assign({ request: 'join', ptype: 'subscriber', room: room }, options);
                 return [2 /*return*/, this.send({ message: payload })];
             });
         });
@@ -106,7 +106,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             var payload;
             return __generator(this, function (_a) {
                 payload = {
-                    request: "start",
+                    request: 'start',
                 };
                 return [2 /*return*/, this.send({ message: payload, jsep: answer.toJSON() })];
             });
@@ -116,7 +116,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var payload;
             return __generator(this, function (_a) {
-                payload = __assign({ request: "publish" }, options);
+                payload = __assign({ request: 'publish' }, options);
                 return [2 /*return*/, this.send({ message: payload, jsep: offer.toJSON() })];
             });
         });
@@ -126,7 +126,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             var payload;
             return __generator(this, function (_a) {
                 payload = {
-                    request: "unpublish",
+                    request: 'unpublish',
                 };
                 return [2 /*return*/, this.send({ message: payload })];
             });
@@ -138,7 +138,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             var payload;
             return __generator(this, function (_b) {
                 payload = {
-                    request: "update",
+                    request: 'update',
                     subscribe: subscribe,
                     unsubscribe: unsubscribe,
                 };
@@ -151,7 +151,7 @@ var JanusVideoRoomPlugin = /** @class */ (function (_super) {
             var payload;
             return __generator(this, function (_a) {
                 payload = {
-                    request: "leave",
+                    request: 'leave',
                 };
                 return [2 /*return*/, this.send({ message: payload })];
             });

@@ -1,6 +1,6 @@
-import Janus from "../js/janus";
-import { ConstructorOptions, CreateRecordingResult, InitOptions } from "./interfaces/janus";
-import { JanusSession } from "./janus_session";
+import Janus from '../js/janus';
+import { JanusSession } from './janus_session';
+import { ConstructorOptions, CreateRecordingResult, InitOptions } from './interfaces/janus';
 export declare class JanusJs {
     protected instance: Janus;
     protected options: ConstructorOptions;
@@ -14,10 +14,10 @@ export declare class JanusJs {
     static attachMediaStream(element: HTMLMediaElement, stream: MediaStream): void;
     static reattachMediaStream(to: HTMLMediaElement, from: HTMLMediaElement): void;
     static stopAllTracks(stream: MediaStream): void;
-    constructor(options: Omit<ConstructorOptions, "success" | "error" | "destroyed">);
+    constructor(options: Omit<ConstructorOptions, 'success' | 'error' | 'destroyed'>);
     onDestroyed: () => void;
     onError: (err: any) => void;
-    init(params?: Omit<InitOptions, "callback">): Promise<void>;
+    init(params?: InitOptions): Promise<void>;
     static mix(audioContext: AudioContext, streams: MediaStream[]): any;
     static playMediaStream(mediaStream: MediaStream): AudioContext;
     static createRecording(options: {

@@ -45,15 +45,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import Janus from "../js/janus";
-import adapter from "webrtc-adapter";
-import { JanusSession } from "./janus_session";
-import _ from "lodash";
-import { Subject } from "rxjs";
+import Janus from '../js/janus';
+import adapter from 'webrtc-adapter';
+// import {
+//   ConstructorOptions,
+//   CreateRecordingController,
+//   CreateRecordingResult,
+//   InitOptions,
+// } from "./interfaces/janus";
+import { JanusSession } from './janus_session';
+import _ from 'lodash';
+import { Subject } from 'rxjs';
 var JanusJs = /** @class */ (function () {
     function JanusJs(options) {
         this.statsQueryInterval = 0;
-        console.log("JanusJs loaded");
+        console.log('JanusJs loaded');
         this.options = options;
     }
     JanusJs.isWebrtcSupported = function () {
@@ -101,7 +107,7 @@ var JanusJs = /** @class */ (function () {
     };
     JanusJs.prototype.init = function (params) {
         if (params === void 0) { params = {
-            debug: "all",
+            debug: 'all',
             dependencies: Janus.useDefaultDependencies({ adapter: adapter }),
         }; }
         return __awaiter(this, void 0, void 0, function () {
@@ -109,12 +115,12 @@ var JanusJs = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         if (!params.dependencies) {
-                            params.dependencies = Janus.useDefaultDependencies({ adapter: adapter });
+                            params.dependencies = Janus.useDefaultDependencies({
+                                adapter: adapter,
+                            });
                         }
                         return [4 /*yield*/, new Promise(function (resolve, reject) {
-                                Janus.init(__assign(__assign({}, params), { callback: function () {
-                                        resolve();
-                                    } }));
+                                Janus.init(__assign(__assign({}, params), { callback: function () { } }));
                             })];
                     case 1:
                         _a.sent();
@@ -142,7 +148,7 @@ var JanusJs = /** @class */ (function () {
             return audioContext;
         }
         catch (err) {
-            JanusJs.error("failed to play media stream", err);
+            JanusJs.error('failed to play media stream', err);
             throw err;
         }
     };

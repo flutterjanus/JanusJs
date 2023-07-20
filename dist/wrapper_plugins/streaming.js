@@ -49,16 +49,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-import { JanusPlugin, JanusPlugins } from "../janus_plugin";
+import { JanusPlugin, JanusPlugins } from '../janus_plugin';
 var JanusStreamingPlugin = /** @class */ (function (_super) {
     __extends(JanusStreamingPlugin, _super);
     function JanusStreamingPlugin(instance, session, handle, controllers) {
         return _super.call(this, instance, session, handle, controllers) || this;
     }
-    JanusStreamingPlugin.prototype.streamingTest = function () {
-        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
-            return [2 /*return*/];
-        }); });
+    JanusStreamingPlugin.prototype.list = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.send({
+                        message: {
+                            request: 'list',
+                        },
+                    })];
+            });
+        });
+    };
+    JanusStreamingPlugin.prototype.info = function (id, secret) {
+        if (secret === void 0) { secret = undefined; }
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.send({
+                        message: {
+                            request: 'info',
+                            id: id,
+                            secret: secret,
+                        },
+                    })];
+            });
+        });
     };
     JanusStreamingPlugin.identifier = JanusPlugins.STREAMING;
     return JanusStreamingPlugin;

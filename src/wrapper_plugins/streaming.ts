@@ -22,7 +22,10 @@ export class JanusStreamingPlugin extends JanusPlugin {
         })
     }
 
-    async info(id:number|string, secret: string | undefined = undefined): Promise<any> {
+    async info(
+        id: number | string,
+        secret: string | undefined = undefined
+    ): Promise<any> {
         return this.send({
             message: {
                 request: 'info',

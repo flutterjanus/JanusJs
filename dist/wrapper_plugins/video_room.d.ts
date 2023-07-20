@@ -1,6 +1,6 @@
-import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
-import { JanusSession } from "../janus_session";
+import Janus, { PluginHandle, Controllers } from '../interfaces/janus';
+import { JanusPlugin } from '../janus_plugin';
+import { JanusSession } from '../janus_session';
 export interface UpdateAsSubscriberStream {
     feed: any;
     mid?: any;
@@ -48,7 +48,7 @@ export declare class JanusVideoRoomPlugin extends JanusPlugin {
         }[];
     }): Promise<any>;
     unpublishAsPublisher(): Promise<any>;
-    updateAsSubscriber({ subscribe, unsubscribe }: {
+    updateAsSubscriber({ subscribe, unsubscribe, }: {
         subscribe: UpdateAsSubscriberStream[] | undefined;
         unsubscribe: UpdateAsSubscriberStream[] | undefined;
     }): Promise<any>;

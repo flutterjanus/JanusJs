@@ -1,11 +1,11 @@
-import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
-import { JanusSession } from "../janus_session";
+import Janus, { PluginHandle, Controllers } from '../interfaces/janus';
+import { JanusPlugin } from '../janus_plugin';
+import { JanusSession } from '../janus_session';
 export declare class JanusSipPlugin extends JanusPlugin {
     static identifier: string;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
     register(username: string, server: string, options: {
-        type?: "guest" | "helper";
+        type?: 'guest' | 'helper';
         send_register?: boolean;
         force_udp?: boolean;
         force_tcp?: boolean;
@@ -43,9 +43,9 @@ export declare class JanusSipPlugin extends JanusPlugin {
         headers: any;
         autoaccept_reinvites: boolean;
     }): Promise<void>;
-    hold(direction: "sendonly" | "recvonly" | "inactive"): Promise<void>;
+    hold(direction: 'sendonly' | 'recvonly' | 'inactive'): Promise<void>;
     unhold(): Promise<void>;
-    record(action: "start" | "stop", options?: {
+    record(action: 'start' | 'stop', options?: {
         audio?: boolean;
         video?: boolean;
         peer_audio?: boolean;

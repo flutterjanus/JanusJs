@@ -1,9 +1,11 @@
-import Janus, { PluginHandle, Controllers } from "../interfaces/janus";
-import { JanusPlugin } from "../janus_plugin";
-import { JanusSession } from "../janus_session";
+import Janus, { PluginHandle, Controllers } from '../interfaces/janus';
+import { StreamingListResponse } from '../interfaces/plugins/streaming';
+import { JanusPlugin } from '../janus_plugin';
+import { JanusSession } from '../janus_session';
 export declare class JanusStreamingPlugin extends JanusPlugin {
     static identifier: string;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
-    streamingTest(): Promise<void>;
+    list(): Promise<StreamingListResponse[]>;
+    info(id: number | string, secret?: string | undefined): Promise<any>;
 }
 //# sourceMappingURL=streaming.d.ts.map

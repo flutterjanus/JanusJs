@@ -5,7 +5,7 @@
     text-indent: -20px;
 }
 .tsd-kind-icon:before {
-    content: "";
+    content: '';
     display: inline-block;
     vertical-align: middle;
     width: 17px;
