@@ -45,6 +45,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+import _ from 'lodash';
 import { JanusJs } from './janus_js';
 var JanusPlugin = /** @class */ (function () {
     function JanusPlugin(instance, session, handle, controllers) {
@@ -60,6 +70,48 @@ var JanusPlugin = /** @class */ (function () {
             this.handleRecordingSetup(controllers);
         }
     }
+    JanusPlugin.prototype.promisify = function (functionCall) {
+        var parameters = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            parameters[_i - 1] = arguments[_i];
+        }
+        return __awaiter(this, void 0, void 0, function () {
+            var firstArgument;
+            return __generator(this, function (_a) {
+                firstArgument = _.first(parameters);
+                if (_.isPlainObject(firstArgument)) {
+                    return [2 /*return*/, new Promise(function (resolve, reject) {
+                            functionCall(__assign(__assign({}, _.omit(firstArgument, ['success', 'error'])), { success: function (value) {
+                                    resolve(value);
+                                }, error: function (error) {
+                                    reject(error);
+                                } }));
+                        })];
+                }
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        functionCall.apply(void 0, __spreadArray(__spreadArray([], parameters, false), [function (value) {
+                                resolve(value);
+                            }], false));
+                    })];
+            });
+        });
+    };
+    JanusPlugin.prototype.replaceTracks = function (options) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.promisify(this.handle.replaceTracks, __assign({}, options))];
+            });
+        });
+    };
+    JanusPlugin.prototype.getVolume = function (mid) {
+        return this.promisify(this.handle.getVolume, mid);
+    };
+    JanusPlugin.prototype.getRemoteVolume = function (mid) {
+        return this.promisify(this.handle.getRemoteVolume, mid);
+    };
+    JanusPlugin.prototype.getLocalVolume = function (mid) {
+        return this.promisify(this.handle.getLocalVolume, mid);
+    };
     JanusPlugin.prototype.isAudioMuted = function () {
         throw new Error('Method not implemented.');
     };
@@ -82,9 +134,6 @@ var JanusPlugin = /** @class */ (function () {
         throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.setMaxBitrate = function (bitrate) {
-        throw new Error('Method not implemented.');
-    };
-    JanusPlugin.prototype.replaceTracks = function (params) {
         throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.getLocalTracks = function () {
@@ -311,15 +360,6 @@ var JanusPlugin = /** @class */ (function () {
         throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.dtmf = function (params) {
-        throw new Error('Method not implemented.');
-    };
-    JanusPlugin.prototype.getVolume = function (mid, result) {
-        throw new Error('Method not implemented.');
-    };
-    JanusPlugin.prototype.getRemoteVolume = function (mid, result) {
-        throw new Error('Method not implemented.');
-    };
-    JanusPlugin.prototype.getLocalVolume = function (mid, result) {
         throw new Error('Method not implemented.');
     };
     JanusPlugin.prototype.hangup = function (sendRequest) {

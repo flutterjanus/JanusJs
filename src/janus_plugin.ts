@@ -11,6 +11,7 @@ import Janus, {
     PluginReplaceTracksParam,
     TrackDesc,
     DataParams,
+    TrackOption,
 } from './interfaces/janus'
 import { JanusJs } from './janus_js'
 import { JanusSession } from './janus_session'
@@ -50,6 +51,42 @@ export class JanusPlugin implements PluginHandle {
             this.handleRecordingSetup(controllers)
         }
     }
+    protected async promisify<T>(functionCall, ...parameters) {
+        const firstArgument = _.first(parameters)
+        if (_.isPlainObject(firstArgument)) {
+            return new Promise<T>((resolve, reject) => {
+                functionCall({
+                    ..._.omit(firstArgument, ['success', 'error']),
+                    success: (value) => {
+                        resolve(value)
+                    },
+                    error: (error) => {
+                        reject(error)
+                    },
+                })
+            })
+        }
+        return new Promise<T>((resolve, reject) => {
+            functionCall(...parameters, (value) => {
+                resolve(value)
+            })
+        })
+    }
+
+    async replaceTracks(options: Pick<PluginReplaceTracksParam, 'tracks'>) {
+        return this.promisify<void>(this.handle.replaceTracks, { ...options })
+    }
+
+    getVolume(mid: string) {
+        return this.promisify<number>(this.handle.getVolume, mid)
+    }
+    getRemoteVolume(mid: string) {
+        return this.promisify<number>(this.handle.getRemoteVolume, mid)
+    }
+    getLocalVolume(mid: string) {
+        return this.promisify<number>(this.handle.getLocalVolume, mid)
+    }
+
     isAudioMuted(): boolean {
         throw new Error('Method not implemented.')
     }
@@ -72,9 +109,6 @@ export class JanusPlugin implements PluginHandle {
         throw new Error('Method not implemented.')
     }
     setMaxBitrate(bitrate: number): void {
-        throw new Error('Method not implemented.')
-    }
-    replaceTracks(params: PluginReplaceTracksParam): void {
         throw new Error('Method not implemented.')
     }
     getLocalTracks(): TrackDesc[] {
@@ -253,16 +287,6 @@ export class JanusPlugin implements PluginHandle {
         throw new Error('Method not implemented.')
     }
     dtmf(params: any): void {
-        throw new Error('Method not implemented.')
-    }
-
-    getVolume(mid: string, result: any) {
-        throw new Error('Method not implemented.')
-    }
-    getRemoteVolume(mid: string, result: any) {
-        throw new Error('Method not implemented.')
-    }
-    getLocalVolume(mid: string, result: any) {
         throw new Error('Method not implemented.')
     }
 

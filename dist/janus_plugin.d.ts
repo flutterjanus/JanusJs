@@ -16,6 +16,11 @@ export declare class JanusPlugin implements PluginHandle {
     recording: boolean;
     statsQueryInterval: number;
     constructor(instance: Janus, session: JanusSession, handle: PluginHandle, controllers: Controllers);
+    protected promisify<T>(functionCall: any, ...parameters: any[]): Promise<T>;
+    replaceTracks(options: Pick<PluginReplaceTracksParam, 'tracks'>): Promise<void>;
+    getVolume(mid: string): Promise<number>;
+    getRemoteVolume(mid: string): Promise<number>;
+    getLocalVolume(mid: string): Promise<number>;
     isAudioMuted(): boolean;
     muteAudio(): void;
     unmuteAudio(): void;
@@ -24,7 +29,6 @@ export declare class JanusPlugin implements PluginHandle {
     unmuteVideo(): void;
     getBitrate(): string;
     setMaxBitrate(bitrate: number): void;
-    replaceTracks(params: PluginReplaceTracksParam): void;
     getLocalTracks(): TrackDesc[];
     getRemoteTracks(): TrackDesc[];
     recordingTimeSlice?: number;
@@ -76,9 +80,6 @@ export declare class JanusPlugin implements PluginHandle {
         jsep: JSEP;
     }): Promise<void>;
     dtmf(params: any): void;
-    getVolume(mid: string, result: any): void;
-    getRemoteVolume(mid: string, result: any): void;
-    getLocalVolume(mid: string, result: any): void;
     hangup(sendRequest?: boolean): Promise<void>;
     detach(params?: Omit<DetachOptions, 'success' | 'error'>): Promise<void>;
     stopCollectingStats(): void;

@@ -206,7 +206,6 @@ var JanusJs = /** @class */ (function () {
                                     reject(error);
                                 };
                                 _this.instance = new Janus(__assign({}, _this.options));
-                                console.log(_this.instance);
                             })];
                     case 1:
                         _a.sent();

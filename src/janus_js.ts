@@ -156,7 +156,6 @@ export class JanusJs {
                 reject(error)
             }
             this.instance = new Janus({ ...this.options })
-            console.log(this.instance)
         })
         return new JanusSession(this.instance)
     }

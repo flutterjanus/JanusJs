@@ -285,7 +285,7 @@ export interface PluginHandle {
     createOffer(params: OfferParams): void;
     createAnswer(params: PluginCreateAnswerParam): void;
     handleRemoteJsep(params: PluginHandleRemoteJsepParam): void;
-    replaceTracks(params: PluginReplaceTracksParam): void;
+    replaceTracks(params: PluginReplaceTracksParam): Promise<void>;
     getLocalTracks(): TrackDesc[];
     getRemoteTracks(): TrackDesc[];
     hangup(sendRequest?: boolean): void;
