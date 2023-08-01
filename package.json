@@ -1,6 +1,6 @@
 {
     "name": "typed_janus_js",
-    "version": "1.0.17",
+    "version": "1.0.18",
     "description": "scalable and battle tested wrapper around janusjs providing typed and promisified version of janusjs",
     "typings": "dist",
     "main": "dist/index.js",
@@ -18,16 +18,16 @@
     "author": "shivanshtalwar0@gmail.com",
     "license": "ISC",
     "dependencies": {
-        "aigle": "^1.14.1",
-        "lodash": "^4.17.21",
-        "rxjs": "^7.5.5",
-        "typedoc": "^0.22.15",
-        "webrtc-adapter": "^8.1.1"
+        "aigle": "1.14.1",
+        "lodash": "4.17.21",
+        "rxjs": "7.5.5",
+        "typedoc": "0.22.15",
+        "webrtc-adapter": "8.1.1"
     },
     "devDependencies": {
-        "@types/es6-promise": "^3.3.0",
-        "@types/lodash": "^4.14.182",
-        "typescript": "^4.6.4"
+        "@types/es6-promise": "3.3.0",
+        "@types/lodash": "4.14.182",
+        "typescript": "4.6.4"
     },
     "prettier": {
         "trailingComma": "es5",
