@@ -177,6 +177,11 @@ var JanusPlugin = /** @class */ (function () {
             }
         });
     };
+    JanusPlugin.prototype.sendTrickle = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
     JanusPlugin.prototype.handleStatsHook = function (plugin, controllers, mediaStreamTrack) {
         var _this = this;
         if (mediaStreamTrack === void 0) { mediaStreamTrack = null; }
@@ -189,7 +194,7 @@ var JanusPlugin = /** @class */ (function () {
                             return [2 /*return*/];
                         }
                         results = [];
-                        return [4 /*yield*/, plugin.webrtcStuff.pc.getStats(mediaStreamTrack)];
+                        return [4 /*yield*/, plugin.webrtcStuff.pc.getStats()];
                     case 1:
                         reports = _a.sent();
                         reports.forEach(function (report) {

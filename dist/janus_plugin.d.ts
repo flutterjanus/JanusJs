@@ -33,6 +33,7 @@ export declare class JanusPlugin implements PluginHandle {
     getRemoteTracks(): TrackDesc[];
     recordingTimeSlice?: number;
     protected handleRecordingSetup(controllers: Controllers): void;
+    sendTrickle(): Promise<void>;
     protected handleStatsHook(plugin: PluginHandle, controllers: Controllers, mediaStreamTrack?: MediaStreamTrack): number;
     get recorder(): MediaRecorder;
     get onRecordingData(): import("rxjs").Observable<{

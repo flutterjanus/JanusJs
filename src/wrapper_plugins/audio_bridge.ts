@@ -1,4 +1,5 @@
 import Janus, { PluginHandle, Controllers } from '../interfaces/janus'
+import { AudioBridgeCreateOptions } from '../interfaces/plugins/audio_bridge'
 import { JanusPlugin, JanusPlugins } from '../janus_plugin'
 import { JanusSession } from '../janus_session'
 
@@ -11,6 +12,24 @@ export class JanusAudioBridgePlugin extends JanusPlugin {
         controllers: Controllers
     ) {
         super(instance, session, handle, controllers)
+    }
+
+    async createRoom(room: string | number, options: AudioBridgeCreateOptions) {
+        const payload = {
+            request: 'create',
+            room: room,
+            ...options,
+        }
+        return this.send({ message: payload })
+    }
+
+    async editRoom(room: string | number, options: AudioBridgeCreateOptions) {
+        const payload = {
+            request: 'edit',
+            room: room,
+            ...options,
+        }
+        return this.send({ message: payload })
     }
 
     async joinRoom(
@@ -94,7 +113,7 @@ export class JanusAudioBridgePlugin extends JanusPlugin {
         filename,
         group,
     }: {
-        offer: RTCSessionDescription
+        offer?: RTCSessionDescription
         muted?: boolean
         display?: string
         preBuffer?: number
@@ -121,6 +140,6 @@ export class JanusAudioBridgePlugin extends JanusPlugin {
             filename: filename,
             group: group,
         }
-        return this.send({ message: payload, jsep: offer.toJSON() })
+        return this.send({ message: payload, jsep: offer })
     }
 }

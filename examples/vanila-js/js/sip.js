@@ -18,15 +18,11 @@ async function test() {
         remoteStream.addTrack(data.track.clone())
         JanusJs.playMediaStream(remoteStream)
     })
-    // plugin.onStatReports.subscribe((reports) => {
-    //   console.log(reports);
-    // });
-
+   
     plugin.onMessage.subscribe(async (data) => {
         console.log(data.message.result)
         const result = data.message.result
         if (result.event === 'hangup') {
-            // plugin.record("stop");
             plugin.detach()
         }
         if (result.event === 'registered') {

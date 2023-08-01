@@ -154,6 +154,8 @@ export class JanusPlugin implements PluginHandle {
         })
     }
 
+    async sendTrickle() {}
+
     protected handleStatsHook(
         plugin: PluginHandle,
         controllers: Controllers,
@@ -164,9 +166,7 @@ export class JanusPlugin implements PluginHandle {
                 return
             }
             const results: any[] = []
-            const reports = await plugin.webrtcStuff.pc.getStats(
-                mediaStreamTrack
-            )
+            const reports = await plugin.webrtcStuff.pc.getStats()
             reports.forEach((report) => {
                 results.push(...report)
             })

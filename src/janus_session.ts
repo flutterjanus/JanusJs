@@ -5,21 +5,12 @@ import {
     Controllers,
     DestroyOptions,
     JSEP,
-    Message,
     PluginHandle,
     PluginOptions,
 } from './interfaces/janus'
-import { JanusPlugin, JanusPlugins } from './janus_plugin'
-import { BehaviorSubject, skip } from 'rxjs'
-import { JanusVideoRoomPlugin } from './wrapper_plugins/video_room'
-import { JanusAudioBridgePlugin } from './wrapper_plugins/audio_bridge'
-import { JanusSipPlugin } from './wrapper_plugins/sip'
-import { JanusVideoCallPlugin } from './wrapper_plugins/video_call'
-import { JanusStreamingPlugin } from './wrapper_plugins/streaming'
-import { JanusEchoTestPlugin } from './wrapper_plugins/echo_test'
-interface Constructable<T> {
-    new (...args: any): T
-}
+import { JanusPlugin } from './janus_plugin'
+import { BehaviorSubject } from 'rxjs'
+
 export class JanusSession {
     protected instance: Janus
 

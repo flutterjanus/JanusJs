@@ -13,6 +13,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -55,6 +66,24 @@ var JanusAudioBridgePlugin = /** @class */ (function (_super) {
     function JanusAudioBridgePlugin(instance, session, handle, controllers) {
         return _super.call(this, instance, session, handle, controllers) || this;
     }
+    JanusAudioBridgePlugin.prototype.createRoom = function (room, options) {
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                payload = __assign({ request: 'create', room: room }, options);
+                return [2 /*return*/, this.send({ message: payload })];
+            });
+        });
+    };
+    JanusAudioBridgePlugin.prototype.editRoom = function (room, options) {
+        return __awaiter(this, void 0, void 0, function () {
+            var payload;
+            return __generator(this, function (_a) {
+                payload = __assign({ request: 'edit', room: room }, options);
+                return [2 /*return*/, this.send({ message: payload })];
+            });
+        });
+    };
     JanusAudioBridgePlugin.prototype.joinRoom = function (room, _a) {
         var _b = _a === void 0 ? {} : _a, id = _b.id, group = _b.group, pin = _b.pin, display = _b.display, token = _b.token, muted = _b.muted, codec = _b.codec, preBuffer = _b.preBuffer, bitrate = _b.bitrate, quality = _b.quality, expectedLoss = _b.expectedLoss, volume = _b.volume, spatialPosition = _b.spatialPosition, secret = _b.secret, audioLevelAverage = _b.audioLevelAverage, audioActivePackets = _b.audioActivePackets, record = _b.record, filename = _b.filename;
         return __awaiter(this, void 0, void 0, function () {
@@ -105,7 +134,7 @@ var JanusAudioBridgePlugin = /** @class */ (function (_super) {
                     filename: filename,
                     group: group,
                 };
-                return [2 /*return*/, this.send({ message: payload, jsep: offer.toJSON() })];
+                return [2 /*return*/, this.send({ message: payload, jsep: offer })];
             });
         });
     };
